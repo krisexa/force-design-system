@@ -1,0 +1,981 @@
+/**
+ * SEMANTIC TOKENS — the only layer components are allowed to consume.
+ *
+ * Every value here points at a primitive. Nothing here is a literal.
+ *
+ * THEMING STRATEGY (three states, deliberately):
+ *   1. `:root`                               -> light, the unconditional default
+ *   2. `@media (prefers-color-scheme: dark)` -> dark, guarded by
+ *      `:root:not([data-theme='light'])` so an explicit light choice still wins
+ *      on a dark-preferring OS
+ *   3. `:root[data-theme='dark']`            -> explicit dark, wins regardless of OS
+ *
+ * The guard in (2) is what makes the toggle work in BOTH directions. Without it,
+ * a user on a dark OS could never force light. Every color token is defined
+ * unconditionally in (1) first, so no token can end up undefined in any state.
+ *
+ * Shade choices are contrast-driven, not aesthetic: light picks darker shades so
+ * they clear 4.5:1 on white, dark picks lighter ones so they clear 4.5:1 on
+ * near-black — which then flips what color of text can sit ON them.
+ */
+
+:root {
+  /*
+   * Surfaces.
+   *
+   * THE LIGHT PAGE IS zinc-50, NOT WHITE, and that is deliberate: product
+   * screenshots are white-UI-on-white and bled into the page with no edge at
+   * all. A page one step off white gives every such image a ground to sit on
+   * without needing a border drawn around it.
+   *
+   * The whole light ladder moved down one notch together when that changed —
+   * a page at zinc-50 with `sunken` and `subtle` still at zinc-50 would have
+   * made both invisible, which is precisely the bug their own comments below
+   * were written about. Keep the STEPS when editing, not the literal values:
+   * raised is lighter than the page, everything else is progressively darker,
+   * and each pair that expresses a state (rest -> hover -> selected) must keep
+   * its ordering in both themes.
+   */
+  --color-surface: var(--zinc-50);
+  /* Now genuinely lifts in light, where it used to be white-on-white and did
+     nothing at all — matching how it already behaved in dark (zinc-900 off a
+     zinc-950 page). */
+  --color-surface-raised: var(--white);
+  --color-surface-sunken: var(--zinc-100);
+  /* A panel set slightly off the page in EITHER direction — the one thing
+     neither surface above can do. `sunken` resolves to pure black in dark mode,
+     which is darker than the page and reads as a hole rather than a card. This
+     steps away from the page ground whichever way the theme runs. */
+  --color-surface-subtle: var(--zinc-100);
+  /* Bento panel fill — the trust band's stat and ticker panels, and the ground
+     under every image placeholder.
+     ONE step off the page, deliberately light: it was zinc-200 and read too
+     heavy under large placeholder panels. The cost of that choice is that it is
+     now the same value as --color-surface-subtle and --color-surface-sunken in
+     light, so `panel` no longer buys a step over `subtle` here — it still does
+     in dark. It also means a borderless panel sits only ~6/255 off the page;
+     13 of the 17 components using this token draw no border of their own, so if
+     any of them stop reading as panels, this is the line to move back to
+     zinc-200 (or give those panels a --color-border hairline, which at zinc-300
+     is a clear 32/255 against this fill).
+     Dark lifts off the near-black page instead of receding, so the panels read
+     the same way in both themes. */
+  --color-surface-panel: var(--zinc-100);
+  /* Hover for a filled panel. Kept as its own token rather than reusing
+     --color-surface-hover so that a panel and its hover MOVE TOGETHER: when the
+     panel step changed, this followed it in one edit, which is the whole point.
+     (The two happen to coincide in light at the moment; they have collided
+     outright before, when surface-hover and panel were both zinc-100 and a panel
+     using both gave no hover feedback at all.) Steps one further than the panel
+     in each theme — darker in light, lighter in dark — so hover always reads as
+     MORE prominent than rest, whichever way the theme runs. */
+  --color-surface-panel-hover: var(--zinc-200);
+  /*
+   * GLASS — a translucent fill for a control sitting ON AN IMAGE, where no
+   * opaque surface token works because the thing behind it is arbitrary. Paired
+   * with `backdrop-filter: blur()` at the call site; the blur is what turns the
+   * transparency into frosting rather than just a washed-out panel.
+   *
+   * 72%, not 50: the fill has to carry text legibly over a photograph we do not
+   * control, including a light UI screenshot under a light theme. Below about
+   * 70% the underlying image starts competing with the label. Tune this rather
+   * than the blur if legibility fails — the blur softens the backdrop, it does
+   * not raise contrast.
+   */
+  --color-surface-glass: color-mix(in srgb, var(--white) 72%, transparent);
+  --color-surface-glass-hover: color-mix(in srgb, var(--white) 88%, transparent);
+  /* Tag pills. A step darker than both the page and --color-surface-subtle,
+     so the pill reads as a filled chip on either ground without needing an
+     outline — tags sit inside the sidebar's subtle cards AND on the hero. */
+  --color-tag-surface: var(--zinc-200);
+  --color-surface-inverse: var(--zinc-950);
+  --color-surface-hover: var(--zinc-200);
+  /* Selected state for a segmented control — the tabbed showcase's pills.
+     A step BEYOND --color-surface-hover in every theme, and that ordering is
+     the whole point: a selected item has to read as stronger than a merely
+     hovered one. This used to be --color-surface-sunken, which is zinc-50 in
+     light against a white track, so the selected pill was almost invisible AND
+     hovering an unselected pill (zinc-100) made it darker than the selected
+     one. The same inversion existed in dark, where hover is zinc-800 and
+     sunken is pure black. */
+  --color-control-selected: var(--zinc-300);
+  /*
+   * Deliberately theme-independent — NOT remapped in either dark block below
+   * (compare --logo-filter, --color-footer-*). Third-party brand marks (e.g.
+   * integration logos) are fixed-color artwork that assumes a light backdrop
+   * per the brand's own guidelines; a chip behind them must stay white even
+   * in dark mode; or a dark logo mark disappears against a dark tile.
+   */
+  --color-logo-chip: var(--white);
+  /*
+   * Foreground for anything sitting ON that chip, pinned for exactly the same
+   * reason the chip is: it is white in BOTH themes, so a theme-relative token
+   * on top of it breaks in one of them. --color-text-muted is zinc-400 in dark
+   * mode — about 2.3:1 on white, effectively gone — and --color-accent is
+   * indigo-400 there, under the 3:1 an icon needs. These two do not flip.
+   *
+   * Used where a currentColor glyph shares a chip treatment with fixed-color
+   * logo artwork, so the three columns of platformDiagram read as one set.
+   */
+  --color-logo-chip-fg: var(--zinc-500);
+  --color-logo-chip-accent: var(--indigo-600);
+
+  /* Same reasoning as --color-logo-chip just above: deliberately
+     theme-independent, NOT remapped in either dark block. A background photo
+     doesn't change with the site's theme toggle, so the scrim that keeps
+     text legible over it — and that text's own color — can't be tied to
+     theme-relative tokens like --color-surface-inverse (which flips to
+     white in dark mode, the opposite of what a photo scrim needs). */
+  --color-photo-scrim: var(--zinc-950);
+
+  /* Letterbox behind a video frame. Theme-independent, like --color-photo-scrim
+     above and for the same reason: the bars beside a video are black in every
+     player on every platform, and they have nothing to do with the page's
+     surface. Declared once and deliberately NOT remapped in either dark block. */
+  --color-video-letterbox: var(--black);
+  --color-text-on-photo: var(--white);
+
+  /* Star-rating gold — a recognizable review-site convention (Gartner/G2),
+     not a themed UI color, so it's fixed like the two tokens above rather
+     than remapped in dark mode. */
+  --color-rating-star: var(--amber-400);
+
+  /* Text */
+  --color-text-primary: var(--zinc-950);
+  --color-text-secondary: var(--zinc-700);
+  /*
+   * zinc-600, not zinc-500, since 2026-09-19. At zinc-500 this measured
+   * 4.32-4.48:1 against the light grounds — under the 4.5:1 that WCAG 1.4.3
+   * asks of text below 24px, and this token is used almost exclusively at 11-14px
+   * (eyebrows, captions, roles). Four places on the home page alone failed; the
+   * platform diagram going responsive is what put three of them in front of
+   * phone users for the first time.
+   *
+   * Light only. Dark is zinc-400 against a near-black ground and already
+   * measured 5.7-6.8:1, so it is left alone — darkening there would make it
+   * worse, not better.
+   */
+  --color-text-muted: var(--zinc-600);
+  --color-text-subtle: var(--zinc-500);
+  --color-text-inverse: var(--white);
+  /* The secondary/deck voice ON an inverse surface. Not --color-text-secondary
+     (that one is tuned for the page ground and disappears on the inverse). */
+  --color-text-inverse-secondary: var(--zinc-400);
+  --color-text-on-accent: var(--white);
+
+  /* Borders */
+  /* One step lighter than the page needs it to be dark. This was zinc-300 for a
+     while, because --color-surface-panel was briefly zinc-200 and a zinc-200
+     hairline on a zinc-200 panel is no hairline at all. Panel has since gone
+     back to zinc-100, so that collision is gone and the border can be quieter
+     again — it still sits a full step off panel (zinc-200 on zinc-100) and two
+     off the page.
+
+     --color-border-strong follows it back to zinc-300. It was only at zinc-400
+     to stay clear of a zinc-300 border, and zinc-400 is a big jump: the zinc
+     ramp has no stop between them, so every emphasised rule on the site
+     (NumberedCards, Capability, ComparisonTable headers) was heavier than
+     intended. */
+  --color-border: var(--zinc-200);
+  --color-border-strong: var(--zinc-300);
+  --color-border-inverse: var(--zinc-800);
+
+  /*
+   * Footer.
+   *
+   * These DO flip with the theme, and used not to. The footer was previously
+   * pinned dark in both themes as fixed site chrome; it now follows the page,
+   * so every token here has a counterpart in both dark blocks below. Leaving
+   * any one of them out is the failure worth watching for — a missed token
+   * keeps its light value and shows up as, say, near-black text on the dark
+   * footer, which looks like a bug rather than a decision.
+   *
+   * Sunken rather than the page surface, so the footer still separates itself
+   * from the content above without needing a rule across the seam.
+   */
+  --color-footer-surface: var(--zinc-50);
+  --color-footer-text: var(--zinc-950);
+  --color-footer-text-muted: var(--zinc-500);
+  --color-footer-border: var(--zinc-200);
+  /*
+   * Certification pills. NEUTRAL, not the green they used to be — named `cert`
+   * rather than `success` because that is what they are: a compliance strip, not
+   * a status. Seven green pills read as seven affirmations competing with the nav
+   * above them; grey lets the strip sit under everything else and be found when
+   * looked for.
+   *
+   * zinc-600, not a lighter step: the pill label is small text, and the 4.5:1
+   * floor applies. zinc-600 is 5.24:1 on the footer's light ground.
+   */
+  /*
+   * Veil laid over the ribbon shader wherever TEXT sits directly on it (the
+   * closing CTA banner). The ribbon's `medium` step is a fixed warm ground in
+   * both themes, so the text colour flips underneath it while the background
+   * does not: measured against the ramp's lightest stop, body copy came out at
+   * 3.95:1 in light and 1.16:1 in dark — the dark case was the white-on-peach
+   * that made the deck unreadable.
+   *
+   * Light veils in light mode, dark in dark, and the two percentages differ
+   * because the same opacity over the same ground is not the same lift in both
+   * directions. These land at 5.84:1 and 5.92:1 for body text.
+   *
+   * Not needed where the ribbon carries no text — the full-width image band has
+   * none, and the CTA callout's copy sits on its own card surface.
+   */
+  --color-ribbon-scrim: color-mix(in srgb, var(--white) 40%, transparent);
+  /*
+   * The splitPanels veil. Identical to --color-ribbon-scrim in LIGHT, and
+   * deliberately stronger in dark — see the dark blocks below.
+   *
+   * A separate token rather than restyling --color-ribbon-scrim, because that
+   * one is shared with ctaBanner, where the shader is actually mounted and
+   * animating behind it. splitPanels mounts no shader: its ground is a static
+   * gradient carrying a whole panel of body copy, so it wants more veil than a
+   * band of large type over live artwork does. One value cannot serve both.
+   */
+  --color-panel-scrim: color-mix(in srgb, var(--white) 40%, transparent);
+  --color-footer-cert: var(--zinc-600);
+  /* A tint of the accent rather than a filled chip. */
+  --color-footer-cert-surface: color-mix(in srgb, var(--zinc-500) 10%, transparent);
+
+  /* Accent — interactive affordances only. 600 = 6.29:1 on white. */
+  --color-accent: var(--indigo-600);
+  --color-accent-hover: var(--indigo-700);
+  --color-accent-active: var(--indigo-800);
+  --color-accent-subtle: var(--indigo-50);
+  /*
+   * One step INTO the subtle fill, for a surface nested inside another that is
+   * already --color-accent-subtle. A card sitting on the subtle fill cannot be
+   * told apart from its parent at the same value, and lifting it to the page
+   * surface would read as a hole punched in the panel rather than as a card on
+   * it — so it deepens instead.
+   *
+   * Distinct from --color-accent-subtle-hover, which is indigo-200 in light and
+   * therefore the same value as the border: a nested card filled at its own
+   * border colour has no edge left.
+   *
+   * Dark deepens within the NEUTRAL for the reason recorded on
+   * --color-accent-subtle-hover below: the subtle fill is zinc there, and
+   * stepping into indigo would change hue rather than depth.
+   */
+  --color-accent-subtle-strong: var(--indigo-100);
+  /*
+   * The EDGE of an accent-subtle surface, and it is neutral in dark on purpose.
+   *
+   * --color-accent-subtle-border stays indigo in both themes because its other
+   * consumer wants the accent at a lower weight. That is wrong for an edge: in
+   * dark the subtle fill is zinc, and indigo-800 against it is both darker than
+   * the fill and off-hue, so it muddies the card rather than defining it.
+   *
+   * An edge has to be LIGHTER than what it encloses on a dark ground. zinc-600
+   * clears both fills it is used against — zinc-800 for a card, zinc-700 for a
+   * chip nested in one — so the same value defines both without a second token.
+   */
+  --color-accent-subtle-edge: var(--indigo-200);
+  --color-accent-subtle-border: var(--indigo-200);
+  /*
+   * The HOVER fill for a chip sitting on --color-accent-subtle, and it is a
+   * separate token from --color-accent-subtle-border because the two want
+   * opposite things in dark mode.
+   *
+   * --color-accent-subtle-border stays indigo in both themes: its other
+   * consumer is ChapteredVideo's completed-chapter bar, which is meant to read
+   * as the accent at a lower weight. But --color-accent-subtle is neutral
+   * (zinc-800) in dark, so reusing the indigo one as a hover made the chip jump
+   * HUE on hover — neutral gray to saturated indigo — rather than deepen the
+   * way light mode does. That is what "too indigo in dark mode" was.
+   *
+   * So light deepens within the indigo (50 -> 200) and dark deepens within the
+   * neutral (800 -> 700), and each theme's hover is the same gesture.
+   */
+  --color-accent-subtle-hover: var(--indigo-200);
+  /* Text/icon color for content sitting ON a solid --color-accent fill (e.g.
+     .badge-accent) — same white/dark-text-flip pattern as the status tokens'
+     own "-on" pair, since --color-accent gets lighter in dark mode. */
+  --color-accent-on: var(--white);
+  --color-focus: var(--indigo-600);
+  --color-focus-ring: color-mix(in srgb, var(--indigo-600) 35%, transparent);
+  /*
+   * Accent for use ON --color-surface-inverse (e.g. localNav) — NOT the same
+   * value as --color-accent. That token is tuned for the THEME's normal
+   * surface; the inverse surface is, by definition, the opposite of it, so it
+   * needs the opposite mode's accent tone. Light mode's inverse surface is
+   * near-black, so it borrows dark mode's accent (accent-400, 6.37:1 on
+   * neutral-950); dark mode's inverse surface is white, so it borrows light
+   * mode's accent-600 (6.29:1 on white) — set below in each dark block.
+   */
+  --color-accent-inverse: var(--indigo-400);
+
+  /* Controls */
+  --color-control: var(--zinc-950);
+  --color-control-hover: var(--zinc-800);
+  --color-control-active: var(--zinc-700);
+  --color-control-text: var(--white);
+
+  /* Controls sitting ON --color-surface-inverse (.btn-inverse). An exact
+     mirror of the four above: a --btn-primary there would be near-black on
+     near-black, since --color-control tracks the PAGE, not the surface it
+     happens to be drawn on. */
+  /*
+   * The secondary button's own fill, hover and press.
+   *
+   * It used to borrow --color-surface-sunken / -hover / -selected, which tied a
+   * CONTROL to the page's surface ladder: when the page moved off white to
+   * zinc-50, the button's zinc-100 rest came within 6/255 of it and it stopped
+   * reading as a button. Its own tokens now, following the --color-control and
+   * --color-control-inverse pattern the other two button variants already use,
+   * so a change to the surface ladder cannot quietly flatten it again.
+   *
+   * One step up from what it borrowed: 200 / 300 / 400 rather than 100 / 200 /
+   * 300. Rest has to clear the page, and each state has to clear the one before
+   * it — which is why the press step moves too. Left at zinc-300 it would have
+   * become identical to hover.
+   */
+  --color-control-secondary: var(--zinc-200);
+  --color-control-secondary-hover: var(--zinc-300);
+  --color-control-secondary-active: var(--zinc-400);
+  --color-control-inverse: var(--white);
+  --color-control-inverse-hover: var(--zinc-200);
+  --color-control-inverse-active: var(--zinc-300);
+  --color-control-inverse-text: var(--zinc-950);
+
+  /* -----------------------------------------------------------------------
+   * Status. Each has: a text/icon color, a solid fill, the text that sits ON
+   * that fill, and a subtle surface + border for banners.
+   * Light picks the 600/700 shades (>=4.8:1 on white); text on a solid fill is white.
+   * -------------------------------------------------------------------- */
+  --color-status-error: var(--red-700);
+  --color-status-error-solid: var(--red-600);
+  --color-status-error-on: var(--white);
+  --color-status-error-surface: var(--red-50);
+  --color-status-error-border: var(--red-200);
+
+  --color-status-warning: var(--amber-700);
+  --color-status-warning-solid: var(--amber-700);
+  --color-status-warning-on: var(--white);
+  --color-status-warning-surface: var(--amber-50);
+  --color-status-warning-border: var(--amber-200);
+
+  --color-status-notice: var(--orange-700);
+  --color-status-notice-solid: var(--orange-700);
+  --color-status-notice-on: var(--white);
+  --color-status-notice-surface: var(--orange-50);
+  --color-status-notice-border: var(--orange-200);
+
+  --color-status-success: var(--green-700);
+  --color-status-success-solid: var(--green-700);
+  --color-status-success-on: var(--white);
+  --color-status-success-surface: var(--green-50);
+  --color-status-success-border: var(--green-200);
+
+  /* Form controls */
+  --color-field-surface: var(--white);
+  /* A control boundary is non-text UI and must clear 3:1 (WCAG 1.4.11).
+     --neutral-300 measured 1.48:1; --neutral-450 gives 3.38:1. */
+  --color-field-border: var(--zinc-500);
+  /* One step BEYOND the resting border, not equal to it. These were the same
+     value in both themes, so hovering any input on the site changed nothing.
+     Darker in light, lighter in dark, so hover always reads as more prominent
+     than rest whichever way the theme runs. */
+  --color-field-border-hover: var(--zinc-600);
+  --color-field-text: var(--zinc-950);
+  /* Placeholders are text and are held to 4.5:1, not the 3:1 UI floor. */
+  --color-field-placeholder: var(--zinc-500);
+  --color-field-disabled-surface: var(--zinc-100);
+  /* WCAG 1.4.3 exempts disabled controls from contrast minimums. Held to the
+     3:1 legibility floor anyway; pushing it to 4.5 would stop it reading as
+     disabled, which is the whole point of the state. */
+  --color-field-disabled-text: var(--zinc-500);
+
+  /* Elevation */
+  --elevation-sm: var(--shadow-sm);
+  --elevation-md: var(--shadow-md);
+  --elevation-lg: var(--shadow-lg);
+  /* Backdrop blur behind a floating panel (e.g. the nav dropdown scrim). */
+  --blur-scrim: var(--blur-md);
+  /* Blur behind the brand plate on a photo card's bottom-left corner. A
+     separate knob from --blur-scrim on purpose, and now a different value: one
+     is a full-panel wash behind UI, the other is a small corner softened so a
+     white wordmark reads over whatever the photograph happens to be doing
+     there. At --blur-md the corner barely registered against a busy dark
+     photo. */
+  --blur-photo-plate: var(--blur-lg);
+  /* Top-to-bottom wash behind a product hero, fading into the page surface
+     it sits on — theme-aware since both stops are semantic surface tokens. */
+  --gradient-hero: linear-gradient(to bottom, var(--color-accent-subtle), var(--color-surface));
+  /* "The force" — the two hues of the drifting wash behind the closing CTA
+     band. Two rather than one so the wash reads as something moving through
+     the band rather than a single radial fade; the component controls their
+     opacity and position, these only say which colors it is made of. Picked a
+     step lighter than the interactive accent, because this sits behind body
+     text and a solid button and must not compete with either. */
+  --color-force-core: var(--indigo-400);
+  --color-force-halo: var(--blue-300);
+
+  /* Bottom-left to top-right sweep for stat figures — the one place type is
+     painted rather than colored. Blue -> indigo: two hues, ending on the
+     house accent rather than continuing past it into violet. The violet stop
+     made the figures the only place on a page where the sweep travelled
+     further round the wheel than the accent itself, so a stat read as its own
+     colour scheme rather than as the accent applied to a number. Remapped (not inverted stop-for-stop) in
+     dark mode: the same four-step shape, re-picked so every stop stays legible
+     on near-black. Consumed via background-clip: text, so it must resolve to a
+     gradient in BOTH themes — a theme that leaves it undefined renders the
+     figures transparent.
+
+     The dark end is --blue-900, not --neutral-1000. At pure black the figure
+     read as black type that happened to fade at one corner rather than as a
+     single colored sweep; starting it in navy makes the whole numeral part
+     of the gradient. Every stop is a hue, so the ramp never passes through
+     grey.
+
+     The light end lands on --accent-600, which is the same 6.29:1-on-white
+     value every interactive affordance uses — these are display-size numerals
+     but they are still TYPE, and the light end of a sweep is where legibility
+     is thinnest. */
+  /* Three cool stops for stat figures — the one place on the site where type is
+     painted rather than colored. Darkish purple -> indigo -> a lighter indigo, so
+     the sweep travels a short distance and lands ON the house accent
+     (`--accent-*` IS the indigo ramp) rather than away from it.
+
+     Per theme, because a painted figure has to stay legible against its own
+     ground and the two grounds are opposite. Measured:
+       light   purple-700 7.07:1   indigo-600 6.44:1   indigo-500 4.58:1
+       dark    violet-400 6.98:1   indigo-300 9.90:1   indigo-200 13.33:1
+     Every stop clears the 4.5:1 body-text floor in its own theme, not merely the
+     3:1 large-text one — so unlike several earlier versions of this token there is
+     no size caveat attached to reusing it.
+
+     A WARM RAMP WAS TRIED AT LENGTH AND ABANDONED; the detail is here so it is not
+     re-attempted from the same premise. The goal was to echo the ribbon shader's
+     cyan/lilac/pink/peach ramp, which works beautifully in dark mode and cannot be
+     made to work in light. The ribbon's ramp is BACKGROUND artwork: its warm stops
+     are pale washes, and as type on white they measure 1.45-2.9:1. Four settings
+     were built and rejected — the 600s (pink 4.54, orange 3.59) read hot on white;
+     the 700s cleared contrast and went deep magenta and brick; compressing the
+     warm end's share helped the brightness but not the hue; and the 400s, run
+     briefly with contrast explicitly waived, simply washed out. Desaturating the
+     warm end is separately a dead end, because oklch interpolation drags orange's
+     hue toward red-pink (orange-600 mixed 26% with zinc-500 lands on #d7526d), so
+     the peach is destroyed by the very operation meant to soften it.
+
+     The conclusion worth keeping: a pastel needs high lightness and low chroma,
+     which against a white ground means no contrast. Warm pastels are available to
+     the ribbon because it paints a BACKGROUND and to dark mode because its ground
+     is near-black. They are not available to type on white, at any step. Hence
+     cool, where the whole ramp has room in both directions. */
+  --gradient-stat: linear-gradient(
+    to top right,
+    var(--purple-700) 0%,
+    var(--indigo-600) 50%,
+    var(--indigo-500) 100%
+  );
+
+  /* -----------------------------------------------------------------------
+   * Spacing — named by intent, so rhythm survives a rescale.
+   * -------------------------------------------------------------------- */
+  --space-3xs: var(--size-1);
+  --space-2xs: var(--size-2);
+  --space-xs: var(--size-3);
+  --space-sm: var(--size-4);
+  --space-md: var(--size-5);
+  --space-lg: var(--size-6);
+  --space-xl: var(--size-7);
+  --space-2xl: var(--size-8);
+  --space-3xl: var(--size-9);
+  --space-4xl: var(--size-10);
+
+  --space-section: var(--size-9);
+  --space-section-tight: var(--size-7);
+  --space-gutter: var(--size-5);
+
+  /* Container widths */
+  --measure-prose: var(--measure-prose-raw);
+  --measure-content: var(--measure-content-raw);
+  --measure-wide: var(--measure-wide-raw);
+
+  /* Sticky-below-header offset. */
+  --header-height: var(--header-height-raw);
+
+  /* Radii */
+  --radius-inline: var(--radius-xs);
+  --radius-control: var(--radius-sm);
+  /* Buttons are fully round, separate from --radius-control. They used to
+     share it, but that token also shapes inputs, dropdown panels, tooltips,
+     filter tabs and the header's menus — rounding buttons by changing it
+     would have turned every one of those into a pill too. */
+  --radius-button: var(--radius-pill);
+  --radius-surface: var(--radius-lg);
+  /* For a small panel that CONTAINS a pill button. A pill's effective radius
+     is half its height (~18px at our control size), which is rounder than
+     --radius-surface's 12px — so the button's corner ends up sharper-looking
+     than the card enclosing it, and the two corners visibly fight. This is
+     the step up that puts the button's radius back inside the card's. */
+  --radius-surface-lg: var(--radius-2xl);
+  --radius-pill: var(--radius-full);
+
+  /* -----------------------------------------------------------------------
+   * Typography — each named style carries size, line-height, weight and
+   * tracking together, so a style is applied as a set. Sizes are fluid; the
+   * matching -min / -max are exposed for documentation.
+   * -------------------------------------------------------------------- */
+  --font-family-base: var(--font-sans);
+  --font-family-mono: var(--font-mono);
+  --font-family-heading: var(--font-heading);
+
+  /* Generic tight line-height for multi-line lockups that aren't one of the
+     named type styles below (e.g. a stacked brand mark). */
+  --line-height-heading: var(--line-height-tight);
+
+  --type-display-size: var(--font-size-9);
+  --type-display-min: var(--font-size-9-min);
+  --type-display-max: var(--font-size-9-max);
+  --type-display-line: var(--line-height-tight);
+  /* OPT-IN, for a display headline that runs to several lines. --type-display-line
+     stays 1.1 because the other three .type-display callers are one or two short
+     lines where it is correct; the home hero wraps to four on a phone, and at that
+     length 1.1 reads as four separate statements. Only .spotlight-headline uses
+     this today — it is a second choice, not a replacement. */
+  --type-display-line-tight: var(--line-height-display);
+  --type-display-weight: var(--font-weight-semibold);
+  --type-display-tracking: var(--letter-spacing-tight);
+  /* One step heavier than any named type scale's own weight — for inline
+     emphasis within a heading/body (e.g. ScrollRevealHeading's forced
+     words), not a scale of its own. */
+  --type-strong-weight: var(--font-weight-bold);
+
+  --type-h1-size: var(--font-size-8);
+  --type-h1-min: var(--font-size-8-min);
+  --type-h1-max: var(--font-size-8-max);
+  --type-h1-line: var(--line-height-tight);
+  --type-h1-weight: var(--font-weight-semibold);
+  --type-h1-tracking: var(--letter-spacing-tight);
+
+  --type-h2-size: var(--font-size-7);
+  --type-h2-min: var(--font-size-7-min);
+  --type-h2-max: var(--font-size-7-max);
+  --type-h2-line: var(--line-height-snug);
+  --type-h2-weight: var(--font-weight-semibold);
+  --type-h2-tracking: var(--letter-spacing-tight);
+
+  --type-h3-size: var(--font-size-6);
+  --type-h3-min: var(--font-size-6-min);
+  --type-h3-max: var(--font-size-6-max);
+  --type-h3-line: var(--line-height-snug);
+  --type-h3-weight: var(--font-weight-semibold);
+  --type-h3-tracking: var(--letter-spacing-snug);
+
+  --type-h4-size: var(--font-size-5);
+  --type-h4-min: var(--font-size-5-min);
+  --type-h4-max: var(--font-size-5-max);
+  --type-h4-line: var(--line-height-snug);
+  --type-h4-weight: var(--font-weight-medium);
+  --type-h4-tracking: var(--letter-spacing-snug);
+
+  --type-h5-size: var(--font-size-4);
+  --type-h5-min: var(--font-size-4-min);
+  --type-h5-max: var(--font-size-4-max);
+  --type-h5-line: var(--line-height-normal);
+  --type-h5-weight: var(--font-weight-medium);
+  --type-h5-tracking: var(--letter-spacing-normal);
+
+  --type-h6-size: var(--font-size-3);
+  --type-h6-min: var(--font-size-3-min);
+  --type-h6-max: var(--font-size-3-max);
+  --type-h6-line: var(--line-height-normal);
+  --type-h6-weight: var(--font-weight-semibold);
+  --type-h6-tracking: var(--letter-spacing-normal);
+
+  --type-body-size: var(--font-size-3);
+  --type-body-min: var(--font-size-3-min);
+  --type-body-max: var(--font-size-3-max);
+  --type-body-line: var(--line-height-relaxed);
+  --type-body-weight: var(--font-weight-regular);
+  --type-body-tracking: var(--letter-spacing-normal);
+
+  --type-body-lg-size: var(--font-size-4);
+  --type-body-lg-min: var(--font-size-4-min);
+  --type-body-lg-max: var(--font-size-4-max);
+  --type-body-lg-line: var(--line-height-relaxed);
+  --type-body-lg-weight: var(--font-weight-regular);
+  /* A pull quote is body-lg SIZE at a heavier weight — the one combination the
+     scale does not already name, and the reason base.css's `.prose blockquote`
+     reached down to a primitive for it. Named here so the rich-text rule and
+     ui/PullQuote.astro can share one definition instead of two literals. */
+  --type-quote-weight: var(--font-weight-semibold);
+  --type-body-lg-tracking: var(--letter-spacing-normal);
+
+  --type-small-size: var(--font-size-2);
+  --type-small-min: var(--font-size-2-min);
+  --type-small-max: var(--font-size-2-max);
+  --type-small-line: var(--line-height-normal);
+  --type-small-weight: var(--font-weight-regular);
+  --type-small-tracking: var(--letter-spacing-normal);
+
+  --type-control-size: var(--font-size-2);
+  --type-control-line: var(--line-height-normal);
+  --type-control-weight: var(--font-weight-medium);
+
+  --type-eyebrow-size: var(--font-size-0);
+  --type-eyebrow-min: var(--font-size-0-min);
+  --type-eyebrow-max: var(--font-size-0-max);
+  --type-eyebrow-line: var(--line-height-normal);
+  --type-eyebrow-weight: var(--font-weight-semibold);
+  --type-eyebrow-tracking: var(--letter-spacing-wide);
+
+  /* Uppercase micro-label: the smallest step, for chips and badges that sit
+     inline against larger text — a "NEW" flag beside a nav item, not prose.
+     Semibold and wide-tracked because caps at this size need both to stay
+     legible; tracking especially, since uppercase without it reads as a solid
+     block. Distinct from --type-eyebrow (same treatment, a step larger, used as
+     a section kicker on its own line). */
+  --type-micro-size: var(--font-size-00);
+  --type-micro-min: var(--font-size-00-min);
+  --type-micro-max: var(--font-size-00-max);
+  --type-micro-line: var(--line-height-normal);
+  --type-micro-weight: var(--font-weight-semibold);
+  --type-micro-tracking: var(--letter-spacing-wide);
+
+  /* Smaller than eyebrow, plain (no uppercase/tracking) — fine print such as a
+     secondary link riding along under an image. */
+  --type-fine-size: var(--font-size-0);
+  --type-fine-min: var(--font-size-0-min);
+  --type-fine-max: var(--font-size-0-max);
+  --type-fine-line: var(--line-height-normal);
+  --type-fine-weight: var(--font-weight-regular);
+
+  /* Between small and fine — a middle step for cases needing something
+     smaller than body-adjacent text but larger than fine print. */
+  --type-caption-size: var(--font-size-1);
+  --type-caption-min: var(--font-size-1-min);
+  --type-caption-max: var(--font-size-1-max);
+  --type-caption-line: var(--line-height-normal);
+  --type-caption-weight: var(--font-weight-regular);
+
+  /* -----------------------------------------------------------------------
+   * Motion — one vocabulary so hovers, theme changes and future transitions
+   * share timing rather than each inventing its own.
+   * -------------------------------------------------------------------- */
+  --motion-instant: var(--duration-instant) var(--easing-standard);
+  --motion-fast: var(--duration-fast) var(--easing-standard);
+  --motion-base: var(--duration-base) var(--easing-standard);
+  --motion-slow: var(--duration-slow) var(--easing-standard);
+  --motion-enter: var(--duration-base) var(--easing-entrance);
+  --motion-exit: var(--duration-fast) var(--easing-exit);
+  --motion-theme: var(--duration-base) var(--easing-standard);
+  --motion-marquee: var(--duration-marquee) linear;
+  --motion-marquee-slow: var(--duration-marquee-slow) linear;
+  --motion-marquee-slower: var(--duration-marquee-slower) linear;
+  --motion-stage: var(--duration-stage) var(--easing-stage);
+  --motion-stage-idle: var(--duration-stage-idle) ease-in-out;
+  --motion-stage-pulse: var(--duration-stage-pulse) var(--easing-stage-pulse);
+  /* One beat of the pulse: four waves per cycle, so a quarter of it. */
+  --motion-stage-beat: calc(var(--duration-stage-pulse) / 4) ease-out;
+
+  /* -----------------------------------------------------------------------
+   * Stacking — named by what lives there. Nothing may hardcode a z-index.
+   * -------------------------------------------------------------------- */
+  --z-base: var(--layer-0);
+  --z-raised: var(--layer-1);
+  --z-dropdown: var(--layer-2);
+  --z-sticky: var(--layer-3);
+  --z-overlay: var(--layer-4);
+  --z-modal: var(--layer-4);
+  --z-toast: var(--layer-5);
+  --z-tooltip: var(--layer-max);
+
+  /*
+   * The brand mark ships as one asset (near-black fill, no light/dark
+   * variant) — see public/logo/exaforce-logo.svg. Rather than maintain a
+   * second file, dark mode inverts it via filter: grayscale forces the fill
+   * to a single tone first (the source is #231f20, not pure black, so a bare
+   * invert() would land on a light gray rather than white), brightness(0)
+   * drives that tone to pure black, invert(1) then flips it to pure white.
+   * Transparent regions are untouched by all three (alpha isn't a filter
+   * input), so the mark stays cleanly silhouetted either way.
+   */
+  --logo-filter: none;
+}
+
+/* --------------------------------------------------------------------------
+ * DARK — system preference. Guarded so an explicit light choice still wins.
+ * ----------------------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-surface: var(--zinc-950);
+    --color-surface-raised: var(--zinc-900);
+    --color-surface-sunken: var(--black);
+    /* Lighter than the page here, where light mode had it darker. */
+    --color-surface-subtle: var(--zinc-900);
+    --color-surface-panel: var(--zinc-900);
+    --color-surface-panel-hover: var(--zinc-800);
+    --color-surface-glass: color-mix(in srgb, var(--zinc-950) 72%, transparent);
+    --color-surface-glass-hover: color-mix(in srgb, var(--zinc-950) 88%, transparent);
+    /* Same idea inverted: a step lighter than the card it sits on. */
+    --color-tag-surface: var(--zinc-800);
+    --color-surface-inverse: var(--white);
+    --color-surface-hover: var(--zinc-800);
+    --color-control-selected: var(--zinc-700);
+
+    --color-text-primary: var(--zinc-50);
+    --color-text-secondary: var(--zinc-300);
+    --color-text-muted: var(--zinc-400);
+    --color-text-subtle: var(--zinc-500);
+    --color-text-inverse: var(--zinc-950);
+    --color-text-inverse-secondary: var(--zinc-600);
+    /* The dark accent is a LIGHT indigo, so white on it fails. Near-black passes. */
+    --color-text-on-accent: var(--zinc-950);
+
+    --color-border: var(--zinc-800);
+    --color-border-strong: var(--zinc-700);
+    --color-border-inverse: var(--zinc-200);
+
+    /* Footer, now theme-following. All seven, deliberately — see the light
+       block for why a missed one shows up as a bug. */
+    --color-footer-surface: var(--zinc-900);
+    --color-footer-text: var(--white);
+    --color-footer-text-muted: var(--zinc-400);
+    --color-footer-border: var(--zinc-800);
+    --color-ribbon-scrim: color-mix(in srgb, var(--zinc-950) 70%, transparent);
+    /* 90%, against ribbon-scrim's 70%. The steps, measured over the warm
+       ground: 70% gave ~#534F4D — a light-grey slab on a near-black page, with
+       the copy on it at low contrast; 85% ~#2E2C2C; 90% ~#212021, which sits
+       just above zinc-900 and is where this landed. This is about as far as it
+       goes: past ~94% the warm ground stops reading at all and the block may as
+       well be a plain dark card, which would make the whole ribbon-ground
+       arrangement pointless. */
+    --color-panel-scrim: color-mix(in srgb, var(--zinc-950) 90%, transparent);
+    --color-footer-cert: var(--zinc-400);
+    --color-footer-cert-surface: color-mix(in srgb, var(--zinc-400) 10%, transparent);
+
+    --color-accent: var(--indigo-400);
+    --color-accent-hover: var(--indigo-300);
+    --color-accent-active: var(--indigo-200);
+    --color-accent-subtle: var(--zinc-800);
+    --color-accent-subtle-strong: var(--zinc-700);
+    --color-accent-subtle-edge: var(--zinc-600);
+    --color-accent-subtle-border: var(--indigo-800);
+    /* Neutral, so hover deepens the fill instead of changing its hue. Paired
+       with --color-accent-hover text this measures 5.21:1; the old indigo-800
+       fill under accent-400 text was 3.23:1 and failed WCAG 1.4.3. */
+    --color-accent-subtle-hover: var(--zinc-700);
+    --color-accent-on: var(--zinc-950);
+    --color-focus: var(--indigo-400);
+    --color-focus-ring: color-mix(in srgb, var(--indigo-400) 45%, transparent);
+    --color-accent-inverse: var(--indigo-600);
+
+    /* Dark inverts the DIRECTION: the control sits LIGHTER than the page, the
+       way it sits darker than the near-white page in light. This was --black,
+       which is DARKER than the zinc-950 surface — 1.06:1, so the pill was
+       invisible and the label alone carried the button. It survived the light
+       ladder retune because that change deliberately left dark alone as
+       'already resolved'; what went unchecked was which SIDE of the surface it
+       sat on. zinc-800 clears the page (1.34:1) and a zinc-900 panel (1.19:1),
+       both at or above light's 1.21:1. zinc-900 would not — it is the panel. */
+    --color-control-secondary: var(--zinc-800);
+    --color-control-secondary-hover: var(--zinc-700);
+    --color-control-secondary-active: var(--zinc-600);
+    --color-control: var(--white);
+    --color-control-hover: var(--zinc-200);
+    --color-control-active: var(--zinc-300);
+    --color-control-text: var(--zinc-950);
+
+    --color-control-inverse: var(--zinc-950);
+    --color-control-inverse-hover: var(--zinc-800);
+    --color-control-inverse-active: var(--zinc-700);
+    --color-control-inverse-text: var(--white);
+
+    /* Deeper on near-black: the light-mode shades wash out to a grey haze
+       against a dark ground rather than reading as color. */
+    --color-force-core: var(--indigo-600);
+    --color-force-halo: var(--blue-500);
+
+    /* Now overridden per theme, where it used to be one declaration for both.
+       The four-stop sweep needs different STEPS on each ground: light wants the
+       600s to stay legible on white, dark wants the 300/400s so the same hues
+       read as the ribbon's glow rather than as mud on near-black. See the note
+       by the :root value for the ratios. */
+    --gradient-stat: linear-gradient(
+      to top right,
+      var(--violet-400) 0%,
+      var(--indigo-300) 50%,
+      var(--indigo-200) 100%
+    );
+
+    /* Status: lighter shades to clear contrast on near-black, which flips the
+       text that can sit on a solid fill to near-black. */
+    --color-status-error: var(--red-400);
+    --color-status-error-solid: var(--red-400);
+    --color-status-error-on: var(--zinc-950);
+    --color-status-error-surface: var(--zinc-900);
+    --color-status-error-border: var(--red-800);
+
+    --color-status-warning: var(--amber-400);
+    --color-status-warning-solid: var(--amber-400);
+    --color-status-warning-on: var(--zinc-950);
+    --color-status-warning-surface: var(--zinc-900);
+    --color-status-warning-border: var(--amber-800);
+
+    --color-status-notice: var(--orange-400);
+    --color-status-notice-solid: var(--orange-400);
+    --color-status-notice-on: var(--zinc-950);
+    --color-status-notice-surface: var(--zinc-900);
+    --color-status-notice-border: var(--orange-800);
+
+    --color-status-success: var(--green-400);
+    --color-status-success-solid: var(--green-400);
+    --color-status-success-on: var(--zinc-950);
+    --color-status-success-surface: var(--zinc-900);
+    --color-status-success-border: var(--green-800);
+
+    --color-field-surface: var(--zinc-900);
+    /* 3:1 non-text floor: --neutral-700 measured 1.70:1, --neutral-500 gives 3.67:1. */
+    --color-field-border: var(--zinc-500);
+    --color-field-border-hover: var(--zinc-400);
+    --color-field-text: var(--zinc-50);
+    --color-field-placeholder: var(--zinc-400);
+    --color-field-disabled-surface: var(--zinc-800);
+    --color-field-disabled-text: var(--zinc-400);
+
+    --elevation-sm: var(--shadow-dark-sm);
+    --elevation-md: var(--shadow-dark-md);
+    --elevation-lg: var(--shadow-dark-lg);
+
+    --logo-filter: grayscale(1) brightness(0) invert(1);
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * DARK — explicit choice. Wins regardless of OS preference.
+ * Duplicated from the block above by hand rather than shared via a class,
+ * because a shared class would break the specificity that makes the toggle
+ * bidirectional.
+ * ----------------------------------------------------------------------- */
+:root[data-theme='dark'] {
+  --color-surface: var(--zinc-950);
+  --color-surface-raised: var(--zinc-900);
+  --color-surface-sunken: var(--black);
+  --color-surface-subtle: var(--zinc-900);
+  --color-surface-panel: var(--zinc-900);
+  --color-surface-panel-hover: var(--zinc-800);
+  --color-surface-glass: color-mix(in srgb, var(--zinc-950) 72%, transparent);
+  --color-surface-glass-hover: color-mix(in srgb, var(--zinc-950) 88%, transparent);
+  --color-tag-surface: var(--zinc-800);
+  --color-surface-inverse: var(--white);
+  --color-surface-hover: var(--zinc-800);
+  --color-control-selected: var(--zinc-700);
+
+  --color-text-primary: var(--zinc-50);
+  --color-text-secondary: var(--zinc-300);
+  --color-text-muted: var(--zinc-400);
+  --color-text-subtle: var(--zinc-500);
+  --color-text-inverse: var(--zinc-950);
+  --color-text-inverse-secondary: var(--zinc-600);
+  --color-text-on-accent: var(--zinc-950);
+
+  --color-border: var(--zinc-800);
+  --color-border-strong: var(--zinc-700);
+  --color-border-inverse: var(--zinc-200);
+
+  /* Footer — same seven as the media-query block above. */
+  --color-footer-surface: var(--zinc-900);
+  --color-footer-text: var(--white);
+  --color-footer-text-muted: var(--zinc-400);
+  --color-footer-border: var(--zinc-800);
+  --color-ribbon-scrim: color-mix(in srgb, var(--zinc-950) 70%, transparent);
+  /* Same step as the media-query block above. BOTH dark states need it: with
+     only the media query, an explicit dark choice via the toggle falls back to
+     the light :root value and paints a WHITE veil over the warm ground — a
+     cream panel under light-on-dark text. That is exactly what happened here. */
+  --color-panel-scrim: color-mix(in srgb, var(--zinc-950) 90%, transparent);
+  --color-footer-cert: var(--zinc-400);
+  --color-footer-cert-surface: color-mix(in srgb, var(--zinc-400) 10%, transparent);
+
+  --color-accent: var(--indigo-400);
+  --color-accent-hover: var(--indigo-300);
+  --color-accent-active: var(--indigo-200);
+  --color-accent-subtle: var(--zinc-800);
+  --color-accent-subtle-strong: var(--zinc-700);
+  --color-accent-subtle-edge: var(--zinc-600);
+  --color-accent-subtle-border: var(--indigo-800);
+  /* See the note in the prefers-color-scheme block above. */
+  --color-accent-subtle-hover: var(--zinc-700);
+  --color-accent-on: var(--zinc-950);
+  --color-focus: var(--indigo-400);
+  --color-focus-ring: color-mix(in srgb, var(--indigo-400) 45%, transparent);
+  --color-accent-inverse: var(--indigo-600);
+
+  /* Dark inverts the DIRECTION: the control sits LIGHTER than the page, the
+     way it sits darker than the near-white page in light. This was --black,
+     which is DARKER than the zinc-950 surface — 1.06:1, so the pill was
+     invisible and the label alone carried the button. It survived the light
+     ladder retune because that change deliberately left dark alone as
+     'already resolved'; what went unchecked was which SIDE of the surface it
+     sat on. zinc-800 clears the page (1.34:1) and a zinc-900 panel (1.19:1),
+     both at or above light's 1.21:1. zinc-900 would not — it is the panel. */
+  --color-control-secondary: var(--zinc-800);
+  --color-control-secondary-hover: var(--zinc-700);
+  --color-control-secondary-active: var(--zinc-600);
+  --color-control: var(--white);
+  --color-control-hover: var(--zinc-200);
+  --color-control-active: var(--zinc-300);
+  --color-control-text: var(--zinc-950);
+
+  --color-control-inverse: var(--zinc-950);
+  --color-control-inverse-hover: var(--zinc-800);
+  --color-control-inverse-active: var(--zinc-700);
+  --color-control-inverse-text: var(--white);
+
+  /* See the media-query block above for why these deepen in dark mode. */
+  --color-force-core: var(--indigo-600);
+  --color-force-halo: var(--blue-500);
+
+
+  /* Per-theme override — see the media-query block above for why this is no
+     longer one declaration serving both. */
+  --gradient-stat: linear-gradient(
+    to top right,
+    var(--violet-400) 0%,
+    var(--indigo-300) 50%,
+    var(--indigo-200) 100%
+  );
+
+  --color-status-error: var(--red-400);
+  --color-status-error-solid: var(--red-400);
+  --color-status-error-on: var(--zinc-950);
+  --color-status-error-surface: var(--zinc-900);
+  --color-status-error-border: var(--red-800);
+
+  --color-status-warning: var(--amber-400);
+  --color-status-warning-solid: var(--amber-400);
+  --color-status-warning-on: var(--zinc-950);
+  --color-status-warning-surface: var(--zinc-900);
+  --color-status-warning-border: var(--amber-800);
+
+  --color-status-notice: var(--orange-400);
+  --color-status-notice-solid: var(--orange-400);
+  --color-status-notice-on: var(--zinc-950);
+  --color-status-notice-surface: var(--zinc-900);
+  --color-status-notice-border: var(--orange-800);
+
+  --color-status-success: var(--green-400);
+  --color-status-success-solid: var(--green-400);
+  --color-status-success-on: var(--zinc-950);
+  --color-status-success-surface: var(--zinc-900);
+  --color-status-success-border: var(--green-800);
+
+  --color-field-surface: var(--zinc-900);
+  /* 3:1 non-text floor: --neutral-700 measured 1.70:1, --neutral-500 gives 3.67:1. */
+  --color-field-border: var(--zinc-500);
+  --color-field-border-hover: var(--zinc-400);
+  --color-field-text: var(--zinc-50);
+  --color-field-placeholder: var(--zinc-400);
+  --color-field-disabled-surface: var(--zinc-800);
+  --color-field-disabled-text: var(--zinc-400);
+
+  --elevation-sm: var(--shadow-dark-sm);
+  --elevation-md: var(--shadow-dark-md);
+  --elevation-lg: var(--shadow-dark-lg);
+
+  --logo-filter: grayscale(1) brightness(0) invert(1);
+}

@@ -1,0 +1,197 @@
+/**
+ * BASE — element defaults and the shared primitive classes.
+ *
+ * Every declaration here reads from the SEMANTIC layer only. No primitive
+ * tokens, no literal colors or sizes. If something cannot be expressed with a
+ * semantic token, the token is missing — add it rather than hardcoding here.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* Lets the UA style form controls, scrollbars and the like per theme. */
+  color-scheme: light dark;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    /*
+     * Anchor-link smooth scroll (styleguide sidebars, in-page jump links).
+     * Native scroll-behavior is a fixed browser animation — it cannot read our
+     * --duration-base / --easing-standard tokens, which only apply to CSS
+     * transitions. This is the closest token-consistent equivalent: it is
+     * gated behind the same prefers-reduced-motion check as every other
+     * animation in the system, so "no motion" still means no motion.
+     */
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Smooth the theme swap rather than hard-cutting between palettes. */
+  transition:
+    background-color var(--motion-theme),
+    color var(--motion-theme);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-family-heading);
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* --------------------------------------------------------------------------
+ * Focus. One visible treatment everywhere, never removed — only replaced.
+ * ----------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-control);
+}
+
+/* --------------------------------------------------------------------------
+ * Typography scale. Applied as a set: size, line-height, weight and tracking
+ * travel together so a heading cannot be half-styled.
+ * ----------------------------------------------------------------------- */
+.type-display,
+.type-h1,
+.type-h2,
+.type-h3,
+.type-h4,
+.type-h5,
+.type-h6 {
+  font-family: var(--font-family-heading);
+}
+
+.type-body,
+.type-body-lg,
+.type-small,
+.type-eyebrow,
+.type-fine {
+  font-family: var(--font-family-base);
+}
+
+.type-display {
+  font-size: var(--type-display-size);
+  line-height: var(--type-display-line);
+  font-weight: var(--type-display-weight);
+  letter-spacing: var(--type-display-tracking);
+}
+.type-h1 {
+  font-size: var(--type-h1-size);
+  line-height: var(--type-h1-line);
+  font-weight: var(--type-h1-weight);
+  letter-spacing: var(--type-h1-tracking);
+}
+.type-h2 {
+  font-size: var(--type-h2-size);
+  line-height: var(--type-h2-line);
+  font-weight: var(--type-h2-weight);
+  letter-spacing: var(--type-h2-tracking);
+}
+.type-h3 {
+  font-size: var(--type-h3-size);
+  line-height: var(--type-h3-line);
+  font-weight: var(--type-h3-weight);
+  letter-spacing: var(--type-h3-tracking);
+}
+.type-h4 {
+  font-size: var(--type-h4-size);
+  line-height: var(--type-h4-line);
+  font-weight: var(--type-h4-weight);
+  letter-spacing: var(--type-h4-tracking);
+}
+.type-h5 {
+  font-size: var(--type-h5-size);
+  line-height: var(--type-h5-line);
+  font-weight: var(--type-h5-weight);
+  letter-spacing: var(--type-h5-tracking);
+}
+.type-h6 {
+  font-size: var(--type-h6-size);
+  line-height: var(--type-h6-line);
+  font-weight: var(--type-h6-weight);
+  letter-spacing: var(--type-h6-tracking);
+}
+.type-body {
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  font-weight: var(--type-body-weight);
+}
+.type-body-lg {
+  font-size: var(--type-body-lg-size);
+  line-height: var(--type-body-lg-line);
+  font-weight: var(--type-body-lg-weight);
+}
+.type-small {
+  font-size: var(--type-small-size);
+  line-height: var(--type-small-line);
+  font-weight: var(--type-small-weight);
+}
+.type-eyebrow {
+  font-size: var(--type-eyebrow-size);
+  line-height: var(--type-eyebrow-line);
+  font-weight: var(--type-eyebrow-weight);
+  letter-spacing: var(--type-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.type-fine {
+  font-size: var(--type-fine-size);
+  line-height: var(--type-fine-line);
+  font-weight: var(--type-fine-weight);
+}
+
+/* Text color helpers */
+.text-primary {
+  color: var(--color-text-primary);
+}
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+.text-muted {
+  color: var(--color-text-muted);
+}
+.text-subtle {
+  color: var(--color-text-subtle);
+}

@@ -1,0 +1,6 @@
+/**
+ * Exaforce Design System — tokens only (no fonts, no element defaults).
+ * Primitives first, then the semantic layer that maps them to intent.
+ */
+@import './tokens/primitives.css';
+@import './tokens/semantic.css';

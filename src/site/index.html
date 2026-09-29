@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Exaforce Design System</title>
+  <meta name="description" content="Tokens, typefaces, brand assets and the theme script shared by every Exaforce web property.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="__MAJOR__/assets/favicon/favicon.svg" type="image/svg+xml">
+  <!-- theme.js first, synchronously, so the page never paints in the wrong theme. -->
+  <script src="__MAJOR__/theme.js"></script>
+  <!-- The page consumes the built system exactly the way another site would. -->
+  <link rel="stylesheet" href="__MAJOR__/exaforce.css">
+  <style>
+    /* Everything below reads semantic tokens only — this page is also a test. */
+    .wrap { max-width: var(--measure-wide); margin-inline: auto; padding-inline: var(--space-gutter); }
+    header.top {
+      position: sticky; top: 0; z-index: var(--z-sticky);
+      background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+      backdrop-filter: blur(var(--blur-scrim));
+      border-bottom: 1px solid var(--color-border);
+    }
+    header.top .wrap { display: flex; align-items: center; gap: var(--space-md); min-height: var(--header-height); }
+    header.top .logo { display: inline-flex; color: var(--color-text-primary); }
+    header.top .logo svg { height: 1.25rem; width: auto; }
+    header.top .ver { font-family: var(--font-family-mono); font-size: var(--type-caption-size); color: var(--color-text-muted); }
+    header.top nav { margin-left: auto; display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+    header.top nav a { font-size: var(--type-small-size); color: var(--color-text-secondary); text-decoration: none; }
+    header.top nav a:hover { color: var(--color-accent); }
+    .btn {
+      display: inline-flex; align-items: center; gap: var(--space-2xs);
+      padding: var(--space-2xs) var(--space-sm); border-radius: var(--radius-button);
+      border: 1px solid var(--color-border-strong); background: var(--color-control-secondary);
+      color: var(--color-text-primary); font: inherit; font-size: var(--type-control-size); font-weight: var(--type-control-weight);
+      cursor: pointer; transition: background-color var(--motion-fast), border-color var(--motion-fast);
+    }
+    .btn:hover { background: var(--color-control-secondary-hover); }
+    section { padding-block: var(--space-2xl); border-bottom: 1px solid var(--color-border); }
+    section h2 { margin-bottom: var(--space-xs); }
+    section > .wrap > p.lede { color: var(--color-text-secondary); max-width: var(--measure-prose); margin-bottom: var(--space-lg); }
+    h3.sub { margin-block: var(--space-lg) var(--space-sm); color: var(--color-text-secondary); }
+    .grid { display: grid; gap: var(--space-sm); grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+    .swatch { border: 1px solid var(--color-border); border-radius: var(--radius-surface); overflow: hidden; background: var(--color-surface-raised); }
+    .swatch .chip { height: 3.5rem; border-bottom: 1px solid var(--color-border); }
+    .swatch .meta { padding: var(--space-2xs) var(--space-xs); }
+    .swatch code, .mono { font-family: var(--font-family-mono); font-size: var(--type-caption-size); }
+    .swatch .name { display: block; color: var(--color-text-primary); word-break: break-all; }
+    .swatch .val { display: block; color: var(--color-text-muted); word-break: break-all; }
+    .ramps { display: grid; gap: var(--space-2xs); }
+    .ramp { display: grid; grid-template-columns: 5rem repeat(11, minmax(0, 1fr)); gap: 2px; align-items: stretch; }
+    .ramp .fam { font-family: var(--font-family-mono); font-size: var(--type-caption-size); color: var(--color-text-secondary); align-self: center; }
+    .ramp .step { height: 2.75rem; border-radius: var(--radius-inline); display: grid; align-content: end; padding: 2px 4px; font-family: var(--font-family-mono); font-size: var(--font-size-00); line-height: 1; }
+    .ramp .step.on-light { color: var(--zinc-950); }
+    .ramp .step.on-dark { color: var(--white); }
+    .ramp .step span { opacity: .75; }
+    .ramp .step:hover span { opacity: 1; }
+    .ramps-key { display: flex; gap: var(--space-md); flex-wrap: wrap; font-family: var(--font-family-mono); font-size: var(--type-caption-size); color: var(--color-text-muted); margin-bottom: var(--space-2xs); padding-left: 5rem; }
+    @media (max-width: 767px) { .ramp { grid-template-columns: 1fr; grid-template-rows: auto; } .ramp .steps { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); gap: 2px; } .ramps-key { display: none; } }
+    .specimen { display: grid; gap: var(--space-md); grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); }
+    .specimen .face { padding: var(--space-md); border: 1px solid var(--color-border); border-radius: var(--radius-surface); background: var(--color-surface-raised); }
+    .specimen .face .big { font-size: var(--font-size-8); line-height: var(--line-height-tight); letter-spacing: var(--letter-spacing-tight); margin-bottom: var(--space-sm); }
+    .specimen .face .row { display: flex; gap: var(--space-sm); align-items: baseline; padding-block: var(--space-3xs); border-top: 1px solid var(--color-border); }
+    .specimen .face .row .w { width: 3rem; flex: none; }
+    .face-heading, .face-heading .row { font-family: var(--font-family-heading); }
+    .face-body, .face-body .row { font-family: var(--font-family-base); }
+    .typerow { display: grid; grid-template-columns: 9rem 1fr; gap: var(--space-sm); align-items: baseline; padding-block: var(--space-xs); border-top: 1px solid var(--color-border); }
+    .typerow:last-child { border-bottom: 1px solid var(--color-border); }
+    .typerow .k { color: var(--color-text-muted); }
+    .bar { display: flex; align-items: flex-end; gap: var(--space-xs); flex-wrap: wrap; }
+    .bar .b { background: var(--color-accent); border-radius: var(--radius-inline); }
+    .bar .b span { display: block; margin-top: var(--space-3xs); color: var(--color-text-muted); }
+    .radii { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+    .radii .r { width: 5rem; height: 5rem; background: var(--color-surface-panel); border: 1px solid var(--color-border-strong); display: grid; place-items: center; text-align: center; }
+    .logos { display: grid; gap: var(--space-sm); grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+    .logos .tile { padding: var(--space-lg); border-radius: var(--radius-surface); display: grid; place-items: center; gap: var(--space-sm); border: 1px solid var(--color-border); }
+    .logos .tile.light { background: var(--white); color: var(--zinc-950); }
+    .logos .tile.dark { background: var(--zinc-950); color: var(--zinc-50); }
+    .logos .tile.themed { background: var(--color-surface-raised); color: var(--color-text-primary); }
+    .logos .tile.os { background: light-dark(var(--white), var(--zinc-950)); color: light-dark(var(--zinc-950), var(--zinc-50)); color-scheme: light dark; }
+    .logos .tile img, .logos .tile .inl svg { max-height: 3rem; width: auto; height: 3rem; }
+    .logos .tile img.mark, .logos .tile .inl.mark svg { height: 3.5rem; max-height: 3.5rem; }
+    .logos .tile .inl { display: inline-flex; }
+    .logos .tile a { font-family: var(--font-family-mono); font-size: var(--type-caption-size); color: inherit; }
+    .icons { display: grid; gap: var(--space-xs); grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
+    .icons .ic { display: grid; gap: var(--space-2xs); justify-items: center; padding: var(--space-sm) var(--space-2xs); border: 1px solid var(--color-border); border-radius: var(--radius-control); background: var(--color-surface-raised); color: var(--color-text-primary); }
+    .icons .ic svg { width: 1.75rem; height: 1.75rem; }
+    .icons .ic img { width: 3rem; height: auto; }
+    .icons .ic span { font-family: var(--font-family-mono); font-size: var(--font-size-00); color: var(--color-text-muted); text-align: center; word-break: break-all; }
+    pre { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-surface); padding: var(--space-sm) var(--space-md); overflow-x: auto; font-family: var(--font-family-mono); font-size: var(--type-caption-size); line-height: var(--line-height-normal); margin-block: var(--space-xs) var(--space-md); }
+    .note { padding: var(--space-sm) var(--space-md); border-left: 3px solid var(--color-accent); background: var(--color-accent-subtle); border-radius: var(--radius-control); color: var(--color-text-secondary); max-width: var(--measure-content); }
+    footer { padding-block: var(--space-xl); color: var(--color-text-muted); }
+    .btn { white-space: nowrap; }
+    @media (max-width: 767px) { .typerow { grid-template-columns: 1fr; gap: var(--space-3xs); } header.top nav, header.top .ver { display: none; } header.top .btn { margin-left: auto; } }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <a class="logo" href="#" aria-label="Exaforce design system" data-inline-svg="__MAJOR__/assets/logo/exaforce-logo-current.svg"></a>
+      <span class="ver">design system __VERSION__</span>
+      <nav>
+        <a href="#type">Type</a><a href="#color">Colour</a><a href="#space">Space</a><a href="#brand">Brand</a><a href="#icons">Icons</a><a href="#use">Use it</a>
+      </nav>
+      <button class="btn" type="button" data-theme-toggle><span data-theme-label data-theme-word="Theme"></span></button>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <p class="type-eyebrow">Exaforce Design System</p>
+      <h1 class="type-display">One source for every Exaforce web property.</h1>
+      <p class="type-body-lg" style="max-width: var(--measure-prose); margin-top: var(--space-sm); color: var(--color-text-secondary);">
+        Design tokens, the two self-hosted typefaces, the logo and icon set, and the theme script.
+        Sites link to it or install it; nothing brand-level is copied into a site again.
+      </p>
+    </div>
+  </section>
+
+  <section id="type">
+    <div class="wrap">
+      <h2 class="type-h2">Typefaces</h2>
+      <p class="lede">Two variable faces, self-hosted, split by unicode range so a Latin page downloads two files. Family names are the <span class="mono">… Variable</span> ones; never the bare names.</p>
+      <div class="specimen">
+        <div class="face face-heading">
+          <div class="big">Google Sans Flex</div>
+          <div class="row"><span class="w mono">400</span><span style="font-weight:400">Headings, display and buttons</span></div>
+          <div class="row"><span class="w mono">500</span><span style="font-weight:500">Headings, display and buttons</span></div>
+          <div class="row"><span class="w mono">600</span><span style="font-weight:600">Headings, display and buttons</span></div>
+          <div class="row"><span class="w mono">700</span><span style="font-weight:700">Headings, display and buttons</span></div>
+          <p class="type-caption" style="margin-top: var(--space-sm); color: var(--color-text-muted);"><span class="mono">--font-family-heading</span> · weight axis 1–1000 · SIL OFL 1.1</p>
+        </div>
+        <div class="face face-body">
+          <div class="big">Inter Tight</div>
+          <div class="row"><span class="w mono">400</span><span style="font-weight:400">Body copy, UI text, captions and fine print</span></div>
+          <div class="row"><span class="w mono">500</span><span style="font-weight:500">Body copy, UI text, captions and fine print</span></div>
+          <div class="row"><span class="w mono">600</span><span style="font-weight:600">Body copy, UI text, captions and fine print</span></div>
+          <div class="row"><span class="w mono">700</span><span style="font-weight:700">Body copy, UI text, captions and fine print</span></div>
+          <p class="type-caption" style="margin-top: var(--space-sm); color: var(--color-text-muted);"><span class="mono">--font-family-base</span> · weight axis 100–900 · SIL OFL 1.1</p>
+        </div>
+      </div>
+
+      <h3 class="type-h4 sub">Type scale</h3>
+      <p class="type-small" style="color: var(--color-text-muted); margin-bottom: var(--space-sm);">Fluid between 375px and 1440px viewports. Each class sets size, line height, weight and tracking together.</p>
+      <div id="typescale"></div>
+    </div>
+  </section>
+
+  <section id="color">
+    <div class="wrap">
+      <h2 class="type-h2">Colour</h2>
+      <p class="lede">Components use the semantic layer only. The values shown are what this theme resolves to right now; flip the theme to see them remap. Primitives are the Tailwind v4 palette, in oklch, unchanged.</p>
+      <div id="swatches"></div>
+
+      <h3 class="type-h3 sub" id="palette">Palette (primitives)</h3>
+      <p class="type-small" style="color: var(--color-text-muted); max-width: var(--measure-prose); margin-bottom: var(--space-sm);">
+        All 26 families at all 11 steps, byte-identical to Tailwind v4. These never change with the theme. Components should not reference them directly; they are what the semantic tokens above point at. If a colour you need is not expressible semantically, add a semantic token rather than reaching down here.
+      </p>
+      <div class="ramps" id="ramps"></div>
+    </div>
+  </section>
+
+  <section id="space">
+    <div class="wrap">
+      <h2 class="type-h2">Space, radius, motion</h2>
+      <h3 class="type-h4 sub">Spacing</h3>
+      <div class="bar" id="spacing"></div>
+      <h3 class="type-h4 sub">Radii</h3>
+      <div class="radii" id="radii"></div>
+      <h3 class="type-h4 sub">Motion</h3>
+      <div id="motion"></div>
+    </div>
+  </section>
+
+  <section id="brand">
+    <div class="wrap">
+      <h2 class="type-h2">Logo and mark</h2>
+      <p class="lede">Each artwork in four variants. Prefer inlining <span class="mono">-current</span>: it takes the text colour around it and follows the theme toggle, which is what the header above does. Use <span class="mono">-black</span> or <span class="mono">-white</span> as an image when you know the background. <span class="mono">-auto</span> switches with the OS colour scheme, for READMEs and embeds you don't style.</p>
+
+      <h3 class="type-h4 sub">Follows the theme (inlined <span class="mono">-current</span>)</h3>
+      <div class="logos">
+        <div class="tile themed"><span class="inl" data-inline-svg="__MAJOR__/assets/logo/exaforce-logo-current.svg"></span><a href="__MAJOR__/assets/logo/exaforce-logo-current.svg">logo/exaforce-logo-current.svg</a></div>
+        <div class="tile themed"><span class="inl mark" data-inline-svg="__MAJOR__/assets/logo/exaforce-mark-current.svg"></span><a href="__MAJOR__/assets/logo/exaforce-mark-current.svg">logo/exaforce-mark-current.svg</a></div>
+      </div>
+
+      <h3 class="type-h4 sub">Fixed ink, as <span class="mono">&lt;img&gt;</span></h3>
+      <div class="logos">
+        <div class="tile light"><img src="__MAJOR__/assets/logo/exaforce-logo-black.svg" alt="Exaforce wordmark, black"><a href="__MAJOR__/assets/logo/exaforce-logo-black.svg">logo/exaforce-logo-black.svg</a></div>
+        <div class="tile dark"><img src="__MAJOR__/assets/logo/exaforce-logo-white.svg" alt="Exaforce wordmark, white"><a href="__MAJOR__/assets/logo/exaforce-logo-white.svg">logo/exaforce-logo-white.svg</a></div>
+        <div class="tile light"><img class="mark" src="__MAJOR__/assets/logo/exaforce-mark-black.svg" alt="Exaforce mark, black"><a href="__MAJOR__/assets/logo/exaforce-mark-black.svg">logo/exaforce-mark-black.svg</a></div>
+        <div class="tile dark"><img class="mark" src="__MAJOR__/assets/logo/exaforce-mark-white.svg" alt="Exaforce mark, white"><a href="__MAJOR__/assets/logo/exaforce-mark-white.svg">logo/exaforce-mark-white.svg</a></div>
+      </div>
+
+      <h3 class="type-h4 sub">Follows the OS (<span class="mono">-auto</span>, as <span class="mono">&lt;img&gt;</span>)</h3>
+      <div class="logos">
+        <div class="tile os"><img src="__MAJOR__/assets/logo/exaforce-logo-auto.svg" alt="Exaforce wordmark, auto"><a href="__MAJOR__/assets/logo/exaforce-logo-auto.svg">logo/exaforce-logo-auto.svg</a></div>
+        <div class="tile os"><img class="mark" src="__MAJOR__/assets/logo/exaforce-mark-auto.svg" alt="Exaforce mark, auto"><a href="__MAJOR__/assets/logo/exaforce-mark-auto.svg">logo/exaforce-mark-auto.svg</a></div>
+      </div>
+      <p class="type-small" style="color: var(--color-text-muted); margin-top: var(--space-xs);">The OS tiles use the system colour scheme, not this page's toggle, so they can disagree with the page when you have forced a theme. That is the trade-off of <span class="mono">-auto</span>.</p>
+      <h3 class="type-h4 sub">Favicon set</h3>
+      <div class="icons" id="favicons"></div>
+    </div>
+  </section>
+
+  <section id="icons">
+    <div class="wrap">
+      <h2 class="type-h2">Icons</h2>
+      <p class="lede">The nav, chain and ui sets are drawn with <span class="mono">currentColor</span>, so they take the text colour of wherever they sit. The trust marks are fixed-colour certification artwork and should not be recoloured. Inlined here by fetch; reference them by path or paste the SVG.</p>
+      <div id="iconsets"></div>
+    </div>
+  </section>
+
+  <section id="use">
+    <div class="wrap">
+      <h2 class="type-h2">Use it</h2>
+      <p class="lede">Two ways in. Sites without a build step link to the hosted files; sites with a bundler install the package so everything ships in their own CSS.</p>
+
+      <h3 class="type-h4 sub">No build step (vanilla HTML)</h3>
+<pre>&lt;!-- in &lt;head&gt;, in this order --&gt;
+&lt;link rel="preconnect" href="https://HOST"&gt;
+&lt;script src="https://HOST/__MAJOR__/theme.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="https://HOST/__MAJOR__/exaforce.css"&gt;
+&lt;!-- optional, only if the first paint must be in the web font: --&gt;
+&lt;link rel="preload" as="font" type="font/woff2" crossorigin href="https://HOST/fonts/inter-tight-latin-wght-normal.HASH.woff2"&gt;</pre>
+      <p class="type-small" style="color: var(--color-text-muted);">Pick <span class="mono">/__MAJOR__/</span> to receive approved updates automatically, or <span class="mono">/__VERSION__/</span> to pin. Hashed font names are listed in <a href="manifest.json">manifest.json</a>. Want tokens without the element defaults? Link <span class="mono">fonts.css</span> and <span class="mono">tokens.css</span> instead of <span class="mono">exaforce.css</span>.</p>
+
+      <h3 class="type-h4 sub">With a bundler (Astro, Vite)</h3>
+<pre>npm install github:exaforce/force-design-system#v__VERSION__
+
+/* global.css */
+@import '@exaforce/design-system';            /* fonts + tokens + base */
+/* or, à la carte */
+@import '@exaforce/design-system/fonts.css';
+@import '@exaforce/design-system/tokens.css';</pre>
+<pre>&lt;!-- layout head --&gt;
+&lt;script is:inline src="/theme.js"&gt;&lt;/script&gt;  &lt;!-- copy from node_modules/@exaforce/design-system/src/theme.js --&gt;
+&lt;img src={logo} alt="Exaforce" /&gt;                &lt;!-- import logo from '@exaforce/design-system/assets/logo/exaforce-logo.svg' --&gt;</pre>
+
+      <h3 class="type-h4 sub">Theme toggle</h3>
+<pre>&lt;button data-theme-toggle&gt;&lt;span data-theme-label&gt;&lt;/span&gt;&lt;/button&gt;   &lt;!-- cycles light → dark → system --&gt;
+&lt;button data-theme-toggle="dark"&gt;Dark&lt;/button&gt;                        &lt;!-- sets one mode --&gt;
+ExaforceTheme.set('light'); ExaforceTheme.resolved(); // "light" | "dark"</pre>
+      <div class="note type-small">A site that should default to dark when the visitor has never chosen adds <span class="mono">data-default="dark"</span> to the script tag. The saved choice lives under the localStorage key <span class="mono">theme</span>, the same one exaforce.com uses.</div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap type-small">Exaforce Design System __VERSION__ · fonts under the SIL Open Font License 1.1 · <a href="manifest.json">manifest</a></div>
+  </footer>
+
+  <script>
+    const ICONS = __ICONS_JSON__;
+    const MAJOR = '__MAJOR__';
+    const css = getComputedStyle(document.documentElement);
+    const val = (t) => css.getPropertyValue(t).trim();
+
+    /* Type scale */
+    const type = ['display','h1','h2','h3','h4','h5','h6','body-lg','body','small','caption','eyebrow','micro','fine'];
+    document.getElementById('typescale').innerHTML = type.map(t => {
+      const cls = 'type-' + t;
+      const min = val(`--type-${t}-min`), max = val(`--type-${t}-max`);
+      const range = min && max ? `${parseFloat(min)*16|0}–${parseFloat(max)*16|0}px` : '';
+      return `<div class="typerow"><span class="k mono">.${cls} <span style="opacity:.7">${range}</span></span><span class="${cls}">The quick brown fox jumps over the lazy dog</span></div>`;
+    }).join('');
+
+    /* Colour */
+    const groups = {
+      'Surfaces': ['surface','surface-raised','surface-sunken','surface-subtle','surface-panel','surface-panel-hover','surface-hover','surface-inverse','surface-glass','tag-surface','control-selected'],
+      'Text': ['text-primary','text-secondary','text-muted','text-subtle','text-inverse','text-inverse-secondary','text-on-accent','text-on-photo'],
+      'Borders': ['border','border-strong','border-inverse','focus','focus-ring'],
+      'Accent': ['accent','accent-hover','accent-active','accent-on','accent-subtle','accent-subtle-strong','accent-subtle-hover','accent-subtle-border','accent-subtle-edge','accent-inverse'],
+      'Controls': ['control','control-hover','control-active','control-text','control-secondary','control-secondary-hover','control-secondary-active','control-inverse','control-inverse-hover','control-inverse-active','control-inverse-text'],
+      'Fields': ['field-surface','field-border','field-border-hover','field-text','field-placeholder','field-disabled-surface','field-disabled-text'],
+      'Status': ['status-error','status-error-solid','status-error-on','status-error-surface','status-error-border','status-warning','status-warning-solid','status-warning-surface','status-warning-border','status-notice','status-notice-solid','status-notice-surface','status-notice-border','status-success','status-success-solid','status-success-surface','status-success-border'],
+      'Fixed (never remapped)': ['logo-chip','logo-chip-fg','logo-chip-accent','photo-scrim','video-letterbox','rating-star'],
+      'Site chrome': ['footer-surface','footer-text','footer-text-muted','footer-border','footer-cert','footer-cert-surface','ribbon-scrim','panel-scrim','force-core','force-halo'],
+    };
+    const probe = document.createElement('div'); probe.style.display = 'none'; document.body.appendChild(probe);
+    const resolve = (token) => { probe.style.color = ''; probe.style.color = `var(${token})`; return getComputedStyle(probe).color; };
+    function renderSwatches() {
+      document.getElementById('swatches').innerHTML = Object.entries(groups).map(([g, names]) => `
+        <h3 class="type-h4 sub">${g}</h3>
+        <div class="grid">${names.map(n => {
+          const t = '--color-' + n;
+          return `<div class="swatch"><div class="chip" style="background: var(${t})"></div><div class="meta"><code class="name">${t}</code><code class="val">${val(t)} → ${resolve(t)}</code></div></div>`;
+        }).join('')}</div>`).join('');
+    }
+    renderSwatches();
+    document.documentElement.addEventListener('exaforce:theme', renderSwatches);
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderSwatches);
+
+    /* Palette: every primitive family, every step. Families are listed rather
+       than discovered because CSS gives no way to enumerate custom properties;
+       keep this in step with primitives.css (the check script does not). */
+    const families = ['slate','gray','zinc','neutral','stone','mauve','olive','mist','taupe','red','orange','amber','yellow','lime','green','emerald','teal','cyan','sky','blue','indigo','violet','purple','fuchsia','pink','rose'];
+    const steps = [50,100,200,300,400,500,600,700,800,900,950];
+    const rampsEl = document.getElementById('ramps');
+    rampsEl.insertAdjacentHTML('beforebegin', `<div class="ramps-key">${steps.map(s => `<span style="flex:1">${s}</span>`).join('')}</div>`);
+    rampsEl.innerHTML = families.map(f => `<div class="ramp"><span class="fam">--${f}-*</span><div class="steps" style="display:contents">${steps.map(s => {
+      const t = `--${f}-${s}`; const v = val(t);
+      const missing = !v;
+      return `<div class="step ${s >= 500 ? 'on-dark' : 'on-light'}" style="background: var(${t})${missing ? '; outline: 1px dashed var(--color-status-error)' : ''}" title="${t}: ${v || 'MISSING'}"><span>${s}</span></div>`;
+    }).join('')}</div></div>`).join('');
+
+    /* Space, radius, motion */
+    const spaces = ['3xs','2xs','xs','sm','md','lg','xl','2xl','3xl','4xl','gutter','section-tight','section'];
+    document.getElementById('spacing').innerHTML = spaces.map(s => `<div><div class="b" style="width: var(--space-${s}); height: var(--space-${s}); min-width: 2px"></div><span class="mono">--space-${s}<br>${val('--space-' + s)}</span></div>`).join('');
+    const radii = ['inline','control','surface','surface-lg','button'];
+    document.getElementById('radii').innerHTML = radii.map(r => `<div class="r" style="border-radius: var(--radius-${r})"><span class="mono" style="font-size: var(--font-size-00)">--radius-${r}</span></div>`).join('');
+    const motion = ['instant','fast','base','slow','enter','exit','theme'];
+    document.getElementById('motion').innerHTML = motion.map(m => `<div class="typerow"><span class="k mono">--motion-${m}</span><span class="mono">${val('--motion-' + m)}</span></div>`).join('');
+
+    /* Favicons */
+    const fav = ['favicon.svg','favicon.ico','apple-touch-icon.png','icon-192.png','icon-512.png','icon-maskable-512.png'];
+    document.getElementById('favicons').innerHTML = fav.map(f => `<a class="ic" href="${MAJOR}/assets/favicon/${f}"><img src="${MAJOR}/assets/favicon/${f}" alt=""><span>${f}</span></a>`).join('')
+      + `<a class="ic" href="${MAJOR}/assets/favicon/site.webmanifest"><span style="font-size: var(--type-small-size); color: var(--color-text-primary)">{ }</span><span>site.webmanifest</span></a>`;
+
+    /* Any element marked data-inline-svg gets the file's markup inlined, so
+       currentColor applies. This is the whole technique for the -current logos. */
+    for (const el of document.querySelectorAll('[data-inline-svg]')) {
+      fetch(el.getAttribute('data-inline-svg')).then(r => r.text()).then(svg => { el.innerHTML = svg; }).catch(() => {});
+    }
+
+    /* Icons: inlined so currentColor applies. */
+    const sets = document.getElementById('iconsets');
+    for (const [group, names] of Object.entries(ICONS)) {
+      const h = document.createElement('h3'); h.className = 'type-h4 sub'; h.textContent = `${group} (${names.length})`; sets.appendChild(h);
+      const grid = document.createElement('div'); grid.className = 'icons'; sets.appendChild(grid);
+      for (const name of names) {
+        const a = document.createElement('a'); a.className = 'ic'; a.href = `${MAJOR}/assets/icons/${group}/${name}.svg`; a.title = name;
+        a.innerHTML = `<span class="holder"></span><span>${name}</span>`;
+        grid.appendChild(a);
+        fetch(a.href).then(r => r.text()).then(svg => { a.querySelector('.holder').outerHTML = svg; }).catch(() => {});
+      }
+    }
+  </script>
+</body>
+</html>

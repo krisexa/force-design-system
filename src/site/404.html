@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Not found · Exaforce Design System</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/__MAJOR__/assets/favicon/favicon.svg" type="image/svg+xml">
+  <!-- Root-absolute paths: this page is served for ANY missing URL, at any depth. -->
+  <script src="/__MAJOR__/theme.js"></script>
+  <link rel="stylesheet" href="/__MAJOR__/exaforce.css">
+  <style>
+    /* Semantic tokens only, like the styleguide. */
+    body { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
+    .wrap { max-width: var(--measure-wide); margin-inline: auto; padding-inline: var(--space-gutter); width: 100%; }
+    header .wrap { display: flex; align-items: center; gap: var(--space-md); min-height: var(--header-height); }
+    header .logo { display: inline-flex; color: var(--color-text-primary); }
+    header .logo svg { height: 1.25rem; width: auto; }
+    header .ver { font-family: var(--font-family-mono); font-size: var(--type-caption-size); color: var(--color-text-muted); }
+    header .btn { margin-left: auto; }
+    .btn {
+      display: inline-flex; align-items: center; gap: var(--space-2xs); white-space: nowrap;
+      padding: var(--space-2xs) var(--space-sm); border-radius: var(--radius-button);
+      border: 1px solid var(--color-border-strong); background: var(--color-control-secondary);
+      color: var(--color-text-primary); font: inherit; font-size: var(--type-control-size); font-weight: var(--type-control-weight);
+      cursor: pointer; text-decoration: none; transition: background-color var(--motion-fast), border-color var(--motion-fast);
+    }
+    .btn:hover { background: var(--color-control-secondary-hover); }
+    .btn-primary { background: var(--color-control); border-color: var(--color-control); color: var(--color-control-text); }
+    .btn-primary:hover { background: var(--color-control-hover); border-color: var(--color-control-hover); }
+    main { display: grid; align-items: center; padding-block: var(--space-2xl); }
+    main .wrap { display: grid; gap: var(--space-lg); grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+    .mark { color: var(--color-border-strong); width: clamp(6rem, 18vw, 14rem); }
+    .mark svg { width: 100%; height: auto; display: block; }
+    .path { font-family: var(--font-family-mono); font-size: var(--type-small-size); color: var(--color-text-muted); word-break: break-all;
+      padding: var(--space-2xs) var(--space-xs); background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-control); display: inline-block; max-width: 100%; }
+    .actions { display: flex; gap: var(--space-xs); flex-wrap: wrap; margin-top: var(--space-md); }
+    .hint { color: var(--color-text-secondary); max-width: var(--measure-prose); }
+    .hint a { color: var(--color-accent); }
+    footer { padding-block: var(--space-lg); color: var(--color-text-muted); border-top: 1px solid var(--color-border); }
+    @media (max-width: 767px) { main .wrap { grid-template-columns: 1fr; } .mark { order: -1; width: 5rem; } header .ver { display: none; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <a class="logo" href="/" aria-label="Exaforce design system" data-inline-svg="/__MAJOR__/assets/logo/exaforce-logo-current.svg"></a>
+      <span class="ver">design system __VERSION__</span>
+      <button class="btn" type="button" data-theme-toggle><span data-theme-label data-theme-word="Theme"></span></button>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div>
+        <p class="type-eyebrow">404</p>
+        <h1 class="type-h1">Nothing lives at this address.</h1>
+        <p class="type-body-lg hint" style="margin-top: var(--space-sm);">
+          <span class="path" id="path"></span>
+        </p>
+        <p class="hint" id="hint" style="margin-top: var(--space-sm);">
+          Files are published under a version path such as <a href="/__MAJOR__/exaforce.css">/__MAJOR__/exaforce.css</a>.
+          The <a href="/manifest.json">manifest</a> lists every current path and the hashed font names.
+        </p>
+        <div class="actions">
+          <a class="btn btn-primary" href="/">Open the styleguide</a>
+          <a class="btn" href="/manifest.json">manifest.json</a>
+          <a class="btn" href="/__MAJOR__/exaforce.css">/__MAJOR__/exaforce.css</a>
+        </div>
+      </div>
+      <div class="mark" data-inline-svg="/__MAJOR__/assets/logo/exaforce-mark-current.svg" aria-hidden="true"></div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap type-small">Exaforce Design System __VERSION__</div>
+  </footer>
+
+  <script>
+    document.getElementById('path').textContent = location.pathname + location.search;
+    for (const el of document.querySelectorAll('[data-inline-svg]')) {
+      fetch(el.getAttribute('data-inline-svg')).then(r => r.text()).then(svg => { el.innerHTML = svg; }).catch(() => {});
+    }
+    /* Common slips get a more specific hint: an old filename, a version that was never published, or a font asked for without its hash. */
+    const p = location.pathname;
+    const hint = document.getElementById('hint');
+    const versions = __CHANNELS_JSON__;
+    const m = /^\/(v\d+|\d+\.\d+\.\d+)\//.exec(p);
+    if (m && !versions.includes(m[1])) {
+      hint.innerHTML = `There is no <code>/${m[1]}/</code> channel on this host. Published channels: ${versions.map(v => `<a href="/${v}/exaforce.css"><code>/${v}/</code></a>`).join(', ')}.`;
+    } else if (/^\/fonts\/[^/]+\.woff2$/.test(p) && !/\.[0-9a-f]{8}\.woff2$/.test(p)) {
+      hint.innerHTML = `Font files carry a content hash in the name. Look the current name up in the <a href="/manifest.json">manifest</a> rather than linking the bare filename, or link <a href="/__MAJOR__/fonts.css">/__MAJOR__/fonts.css</a> and let it resolve them.`;
+    } else if (/exaforce-(logo|mark)(\.svg|-white\.svg)$/.test(p)) {
+      hint.innerHTML = `The logo files are named by variant: <code>-black</code>, <code>-white</code>, <code>-current</code>, <code>-auto</code>. See <a href="/#brand">the brand section</a>.`;
+    }
+  </script>
+</body>
+</html>

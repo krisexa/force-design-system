@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+    <!-- Background first in document order so it paints BEHIND the mark. -->
+    <rect width="500" height="500" fill="#000"/>
+    <!--
+      Scaled up about the tile's centre. The mark is authored spanning x/y
+      125-375, i.e. the middle 50% of the viewBox, which left a 25% margin on
+      every side — generous for a tile that renders at 16px. 1.2 takes it to 60%
+      coverage and an 18.75%-ish margin.
+
+      translate/scale/translate rather than `transform-origin`: the presentation
+      attribute form is what every SVG renderer handles consistently, and this
+      file is parsed by favicon code paths rather than a full CSS engine. Adjust
+      the single 1.2 to retune; the two translates keep it centred at any scale.
+    -->
+    <g transform="translate(250 250) scale(1.2) translate(-250 -250)">
+    <path d="M372.816 125.488C373.229 125.002 373.974 124.864 374.552 125.141C375.129 125.35 375.54 125.977 375.54 126.601V190.557C375.54 191.181 375.212 191.739 374.635 192.016L253.458 250L374.635 307.988C375.211 308.266 375.539 308.82 375.54 309.443V373.403C375.54 374.028 375.13 374.585 374.552 374.863C374.387 375.001 374.221 375 373.975 375C373.562 375 372.816 374.512 372.816 374.512L250.402 252.92L127.988 374.512C127.659 374.858 127.246 374.999 126.834 375C126.669 375 126.418 374.933 126.252 374.863C125.675 374.654 125.265 374.028 125.265 373.403V309.443C125.265 308.819 125.597 308.266 126.174 307.988L247.268 250L126.091 192.016C125.513 191.739 125.182 191.182 125.182 190.557V126.601C125.182 125.977 125.675 125.35 126.252 125.141C126.83 124.864 127.493 125.002 127.988 125.488L250.402 247.085L372.816 125.488Z" fill="#FFF"/>
+    <path d="M127.079 231.67L208.305 248.403C209.047 248.611 209.541 249.237 209.542 250C209.542 250.764 209.048 251.457 208.305 251.597L127.079 268.335H126.751C126.421 268.335 126.006 268.196 125.759 267.988C125.429 267.71 125.182 267.224 125.182 266.738V233.266C125.182 232.781 125.429 232.294 125.759 232.016C126.089 231.67 126.584 231.601 127.079 231.67Z" fill="#FFF"/>
+    <path d="M373.647 231.67C374.142 231.601 374.638 231.739 374.968 232.016C375.297 232.364 375.545 232.781 375.545 233.266V266.738C375.544 267.224 375.298 267.71 374.968 267.988C374.72 268.196 374.305 268.335 373.975 268.335H373.647L292.421 251.601C291.678 251.393 291.184 250.764 291.184 250C291.185 249.237 291.679 248.542 292.421 248.403L373.647 231.67Z" fill="#FFF"/>
+    </g>
+    <!--
+      FILLS ARE PRESENTATION ATTRIBUTES, NOT CSS, and that is deliberate.
+
+      This file used to colour itself from a <style> block. build-icons.sh
+      already documents ImageMagick ignoring that block and writing a solid
+      black tile from it, and a favicon is parsed by all sorts of small
+      renderers rather than a full CSS engine — so anything that skips the
+      stylesheet gets black-on-black here, with no error and a valid PNG.
+      Attributes cannot be skipped.
+
+      There is no longer any reason to use CSS at all: the prefers-color-scheme
+      swap that needed it is gone (see below), so the fills are two static
+      values.
+
+      NO prefers-color-scheme SWAP. There used to be one — white ground, black
+      mark under dark — and it is what made this favicon look broken. It assumed
+      the browser's tab strip follows the same scheme as the media query; Chrome
+      resolved the dark branch while painting a LIGHT strip, so the tile turned
+      white, vanished into the strip, and left a small dark mark floating in
+      empty space. At 16px that is indistinguishable from a broken image.
+
+      A filled tile does not need to adapt: black ground with a white mark reads
+      as a solid shape on a light strip and the mark carries it on a dark one.
+      Same argument that already committed the PNG home-screen icons to one
+      treatment, and what the Webflow site served.
+
+      The href in Page.astro and CollectionDetail.astro carries a ?v= query.
+      Browsers cache favicons far more aggressively than other assets — this one
+      survived two corrections in a warm Chrome — so bump that version whenever
+      this artwork changes, or nobody will see it.
+    -->
+</svg>

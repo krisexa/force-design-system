@@ -1,0 +1,15 @@
+/**
+ * Exaforce Design System — everything, in the only order that works:
+ *   1. fonts       @font-face declarations (self-hosted woff2, relative paths)
+ *   2. primitives  raw values
+ *   3. semantic    the layer components consume; light/dark live here
+ *   4. base        element defaults, focus ring, type classes
+ *
+ * For a project with a bundler (Astro/Vite):   @import '@exaforce/design-system';
+ * Tokens only, no fonts or element defaults:    @import '@exaforce/design-system/tokens.css';
+ * No build step: link the built files instead — see README.
+ */
+@import './fonts/fonts.css';
+@import './tokens/primitives.css';
+@import './tokens/semantic.css';
+@import './base.css';
