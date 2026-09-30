@@ -7,6 +7,8 @@
  *
  * For a project with a bundler (Astro/Vite):   @import '@exaforce/design-system';
  * Tokens only, no fonts or element defaults:    @import '@exaforce/design-system/tokens.css';
+ * Japanese pages ALSO import '@exaforce/design-system/fonts-ja.css' (Noto Sans JP;
+ * kept separate because its 124 declarations outweigh everything here).
  * No build step: link the built files instead — see README.
  */
 @import './fonts/fonts.css';

@@ -427,13 +427,25 @@
   /* Second slot: the metric-matched Arial declared in global.css, so the text
      that paints before the woff2 arrives already has the web font's width and
      line height and the swap moves nothing. Unique name, per the note above. */
+  /* Third slot: Noto Sans JP, self-hosted (fonts.css). Neither Latin face has
+     kana or kanji, so Japanese text fell through to whatever the OS offered —
+     Hiragino on a Mac, Yu Gothic or worse on Windows. Placed after the Latin
+     face and its metric fallback so Latin never resolves to it. Its slices are
+     unicode-range gated, so a page with no Japanese downloads none of them. */
   --font-sans:
-    'Inter Tight Variable', 'Inter Tight Fallback', ui-sans-serif, system-ui,
-    -apple-system, 'Segoe UI', sans-serif;
+    'Inter Tight Variable', 'Inter Tight Fallback', 'Noto Sans JP Variable',
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
   --font-heading:
-    'Google Sans Flex Variable', 'Google Sans Flex Fallback', ui-sans-serif,
-    system-ui, -apple-system, 'Segoe UI', sans-serif;
+    'Google Sans Flex Variable', 'Google Sans Flex Fallback', 'Noto Sans JP Variable',
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Japanese-first: for content whose language IS Japanese, where Latin letters
+     inside it should set in the same face rather than switching to Inter Tight
+     mid-sentence. Applied by :lang(ja) in base.css; also the stack to name when
+     a component must render a Japanese variant of a lockup. */
+  --font-ja:
+    'Noto Sans JP Variable', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans',
+    'Yu Gothic', Meiryo, sans-serif;
 
   /* Below the -0 step, for uppercase micro-labels only. Caps have no descenders
      and a taller apparent x-height, so a caps chip set at -0 reads larger than

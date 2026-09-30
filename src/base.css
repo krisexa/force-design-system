@@ -195,3 +195,16 @@ video {
 .text-subtle {
   color: var(--color-text-subtle);
 }
+
+/* --------------------------------------------------------------------------
+ * Japanese. An element in Japanese (lang="ja" on it or an ancestor) sets
+ * entirely in Noto Sans JP, Latin characters included, so mixed text reads
+ * as one face — the same rule the business-card and social-header tools
+ * apply to their Japanese templates. Headings too: this comes after the
+ * heading-family rules above on purpose. Kana and kanji OUTSIDE a ja element
+ * (a language switcher reading 日本語 on an English page) still render in
+ * Noto through the stacks in primitives.css; only the Latin treatment differs.
+ * ----------------------------------------------------------------------- */
+:lang(ja) {
+  font-family: var(--font-family-ja);
+}

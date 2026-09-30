@@ -1,0 +1,42 @@
+{
+  "_about": "Ribbon shader presets — the single source the Ribbon Shader Studio, www.exaforce.com and the tools site read. Colour ramps are brand data tuned by eye in the studio; forms are shader tunings. Hex values on purpose: they are fed to a GPU as linear-light uniforms, not to CSS, so they do not map onto the design tokens. Retune in the studio (ribbon-shader-studio.html), paste the result here, bump the version.",
+  "colours": [
+    {
+      "name": "brand-light",
+      "about": "Pale brand tints on a near-white ground. Quiet enough to sit behind copy or a screenshot.",
+      "prog": 0,
+      "ramp": ["#a9dcfb", "#c7b6fb", "#f9bcda", "#fdcb9f"],
+      "bg": null,
+      "ground": null,
+      "strand": null
+    },
+    {
+      "name": "brand-medium",
+      "about": "Full-strength brand colours on a lilac-to-peach ground. The most saturated of the three. Ground stops run bottom-first.",
+      "prog": 0,
+      "ramp": ["#38bdf8", "#8b5cf6", "#f472b6", "#fb923c"],
+      "bg": ["#E9E4F8", "#FFF1E3"],
+      "ground": null,
+      "strand": null
+    },
+    {
+      "name": "brand-dark",
+      "about": "Brand hues as glowing strands over near-black indigo. Additive light, so it has no transparent export. Ground stops run bottom-first; strand is [halo tint, hot core].",
+      "prog": 1,
+      "ramp": ["#5ccdff", "#a78bfa", "#fb7fc4", "#ffab5e"],
+      "bg": null,
+      "ground": ["#2e2159", "#191342", "#0d0a26", "#06041a"],
+      "strand": ["#b9c8ff", "#ffffff"]
+    }
+  ],
+  "forms": [
+    { "name": "thin",   "about": "A narrow taut band that reads as a line rather than a mass.",
+      "p": { "twist": 64, "width": 28,  "strands": 30, "striate": 100, "glow": 0, "tilt": 0,  "speed": 200, "soft": 105 } },
+    { "name": "medium", "about": "Balanced width and strand count. The general-purpose starting point.",
+      "p": { "twist": 52, "width": 62,  "strands": 60, "striate": 100, "glow": 0, "tilt": 0,  "speed": 200, "soft": 85 } },
+    { "name": "thick",  "about": "A broad soft sweep filling the frame, with striation dialled back to a wash.",
+      "p": { "twist": 32, "width": 132, "strands": 64, "striate": 34,  "glow": 0, "tilt": -6, "speed": 200, "soft": 34 } },
+    { "name": "crisp",  "about": "Narrow band, full striation, hard edge. Strands resolve individually.",
+      "p": { "twist": 46, "width": 44,  "strands": 44, "striate": 100, "glow": 0, "tilt": 0,  "speed": 200, "soft": 170 } }
+  ]
+}

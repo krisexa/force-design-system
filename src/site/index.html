@@ -11,6 +11,8 @@
   <script src="__MAJOR__/theme.js"></script>
   <!-- The page consumes the built system exactly the way another site would. -->
   <link rel="stylesheet" href="__MAJOR__/exaforce.css">
+  <!-- Opt-in, because this page shows Japanese; most pages leave it out. -->
+  <link rel="stylesheet" href="__MAJOR__/fonts-ja.css">
   <style>
     /* Everything below reads semantic tokens only — this page is also a test. */
     .wrap { max-width: var(--measure-wide); margin-inline: auto; padding-inline: var(--space-gutter); }
@@ -39,13 +41,15 @@
     section h2 { margin-bottom: var(--space-xs); }
     section > .wrap > p.lede { color: var(--color-text-secondary); max-width: var(--measure-prose); margin-bottom: var(--space-lg); }
     h3.sub { margin-block: var(--space-lg) var(--space-sm); color: var(--color-text-secondary); }
-    .grid { display: grid; gap: var(--space-sm); grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
-    .swatch { border: 1px solid var(--color-border); border-radius: var(--radius-surface); overflow: hidden; background: var(--color-surface-raised); }
-    .swatch .chip { height: 3.5rem; border-bottom: 1px solid var(--color-border); }
-    .swatch .meta { padding: var(--space-2xs) var(--space-xs); }
-    .swatch code, .mono { font-family: var(--font-family-mono); font-size: var(--type-caption-size); }
-    .swatch .name { display: block; color: var(--color-text-primary); word-break: break-all; }
-    .swatch .val { display: block; color: var(--color-text-muted); word-break: break-all; }
+    .grid { display: grid; gap: var(--space-2xs); grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
+    .swatch { border: 1px solid var(--color-border); border-radius: var(--radius-control); overflow: hidden; background: var(--color-surface-raised); min-width: 0; }
+    .swatch .chip { height: 2rem; border-bottom: 1px solid var(--color-border); }
+    .swatch .meta { padding: var(--space-3xs) var(--space-2xs); }
+    .mono { font-family: var(--font-family-mono); font-size: var(--type-caption-size); }
+    .swatch code { font-family: var(--font-family-mono); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.5; }
+    .swatch .name { font-size: var(--font-size-00); color: var(--color-text-primary); white-space: normal; overflow-wrap: anywhere; }
+    .swatch .val { font-size: var(--font-size-00); color: var(--color-text-subtle); }
+    section h2 + .lede + .grid-key, .grid-key { font-size: var(--type-caption-size); color: var(--color-text-muted); margin-bottom: var(--space-sm); }
     .ramps { display: grid; gap: var(--space-2xs); }
     .ramp { display: grid; grid-template-columns: 5rem repeat(11, minmax(0, 1fr)); gap: 2px; align-items: stretch; }
     .ramp .fam { font-family: var(--font-family-mono); font-size: var(--type-caption-size); color: var(--color-text-secondary); align-self: center; }
@@ -86,6 +90,16 @@
     .icons .ic svg { width: 1.75rem; height: 1.75rem; }
     .icons .ic img { width: 3rem; height: auto; }
     .icons .ic span { font-family: var(--font-family-mono); font-size: var(--font-size-00); color: var(--color-text-muted); text-align: center; word-break: break-all; }
+    .lg { display: grid; gap: var(--space-xs); grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
+    .lg .card { border: 1px solid var(--color-border); border-radius: var(--radius-surface); overflow: hidden; background: var(--color-surface-raised); }
+    .lg .chips { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .lg .chip { height: 4rem; display: grid; place-items: center; padding: var(--space-xs); }
+    .lg .chip img, .lg .chip svg { max-width: 100%; max-height: 2.25rem; width: auto; height: auto; }
+    .lg .chip.on-white { background: var(--white); }
+    .lg .chip.on-light { background: var(--zinc-100); }
+    .lg .chip.on-dark { background: var(--zinc-950); }
+    .lg .chip.themed { background: var(--color-surface-panel); color: var(--color-text-primary); }
+    .lg .name { padding: var(--space-2xs) var(--space-xs); font-family: var(--font-family-mono); font-size: var(--type-caption-size); color: var(--color-text-muted); border-top: 1px solid var(--color-border); }
     pre { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-surface); padding: var(--space-sm) var(--space-md); overflow-x: auto; font-family: var(--font-family-mono); font-size: var(--type-caption-size); line-height: var(--line-height-normal); margin-block: var(--space-xs) var(--space-md); }
     .note { padding: var(--space-sm) var(--space-md); border-left: 3px solid var(--color-accent); background: var(--color-accent-subtle); border-radius: var(--radius-control); color: var(--color-text-secondary); max-width: var(--measure-content); }
     footer { padding-block: var(--space-xl); color: var(--color-text-muted); }
@@ -99,7 +113,7 @@
       <a class="logo" href="#" aria-label="Exaforce design system" data-inline-svg="__MAJOR__/assets/logo/exaforce-logo-current.svg"></a>
       <span class="ver">design system __VERSION__</span>
       <nav>
-        <a href="#type">Type</a><a href="#color">Colour</a><a href="#space">Space</a><a href="#brand">Brand</a><a href="#icons">Icons</a><a href="#use">Use it</a>
+        <a href="#type">Type</a><a href="#color">Colour</a><a href="#space">Space</a><a href="#brand">Brand</a><a href="#icons">Icons</a><a href="#logos">Logos</a><a href="ribbon-shader-studio.html">Ribbon studio</a><a href="#use">Use it</a>
       </nav>
       <button class="btn" type="button" data-theme-toggle><span data-theme-label data-theme-word="Theme"></span></button>
     </div>
@@ -119,7 +133,7 @@
   <section id="type">
     <div class="wrap">
       <h2 class="type-h2">Typefaces</h2>
-      <p class="lede">Two variable faces, self-hosted, split by unicode range so a Latin page downloads two files. Family names are the <span class="mono">… Variable</span> ones; never the bare names.</p>
+      <p class="lede">Three variable faces, self-hosted, split by unicode range so a Latin page downloads two files and a Japanese page only the slices it uses. Family names are the <span class="mono">… Variable</span> ones; never the bare names.</p>
       <div class="specimen">
         <div class="face face-heading">
           <div class="big">Google Sans Flex</div>
@@ -137,6 +151,14 @@
           <div class="row"><span class="w mono">700</span><span style="font-weight:700">Body copy, UI text, captions and fine print</span></div>
           <p class="type-caption" style="margin-top: var(--space-sm); color: var(--color-text-muted);"><span class="mono">--font-family-base</span> · weight axis 100–900 · SIL OFL 1.1</p>
         </div>
+        <div class="face face-ja" lang="ja">
+          <div class="big">Noto Sans JP</div>
+          <div class="row"><span class="w mono" lang="en">400</span><span style="font-weight:400">日本語の本文、見出し、ラベル — Exaforce SOC</span></div>
+          <div class="row"><span class="w mono" lang="en">500</span><span style="font-weight:500">日本語の本文、見出し、ラベル — Exaforce SOC</span></div>
+          <div class="row"><span class="w mono" lang="en">600</span><span style="font-weight:600">日本語の本文、見出し、ラベル — Exaforce SOC</span></div>
+          <div class="row"><span class="w mono" lang="en">700</span><span style="font-weight:700">日本語の本文、見出し、ラベル — Exaforce SOC</span></div>
+          <p class="type-caption" lang="en" style="margin-top: var(--space-sm); color: var(--color-text-muted);"><span class="mono">--font-family-ja</span> · applied by <span class="mono">:lang(ja)</span>, Latin included · opt-in: link <span class="mono">fonts-ja.css</span> · weight axis 100–900 · SIL OFL 1.1</p>
+        </div>
       </div>
 
       <h3 class="type-h4 sub">Type scale</h3>
@@ -148,7 +170,7 @@
   <section id="color">
     <div class="wrap">
       <h2 class="type-h2">Colour</h2>
-      <p class="lede">Components use the semantic layer only. The values shown are what this theme resolves to right now; flip the theme to see them remap. Primitives are the Tailwind v4 palette, in oklch, unchanged.</p>
+      <p class="lede">Components use the semantic layer only. Every name below is prefixed <span class="mono">--color-</span>; the small figures are the oklch lightness, chroma and hue this theme resolves to right now, and hovering a chip shows the full token, its mapping and its value. Flip the theme to see them remap. Primitives are the Tailwind v4 palette, unchanged.</p>
       <div id="swatches"></div>
 
       <h3 class="type-h3 sub" id="palette">Palette (primitives)</h3>
@@ -196,6 +218,10 @@
         <div class="tile os"><img class="mark" src="__MAJOR__/assets/logo/exaforce-mark-auto.svg" alt="Exaforce mark, auto"><a href="__MAJOR__/assets/logo/exaforce-mark-auto.svg">logo/exaforce-mark-auto.svg</a></div>
       </div>
       <p class="type-small" style="color: var(--color-text-muted); margin-top: var(--space-xs);">The OS tiles use the system colour scheme, not this page's toggle, so they can disagree with the page when you have forced a theme. That is the trade-off of <span class="mono">-auto</span>.</p>
+      <h3 class="type-h4 sub">Ribbon</h3>
+      <p class="type-small" style="color: var(--color-text-muted); max-width: var(--measure-prose); margin-bottom: var(--space-sm);">The swept-strand gradient behind hero bands and CTA panels, in three colourways. The ramps are shader data, not tokens: fed to the GPU as linear light, tuned by eye in the <a href="ribbon-shader-studio.html">Ribbon Shader Studio</a>, and published as <a href="__MAJOR__/ribbon-presets.json"><span class="mono">ribbon-presets.json</span></a> so the website and the tools read one file.</p>
+      <div class="logos" id="ribbons"></div>
+
       <h3 class="type-h4 sub">Favicon set</h3>
       <div class="icons" id="favicons"></div>
     </div>
@@ -204,8 +230,16 @@
   <section id="icons">
     <div class="wrap">
       <h2 class="type-h2">Icons</h2>
-      <p class="lede">The nav, chain and ui sets are drawn with <span class="mono">currentColor</span>, so they take the text colour of wherever they sit. The trust marks are fixed-colour certification artwork and should not be recoloured. Inlined here by fetch; reference them by path or paste the SVG.</p>
+      <p class="lede">The platform set is first-party: marks for things Exaforce built, drawn once here and never substituted with a lookalike. The nav, chain and ui sets are UI furniture. All of those are drawn with <span class="mono">currentColor</span>, so they take the text colour of wherever they sit. The trust marks are fixed-colour certification artwork and should not be recoloured. Inlined here by fetch; reference them by path or paste the SVG.</p>
       <div id="iconsets"></div>
+    </div>
+  </section>
+
+  <section id="logos">
+    <div class="wrap">
+      <h2 class="type-h2">Customer, investor and review logos</h2>
+      <p class="lede">Third-party marks, used as supplied. Customers ship in three fixed inks — <span class="mono">-color</span>, <span class="mono">-black</span> for light surfaces, <span class="mono">-white</span> for dark — and must not be recoloured, since the black exports don't share one hex. Investor marks are single files drawn with <span class="mono">currentColor</span>, so they follow the theme when inlined. Which customers appear, and in what order, is each site's decision, not this file's.</p>
+      <div id="logosets"></div>
     </div>
   </section>
 
@@ -219,6 +253,8 @@
 &lt;link rel="preconnect" href="https://HOST"&gt;
 &lt;script src="https://HOST/__MAJOR__/theme.js"&gt;&lt;/script&gt;
 &lt;link rel="stylesheet" href="https://HOST/__MAJOR__/exaforce.css"&gt;
+&lt;!-- only on pages that render Japanese: --&gt;
+&lt;link rel="stylesheet" href="https://HOST/__MAJOR__/fonts-ja.css"&gt;
 &lt;!-- optional, only if the first paint must be in the web font: --&gt;
 &lt;link rel="preload" as="font" type="font/woff2" crossorigin href="https://HOST/fonts/inter-tight-latin-wght-normal.HASH.woff2"&gt;</pre>
       <p class="type-small" style="color: var(--color-text-muted);">Pick <span class="mono">/__MAJOR__/</span> to receive approved updates automatically, or <span class="mono">/__VERSION__/</span> to pin. Hashed font names are listed in <a href="manifest.json">manifest.json</a>. Want tokens without the element defaults? Link <span class="mono">fonts.css</span> and <span class="mono">tokens.css</span> instead of <span class="mono">exaforce.css</span>.</p>
@@ -281,7 +317,15 @@ ExaforceTheme.set('light'); ExaforceTheme.resolved(); // "light" | "dark"</pre>
         <h3 class="type-h4 sub">${g}</h3>
         <div class="grid">${names.map(n => {
           const t = '--color-' + n;
-          return `<div class="swatch"><div class="chip" style="background: var(${t})"></div><div class="meta"><code class="name">${t}</code><code class="val">${val(t)} → ${resolve(t)}</code></div></div>`;
+          const hex2 = (n) => Math.round(n).toString(16).padStart(2, '0');
+          const short = (v) => {
+            let m;
+            if ((m = /^oklch\(([\d.]+) ([\d.]+) ([\d.]+|none)/.exec(v))) return `${(+m[1]).toFixed(3)} ${(+m[2]).toFixed(3)} ${m[3] === 'none' ? '0' : Math.round(+m[3])}`;
+            if ((m = /^rgb\((\d+), (\d+), (\d+)\)$/.exec(v))) return '#' + [m[1], m[2], m[3]].map((n) => hex2(+n)).join('');
+            if ((m = /^color\(srgb ([\d.]+) ([\d.]+) ([\d.]+) \/ ([\d.]+)\)$/.exec(v))) return '#' + [m[1], m[2], m[3]].map((n) => hex2(+n * 255)).join('') + ' ' + Math.round(+m[4] * 100) + '%';
+            return v;
+          };
+          return `<div class="swatch" title="${t}\n${val(t)}\n${resolve(t)}"><div class="chip" style="background: var(${t})"></div><div class="meta"><code class="name">${n}</code><code class="val">${short(resolve(t))}</code></div></div>`;
         }).join('')}</div>`).join('');
     }
     renderSwatches();
@@ -309,6 +353,18 @@ ExaforceTheme.set('light'); ExaforceTheme.resolved(); // "light" | "dark"</pre>
     const motion = ['instant','fast','base','slow','enter','exit','theme'];
     document.getElementById('motion').innerHTML = motion.map(m => `<div class="typerow"><span class="k mono">--motion-${m}</span><span class="mono">${val('--motion-' + m)}</span></div>`).join('');
 
+    /* Ribbon colourways, painted from the published presets. */
+    fetch(`${MAJOR}/ribbon-presets.json`).then(r => r.json()).then(p => {
+      document.getElementById('ribbons').innerHTML = p.colours.map(c => {
+        const stops = c.prog === 1 ? [c.ground[3], c.ground[1] + ' 38%', c.ramp[1] + ' 72%', c.ramp[2]] : c.ramp;
+        const bg = c.bg ? `linear-gradient(to top, ${c.bg[0]}, ${c.bg[1]})` : (c.prog === 1 ? c.ground[3] : 'var(--color-surface-raised)');
+        return `<div class="tile" style="background: ${bg}; color: ${c.prog === 1 ? 'var(--white)' : 'var(--zinc-950)'}; display: grid; gap: var(--space-xs); justify-items: stretch;">
+          <div style="height: 3rem; border-radius: var(--radius-pill); background: linear-gradient(135deg, ${stops.join(',')});"></div>
+          <span class="type-small">${c.about || ''}</span>
+          <a href="${MAJOR}/ribbon-presets.json" style="justify-self: start;">${c.name}</a></div>`;
+      }).join('');
+    }).catch(() => {});
+
     /* Favicons */
     const fav = ['favicon.svg','favicon.ico','apple-touch-icon.png','icon-192.png','icon-512.png','icon-maskable-512.png'];
     document.getElementById('favicons').innerHTML = fav.map(f => `<a class="ic" href="${MAJOR}/assets/favicon/${f}"><img src="${MAJOR}/assets/favicon/${f}" alt=""><span>${f}</span></a>`).join('')
@@ -317,6 +373,28 @@ ExaforceTheme.set('light'); ExaforceTheme.resolved(); // "light" | "dark"</pre>
     /* Any element marked data-inline-svg gets the file's markup inlined, so
        currentColor applies. This is the whole technique for the -current logos. */
     for (const el of document.querySelectorAll('[data-inline-svg]')) {
+      fetch(el.getAttribute('data-inline-svg')).then(r => r.text()).then(svg => { el.innerHTML = svg; }).catch(() => {});
+    }
+
+    /* Logos: fixed-ink files as <img> on the surface they are meant for;
+       currentColor files inlined on a themed surface. */
+    const LOGOS = __LOGOS_JSON__;
+    const logoSets = document.getElementById('logosets');
+    const chipFor = (group, slug, v) => {
+      const src = `${MAJOR}/assets/logos/${group}/${slug}${v === 'current' ? '' : '-' + v}.svg`;
+      if (v === 'current') return `<div class="chip themed" data-inline-svg="${src}" title="${slug}.svg"></div>`;
+      const on = v === 'white' ? 'on-dark' : v === 'black' ? 'on-light' : 'on-white';
+      return `<div class="chip ${on}"><img src="${src}" alt="${slug} ${v}" loading="lazy"></div>`;
+    };
+    for (const [group, slugs] of Object.entries(LOGOS)) {
+      const h = document.createElement('h3'); h.className = 'type-h4 sub'; h.textContent = `${group.replace('-', ' ')} (${Object.keys(slugs).length})`; logoSets.appendChild(h);
+      const grid = document.createElement('div'); grid.className = 'lg'; logoSets.appendChild(grid);
+      grid.innerHTML = Object.entries(slugs).map(([slug, variants]) => {
+        const order = ['color', 'black', 'white', 'current'].filter(v => variants.includes(v));
+        return `<div class="card"><div class="chips" style="grid-template-columns: repeat(${order.length}, 1fr)">${order.map(v => chipFor(group, slug, v)).join('')}</div><div class="name">${slug}${order.length > 1 ? ' · ' + order.join(' / ') : ''}</div></div>`;
+      }).join('');
+    }
+    for (const el of logoSets.querySelectorAll('[data-inline-svg]')) {
       fetch(el.getAttribute('data-inline-svg')).then(r => r.text()).then(svg => { el.innerHTML = svg; }).catch(() => {});
     }
 

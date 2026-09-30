@@ -1,0 +1,1197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex">
+<title>Ribbon Shader Studio · Exaforce Design System</title>
+<link rel="icon" href="__MAJOR__/assets/favicon/favicon.svg" type="image/svg+xml">
+<!-- The studio keeps its own workbench palette but sets type in the system's
+     faces, self-hosted. The presets it edits are injected at build time from
+     src/ribbon/presets.json — the same file published as __MAJOR__/ribbon-presets.json. -->
+<script src="__MAJOR__/theme.js"></script>
+<link rel="stylesheet" href="__MAJOR__/fonts.css">
+<link rel="stylesheet" href="__MAJOR__/tokens.css">
+<style>
+:root{
+  --bg:#FAFAFB; --surface:#F1F2F5; --surface-2:#E9EBEF;
+  --ink:#12151A; --ink-soft:#333A45; --muted:#5B6472;
+  --rule:#E1E4E9; --rule-strong:#CFD3DA;
+  --accent:#0E7C6B; --accent-ink:#0A5D50; --accent-wash:rgba(14,124,107,.09);
+  --shadow:0 1px 2px rgba(16,20,28,.05), 0 18px 44px -24px rgba(16,20,28,.30);
+  --mono:var(--font-family-mono);
+  --sans:var(--font-family-base);
+  --serif:var(--font-family-heading);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B0D11; --surface:#14181E; --surface-2:#1B2027;
+    --ink:#E9EBEF; --ink-soft:#C6CBD4; --muted:#8E97A5;
+    --rule:#222830; --rule-strong:#333B45;
+    --accent:#3ECFB6; --accent-ink:#7FE3D2; --accent-wash:rgba(62,207,182,.12);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 20px 48px -26px rgba(0,0,0,.75);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B0D11; --surface:#14181E; --surface-2:#1B2027;
+  --ink:#E9EBEF; --ink-soft:#C6CBD4; --muted:#8E97A5;
+  --rule:#222830; --rule-strong:#333B45;
+  --accent:#3ECFB6; --accent-ink:#7FE3D2; --accent-wash:rgba(62,207,182,.12);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 20px 48px -26px rgba(0,0,0,.75);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--maxw,1560px); margin:0 auto; padding:22px clamp(14px,2.2vw,32px) 72px}
+a{color:var(--accent-ink)}
+button,select,input{font-family:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px}
+
+/* ---------- masthead ---------- */
+.masthead{
+  display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 18px;
+  padding-bottom:16px; margin-bottom:18px; border-bottom:1px solid var(--rule);
+}
+.masthead h1{
+  font-family:var(--serif); font-weight:600; font-size:1.5rem; letter-spacing:-.02em; margin:0;
+}
+.masthead .sub{font-size:.9rem; color:var(--muted); max-width:62ch}
+.masthead .spacer{flex:1}
+.masthead .back{font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; text-decoration:none}
+.kbd{font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+
+/* ---------- stage ---------- */
+.tool{border:1px solid var(--rule); border-radius:14px; overflow:hidden; background:var(--surface); box-shadow:var(--shadow)}
+.stage{position:relative; width:100%; aspect-ratio:21/9; background:var(--surface-2)}
+.stage canvas{display:block; width:100%; height:100%}
+.stage .fallback{
+  position:absolute; inset:0; display:none; place-items:center;
+  font-family:var(--mono); font-size:.8rem; color:var(--muted); text-align:center; padding:24px;
+}
+.stage.no-gl .fallback{display:grid}
+.stage canvas{cursor:crosshair}
+.guide{position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .25s ease}
+.guide.on{opacity:1}
+.guide .gline{
+  position:absolute; width:240%; height:0; border-top:1px dashed rgba(255,255,255,.95);
+  filter:drop-shadow(0 0 1px rgba(0,0,0,.65)); transform-origin:50% 50%;
+}
+.guide .gdot{
+  position:absolute; width:11px; height:11px; margin:-6px 0 0 -6px; border-radius:50%;
+  border:1.5px solid rgba(255,255,255,.95); background:rgba(0,0,0,.28);
+  filter:drop-shadow(0 0 1px rgba(0,0,0,.65));
+}
+
+/* ---------- panel ---------- */
+.panel{border-top:1px solid var(--rule); background:var(--bg); padding:16px clamp(14px,1.6vw,22px)}
+.row{display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px}
+.row + .row{margin-top:16px; padding-top:16px; border-top:1px solid var(--rule)}
+.sliders{
+  display:grid; gap:14px 26px;
+  grid-template-columns:repeat(auto-fit,minmax(178px,1fr)); width:100%;
+}
+.ctrl{display:grid; grid-template-columns:1fr auto; align-items:center; gap:4px 10px}
+.ctrl label{
+  font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted);
+}
+.ctrl output{
+  font-family:var(--mono); font-size:.74rem; color:var(--ink-soft);
+  font-variant-numeric:tabular-nums; text-align:right;
+}
+.ctrl input[type=range]{grid-column:1 / -1; width:100%; accent-color:var(--accent); background:transparent; margin:0}
+.group{display:flex; align-items:center; gap:10px}
+.group > .lbl{font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+.btn{
+  font-family:var(--mono); font-size:.7rem; letter-spacing:.07em; text-transform:uppercase;
+  border:1px solid var(--rule-strong); background:var(--surface); color:var(--ink-soft);
+  border-radius:7px; padding:7px 12px; cursor:pointer;
+}
+.btn:hover{border-color:var(--accent); color:var(--accent-ink)}
+.btn[aria-pressed="true"]{background:var(--accent-wash); border-color:var(--accent); color:var(--accent-ink)}
+select{
+  font-family:var(--mono); font-size:.72rem; color:var(--ink-soft); background:var(--surface);
+  border:1px solid var(--rule-strong); border-radius:7px; padding:6px 8px;
+}
+.check{
+  display:flex; align-items:center; gap:6px; cursor:pointer;
+  font-family:var(--mono); font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);
+}
+.check input{accent-color:var(--accent); margin:0}
+.check.is-disabled{opacity:.45; cursor:not-allowed}
+.presets{display:flex; gap:8px}
+.preset{
+  width:34px; height:34px; border-radius:9px; border:1px solid rgba(0,0,0,.18);
+  cursor:pointer; padding:0; position:relative;
+}
+.preset[aria-pressed="true"]{box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(--accent)}
+.form{
+  width:34px; height:34px; border-radius:9px; padding:0; cursor:pointer;
+  border:1px solid var(--rule-strong); background:var(--surface); display:grid; place-items:center;
+}
+.form svg{width:26px; height:26px; overflow:visible}
+.form svg path,.form svg circle{fill:none; stroke:var(--muted); stroke-linecap:round}
+.form svg path.striated{stroke-linecap:butt}
+.form:hover{border-color:var(--accent)}
+.form:hover svg path,.form:hover svg circle{stroke:var(--accent-ink)}
+.form[aria-pressed="true"]{background:var(--accent-wash); border-color:var(--accent)}
+.form[aria-pressed="true"] svg path,.form[aria-pressed="true"] svg circle{stroke:var(--accent)}
+.iconbtn{
+  width:34px; height:34px; border-radius:9px; padding:0; cursor:pointer;
+  border:1px solid var(--rule-strong); background:var(--surface); display:grid; place-items:center;
+}
+.iconbtn svg{width:19px; height:19px; fill:var(--muted)}
+.iconbtn:hover{border-color:var(--accent)}
+.iconbtn:hover svg{fill:var(--accent-ink)}
+.iconbtn[aria-pressed="true"]{background:var(--accent-wash); border-color:var(--accent)}
+.iconbtn[aria-pressed="true"] svg{fill:var(--accent)}
+.iconbtn.plain svg{fill:var(--muted); color:var(--muted); width:20px; height:20px}
+.iconbtn.plain:hover:not(:disabled) svg{fill:var(--accent-ink); color:var(--accent-ink)}
+.iconbtn.plain:disabled{opacity:.35; cursor:not-allowed}
+.iconbtn .i-play{display:none}
+.iconbtn[aria-pressed="false"] .i-play{display:block}
+.iconbtn[aria-pressed="false"] .i-pause{display:none}
+
+/* ---------- breakpoint previews ---------- */
+.strip{
+  border-top:1px solid var(--rule); background:var(--bg);
+  padding:14px clamp(14px,1.6vw,22px);
+  display:flex; flex-wrap:wrap; align-items:flex-end; gap:18px 22px;
+}
+.strip .lbl{
+  font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted); align-self:center; margin-right:2px;
+}
+.frame{display:flex; flex-direction:column; gap:6px}
+.frame canvas{
+  display:block; border:1px solid var(--rule); border-radius:6px; background:var(--surface-2);
+}
+.frame .cap{
+  font-family:var(--mono); font-size:.64rem; letter-spacing:.06em; color:var(--muted);
+  font-variant-numeric:tabular-nums;
+}
+.perf{
+  border-top:1px solid var(--rule); background:var(--surface-2);
+  padding:11px clamp(14px,1.6vw,22px); display:flex; flex-wrap:wrap; align-items:center; gap:10px 18px;
+}
+.perfout{font-family:var(--mono); font-size:.73rem; color:var(--ink-soft); font-variant-numeric:tabular-nums}
+.perfnote{font-family:var(--mono); font-size:.67rem; color:var(--muted); margin-left:auto}
+
+/* ---------- notes + code ---------- */
+.below{display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:28px; margin-top:34px}
+.note h2{font-family:var(--serif); font-weight:600; font-size:1.16rem; margin:0 0 10px}
+dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:8px 14px; font-size:.9rem}
+dt{font-family:var(--mono); font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); padding-top:3px}
+dd{margin:0; color:var(--ink-soft)}
+.codeblock{position:relative}
+pre{
+  margin:0; background:var(--surface); border:1px solid var(--rule); border-radius:9px;
+  padding:16px 18px; overflow-x:auto; font-family:var(--mono); font-size:.76rem; line-height:1.6; color:var(--ink-soft);
+}
+.copy{
+  position:absolute; top:9px; right:9px; font-family:var(--mono); font-size:.64rem;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--muted);
+  background:var(--bg); border:1px solid var(--rule); border-radius:6px; padding:5px 8px; cursor:pointer;
+}
+.copy:hover{color:var(--ink)}
+code:not(pre code){font-family:var(--mono); font-size:.85em; color:var(--ink)}
+@media (max-width:720px){
+  .stage{aspect-ratio:4/3}
+  .masthead h1{font-size:1.3rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="masthead">
+    <a class="back" href="./">&larr; Design system</a>
+    <h1>Ribbon Shader Studio</h1>
+    <span class="sub">Swept-strand gradient, drawn per pixel. Colour, form and shape pick independently &mdash; then tune. Presets come from <code>ribbon-presets.json</code>; retune here, paste back there.</span>
+    <span class="spacer"></span>
+    <span class="kbd">WebGL &middot; no dependencies</span>
+    <div class="group">
+      <span class="lbl">Width</span>
+      <select id="layoutW" aria-label="Page width">
+        <option value="1560px" selected>Standard</option>
+        <option value="1920px">Wide</option>
+        <option value="2400px">Extra wide</option>
+        <option value="100%">Full bleed</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="tool">
+    <div class="stage" id="stage">
+      <canvas id="cv" aria-label="Ribbon gradient preview"></canvas>
+      <div class="fallback">WebGL unavailable in this browser &mdash; the shader can't run here.</div>
+      <div class="guide" id="guide" aria-hidden="true"><span class="gline"></span><span class="gdot"></span></div>
+    </div>
+
+    <div class="panel">
+      <div class="row">
+        <div class="group">
+          <span class="lbl">Colour</span>
+          <div class="presets" role="group" aria-label="Colour preset">
+            <button class="preset" id="pre0" aria-pressed="false" aria-label="Light colours"></button>
+            <button class="preset" id="pre1" aria-pressed="true" aria-label="Medium colours"></button>
+            <button class="preset" id="pre2" aria-pressed="false" aria-label="Dark colours on near-black"></button>
+          </div>
+        </div>
+        <div class="group">
+          <span class="lbl">Form</span>
+          <div class="presets" role="group" aria-label="Ribbon form">
+            <button class="form" id="frm0" aria-pressed="false" aria-label="Thin ribbon">
+              <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M2 21C9 21 11 13 17 13s8 8 15 8" stroke-width="2"/></svg>
+            </button>
+            <button class="form" id="frm1" aria-pressed="true" aria-label="Medium ribbon">
+              <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M2 21C9 21 11 13 17 13s8 8 15 8" stroke-width="6"/></svg>
+            </button>
+            <button class="form" id="frm2" aria-pressed="false" aria-label="Thick ribbon">
+              <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M2 21C9 21 11 13 17 13s8 8 15 8" stroke-width="13"/></svg>
+            </button>
+            <button class="form" id="frm3" aria-pressed="false" aria-label="Crisp ribbon">
+              <svg viewBox="0 0 34 34" aria-hidden="true"><path class="striated" d="M2 21C9 21 11 13 17 13s8 8 15 8" stroke-width="8" stroke-dasharray="1.5 2.1"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="group">
+          <span class="lbl">Shape</span>
+          <div class="presets" role="group" aria-label="Ribbon shape">
+            <button class="form" id="shp0" title="Line — the centreline is a height field over x. The classic hero band." aria-pressed="true" aria-label="Line">
+              <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M3 20C10 20 12 14 17 14s7 6 14 6" stroke-width="3.4"/></svg>
+            </button>
+            <button class="form" id="shp1" title="Arc — polar, with the centre below the frame, so the ribbon domes across the top." aria-pressed="false" aria-label="Arc">
+              <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M3 25A15 15 0 0 1 31 25" stroke-width="3.4"/></svg>
+            </button>
+            <button class="form" id="shp2" title="Circle — a polar ring. Set Twist to 0 for a true circle, or raise it for a woven loop." aria-pressed="false" aria-label="Circle">
+              <svg viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="11.5" stroke-width="3.4"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="group">
+          <span class="lbl">Ratio</span>
+          <select id="ratio" aria-label="Canvas aspect ratio">
+            <option value="21/9" selected>21:9</option>
+            <option value="16/9">16:9</option>
+            <option value="16/7">16:7</option>
+            <option value="3/1">3:1</option>
+            <option value="4/3">4:3</option>
+            <option value="1/1">1:1</option>
+          </select>
+        </div>
+        <div class="group">
+          <span class="lbl">Scale</span>
+          <select id="scale" aria-label="Render scale">
+            <option value="0" selected>auto</option>
+            <option value="1">1&times;</option>
+            <option value="1.5">1.5&times;</option>
+            <option value="2">2&times;</option>
+          </select>
+        </div>
+        <span class="spacer"></span>
+        <button class="iconbtn" id="play" aria-pressed="true" aria-label="Pause" title="Pause">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <g class="i-pause"><rect x="7.5" y="5" width="3.2" height="14" rx="1"/><rect x="13.3" y="5" width="3.2" height="14" rx="1"/></g>
+            <path class="i-play" d="M8.5 5.4 19 12 8.5 18.6Z"/>
+          </svg>
+        </button>
+        <button class="iconbtn plain" id="undo" aria-label="Undo" title="Undo the last change (⌘Z)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7H14.5a4.5 4.5 0 0 1 0 9H8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M11.4 3.6 7 7l4.4 3.4z"/></svg>
+        </button>
+        <button class="iconbtn plain" id="redo" aria-label="Redo" title="Redo (⇧⌘Z)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 7H9.5a4.5 4.5 0 0 0 0 9H16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12.6 3.6 17 7l-4.4 3.4z"/></svg>
+        </button>
+        <button class="btn" id="reset" title="Reset sliders to the current Form preset (colour and shape unchanged)">Reset</button>
+        <button class="btn" id="copyCfg">Copy settings</button>
+        <button class="btn" id="copyGlsl">Copy shader</button>
+        <div class="group">
+          <span class="lbl">PNG</span>
+          <select id="exportW" aria-label="Export width">
+            <option value="1600">1600w</option>
+            <option value="2560" selected>2560w</option>
+            <option value="3840">3840w</option>
+          </select>
+          <select id="exportFmt" aria-label="Export format">
+            <option value="png" selected>PNG</option>
+            <option value="webp">WebP</option>
+          </select>
+          <label class="check" id="alphaWrap"><input type="checkbox" id="alphaBg"> Transparent</label>
+        </div>
+        <button class="btn" id="dlPng" title="Some embedded viewers block page-initiated downloads. If nothing lands, use Copy image.">Download</button>
+        <button class="btn" id="cpPng">Copy image</button>
+        <span class="perfout" id="exportOut"></span>
+      </div>
+
+      <div class="row">
+        <div class="sliders">
+          <div class="ctrl"><label for="cTwist">Twist</label><output id="oTwist"></output>
+            <input type="range" id="cTwist" min="0" max="150" value="52"></div>
+          <div class="ctrl"><label for="cWidth">Width</label><output id="oWidth"></output>
+            <input type="range" id="cWidth" min="8" max="200" value="62"></div>
+          <div class="ctrl"><label for="cStrands">Strands</label><output id="oStrands"></output>
+            <input type="range" id="cStrands" min="8" max="400" value="90"></div>
+          <div class="ctrl"><label for="cStriate">Striation</label><output id="oStriate"></output>
+            <input type="range" id="cStriate" min="0" max="100" value="100"></div>
+          <div class="ctrl"><label for="cGlow">Glow</label><output id="oGlow"></output>
+            <input type="range" id="cGlow" min="0" max="100" value="0"></div>
+          <div class="ctrl"><label for="cTilt">Tilt</label><output id="oTilt"></output>
+            <input type="range" id="cTilt" min="-30" max="30" value="0"></div>
+          <div class="ctrl"><label for="cSoft">Softness</label><output id="oSoft"></output>
+            <input type="range" id="cSoft" min="12" max="220" value="85"></div>
+          <div class="ctrl"><label for="cSpeed">Speed</label><output id="oSpeed"></output>
+            <input type="range" id="cSpeed" min="0" max="400" value="200"></div>
+          <div class="ctrl"><label for="cBlur" title="Blur ramps in with distance from the focus line. Drag on the canvas to place it.">Blur</label><output id="oBlur"></output>
+            <input type="range" id="cBlur" min="0" max="100" value="0"></div>
+          <div class="ctrl"><label for="cBspread" title="How far from the focus line the blur takes to reach full strength.">Focus depth</label><output id="oBspread"></output>
+            <input type="range" id="cBspread" min="4" max="140" value="45"></div>
+          <div class="ctrl"><label for="cBang" title="Direction of the focus line. 0° is horizontal.">Focus angle</label><output id="oBang"></output>
+            <input type="range" id="cBang" min="-90" max="90" value="0"></div>
+          <div class="ctrl"><label for="cOpacity">Opacity</label><output id="oOpacity"></output>
+            <input type="range" id="cOpacity" min="0" max="100" value="100"></div>
+          <div class="ctrl"><label for="cZoom">Zoom</label><output id="oZoom"></output>
+            <input type="range" id="cZoom" min="30" max="300" value="100"></div>
+          <div class="ctrl"><label for="cPanX">Pan X</label><output id="oPanX"></output>
+            <input type="range" id="cPanX" min="-120" max="120" value="0"></div>
+          <div class="ctrl"><label for="cPanY">Pan Y</label><output id="oPanY"></output>
+            <input type="range" id="cPanY" min="-60" max="60" value="0"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strip" id="strip">
+      <span class="lbl">In situ</span>
+      <div class="frame"><canvas class="pv" data-ratio="2.333" style="width:238px;height:102px"></canvas><span class="cap">Desktop 21:9</span></div>
+      <div class="frame"><canvas class="pv" data-ratio="1.778" style="width:181px;height:102px"></canvas><span class="cap">Laptop 16:9</span></div>
+      <div class="frame"><canvas class="pv" data-ratio="1.333" style="width:136px;height:102px"></canvas><span class="cap">Tablet 4:3</span></div>
+      <div class="frame"><canvas class="pv" data-ratio="0.75" style="width:77px;height:102px"></canvas><span class="cap">Phone 3:4</span></div>
+    </div>
+
+    <div class="perf">
+      <button class="btn" id="measure">Measure</button>
+      <span class="perfout" id="perfout">measuring&hellip;</span>
+      <span class="perfnote" id="perfnote">&le;8 noise samples per pixel &middot; 2 compiled permutations</span>
+    </div>
+  </div>
+
+  <div class="below">
+    <div class="note">
+      <h2>What the parameters do</h2>
+      <dl>
+        <dt>Twist</dt><dd>Amplitude of the three sines that bend the centreline. At 0 the ribbon is a straight horizontal band.</dd>
+        <dt>Width</dt><dd>Thickness of the band, which also varies along <code>x</code> so the ribbon tapers.</dd>
+        <dt>Strands</dt><dd>Frequency of the striation term. It fades itself out wherever a full cycle would fall inside one pixel, so pushing it high thins the strands rather than tearing into moir&eacute;.</dd>
+        <dt>Striation</dt><dd>How much of that term reaches alpha. At 0 you get smooth colour bands; at 1, hairlines.</dd>
+        <dt>Glow</dt><dd>Two extra wide, soft passes behind the band. Reads as bloom on light grounds, as fog on dark.</dd>
+        <dt>Softness</dt><dd>Exponent on the edge falloff. Low values give a dense band with defined edges; high values dissolve it into haze.</dd>
+        <dt>Shape</dt><dd>Line keeps the centreline as a height field over x. Arc and circle feed the same code polar coordinates &mdash; angle for &ldquo;along&rdquo;, radius for &ldquo;across&rdquo; &mdash; with integer wave harmonics so the loop closes without a seam.</dd>
+        <dt>Opacity</dt><dd>Fades the ribbon back toward its own ground, so type or a logo can sit on top. On a transparent export it scales the alpha instead.</dd>
+        <dt>Zoom / Pan</dt><dd>Scale and offset on the sampling space, so the composition can be framed independently of the canvas. These travel with the config &mdash; they are part of the artwork, not the viewer.</dd>
+        <dt>Tilt</dt><dd>Rotates the sampling space, for a diagonal sweep across a hero.</dd>
+      </dl>
+    </div>
+    <div class="note">
+      <h2>How one pixel gets its colour</h2>
+      <div class="codeblock">
+        <button class="copy" data-copy="core">Copy</button>
+<pre id="core">// signed distance from a curved centreline, normalised across the width
+float c = centreOf(q.x, t, phase);
+float w = (0.11 + 0.075*sin(q.x*1.5 + t*0.10 + phase)) * u_width;
+float v = (q.y - c) / w;          // -1 .. 1 inside the band
+float m = 1.0 - v*v;              // &lt;= 0 means this pixel is outside
+float vv = 0.5 + 0.5*v;
+
+// vv is used twice: once for colour along the width, once at high
+// frequency for the strands
+float sh = 0.5 + 0.5*sin(vv*u_strands*PI + snoise(...)*2.6);
+float ct = clamp(vv*0.46 + q.x*0.42 + 0.07*snoise(...), 0.0, 1.0);
+
+vec3  col = ramp(ct);                                  // linear-light mix
+float a   = pow(m, u_soft) * mix(1.0, 0.38 + 0.62*sh, u_striate);</pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+(function(){
+  "use strict";
+
+  var SNOISE = [
+    "vec3 permute(vec3 x){return mod(((x*34.0)+1.0)*x,289.0);}",
+    "float snoise(vec2 v){",
+    " const vec4 C=vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);",
+    " vec2 i=floor(v+dot(v,C.yy));",
+    " vec2 x0=v-i+dot(i,C.xx);",
+    " vec2 i1=(x0.x>x0.y)?vec2(1.0,0.0):vec2(0.0,1.0);",
+    " vec4 x12=x0.xyxy+C.xxzz; x12.xy-=i1;",
+    " i=mod(i,289.0);",
+    " vec3 p=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));",
+    " vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0);",
+    " m=m*m; m=m*m;",
+    " vec3 x=2.0*fract(p*C.www)-1.0;",
+    " vec3 h=abs(x)-0.5;",
+    " vec3 ox=floor(x+0.5);",
+    " vec3 a0=x-ox;",
+    " m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);",
+    " vec3 g;",
+    " g.x=a0.x*x0.x+h.x*x0.y;",
+    " g.yz=a0.yz*x12.xz+h.yz*x12.yw;",
+    " return 130.0*dot(m,g);}"
+  ].join("\n");
+
+  var FRAG = [
+    "precision highp float;",
+    "uniform vec2 u_res;",
+    "uniform float u_time,u_twist,u_strands,u_width,u_glow,u_striate,u_tilt,u_soft;",
+    "uniform float u_zoom,u_panX,u_panY,u_cy,u_r0,u_cutout,u_opacity;",
+    "uniform float u_blur,u_bspread,u_bang,u_bgdir; uniform vec2 u_bpos;",
+    "#ifdef POLAR",          // integer harmonics so the wobble closes on itself
+    " #define F1 3.0",
+    " #define F2 5.0",
+    " #define F3 2.0",
+    " #define FW 2.0",
+    " #define AMPS (u_r0*0.9)",   // radial wobble scales with the radius, or a small ring turns into a flower
+    "#else",
+    " #define F1 1.7",
+    " #define F2 3.1",
+    " #define F3 0.8",
+    " #define FW 1.5",
+    " #define AMPS 1.0",
+    "#endif",
+    "#ifdef XSHAPE",
+    " vec2 rot2(vec2 v,float a){ float c=cos(a), s=sin(a); return vec2(v.x*c-v.y*s, v.x*s+v.y*c); }",
+    " #define QA (cc+rot2(q-cc, xang))",
+    " #define QB (cc+rot2(q-cc,-xang))",
+    "#else",
+    " #define QA q",
+    " #define QB q",
+    "#endif",
+    "uniform vec3 u_bg,u_bg2,k0,k1,k2,k3,g0,g1,g2,g3,s0,s1;",
+    SNOISE,
+    "vec3 ramp(float t){",
+    " t=clamp(t,0.0,1.0);",
+    " vec3 r=mix(k0,k1,smoothstep(0.0,0.36,t));",
+    " r=mix(r,k2,smoothstep(0.32,0.70,t));",
+    " r=mix(r,k3,smoothstep(0.64,1.0,t));",
+    " return r;}",
+    "float centreOf(float x,float t,float ph){",
+    " return 0.5+u_twist*AMPS*(0.17*sin(x*F1+t*0.17+ph)+0.10*sin(x*F2-t*0.12+ph*1.7)+0.05*sin(x*F3+t*0.07));}",
+    "void over(inout vec3 c, inout float A, vec3 sc, float sa){",
+    " float na=sa+A*(1.0-sa);",
+    " c = na>0.0 ? (sc*sa + c*A*(1.0-sa))/na : vec3(0.0);",
+    " A = na;}",
+    "vec4 ribbon(vec2 q,float t,float ph,float wmul,float striate,float bf){",
+    " float c=centreOf(q.x,t,ph);",
+    " float w=max((0.11+0.075*sin(q.x*FW+t*0.10+ph))*u_width*wmul*mix(1.0,1.45,bf),0.012);",
+    " float v=(q.y-c)/w;",
+    " float m=1.0-v*v; if(m<=0.0) return vec4(0.0);",
+    " float vv=0.5+0.5*v;",
+    " float edge=pow(m,max(u_soft*mix(1.0,0.14,bf),0.02));",
+    "#ifdef POLAR",
+    " vec2 npos=vec2(cos(q.x),sin(q.x))*1.6+vec2(vv*1.2+t*0.09+ph);",
+    " float cdrive=(0.5+0.5*cos(q.x-0.6))*2.0;",
+    "#else",
+    " vec2 npos=vec2(q.x*1.8+t*0.09+ph,vv*2.2);",
+    " float cdrive=q.x;",
+    "#endif",
+    " float sh=0.5+0.5*sin(vv*u_strands*3.14159+snoise(npos)*2.6);",
+    " sh=mix(0.5,sh,smoothstep(0.0,0.35,m));",
+    "#ifdef AA",
+    // cycles of the striation term per pixel; past Nyquist, fade the term out
+    " float cyc=fwidth(vv)*u_strands*0.5;",
+    " sh=mix(0.5,sh,smoothstep(0.55,0.16,cyc));",
+    "#endif",
+    " float ct=clamp(vv*0.46+cdrive*0.42+0.07*snoise(npos*0.6),0.0,1.0);",
+    " float a=edge*mix(1.0,0.38+0.62*sh,striate*u_striate*(1.0-bf));",
+    " return vec4(ramp(ct),a);}",
+    "void main(){",
+    " vec2 p=gl_FragCoord.xy/u_res; float asp=u_res.x/max(u_res.y,1.0);",
+    " vec2 q=vec2(p.x*asp,p.y); float t=u_time;",
+    " vec2 cc=vec2(asp*0.5,0.5); vec2 d=q-cc; float ca=cos(u_tilt), sa=sin(u_tilt);",
+    " float xang=atan(1.0,asp);",
+    " vec3 col; float outA=1.0;",
+    " vec2 sq=vec2(p.x*asp,p.y);",
+    " vec2 nrm=vec2(sin(u_bang),cos(u_bang));",
+    " float blurF=u_blur*smoothstep(0.0,max(u_bspread,0.01),abs(dot(sq-u_bpos,nrm)));",
+    " q=cc+vec2(d.x*ca-d.y*sa, d.x*sa+d.y*ca);",
+    " q=cc+(q-cc)/max(u_zoom,0.05)-vec2(u_panX,u_panY);",
+    "#ifdef POLAR",
+    " vec2 dd=q-vec2(cc.x,u_cy);",
+    " q=vec2(atan(dd.y,dd.x), 0.5+length(dd)-u_r0);",
+    "#endif",
+    "#ifdef DARK",
+    " float gy=clamp(p.y,0.0,1.0);",
+    " col=mix(g0,g1,smoothstep(0.0,0.20,gy));",
+    " col=mix(col,g2,smoothstep(0.18,0.56,gy));",
+    " col=mix(col,g3,smoothstep(0.54,1.0,gy));",
+    " vec3 base=col;",
+    " vec4 h1=ribbon(QA,t,0.0,2.6,0.0,blurF); col+=mix(h1.rgb,s0,0.35)*h1.a*u_glow*0.13;",
+    " vec4 h2=ribbon(QB,t,2.3,2.2,0.0,blurF); col+=mix(h2.rgb,s0,0.35)*h2.a*u_glow*0.09;",
+    " vec4 b2=ribbon(QB,t,2.3,0.85,1.0,blurF); float a2=pow(b2.a,2.2); col+=mix(b2.rgb,s1,a2*0.10)*a2*1.30;",
+    " vec4 b1=ribbon(QA,t,0.0,1.0,1.0,blurF); float a1=pow(b1.a,2.2); col+=mix(b1.rgb,s1,a1*0.10)*a1*1.75;",
+    // additive passes clip to white where they overlap; roll them off instead,
+    // then put back the chroma the roll-off costs
+    " col=mix(base,col,u_opacity);",
+    " col=vec3(1.0)-exp(-col*0.92);",
+    " col=mix(vec3(dot(col,vec3(0.2126,0.7152,0.0722))),col,1.34);",
+    "#else",
+    " vec4 h1=ribbon(QA,t,0.0,2.6,0.0,blurF);",
+    " vec4 h2=ribbon(QB,t,2.3,2.2,0.0,blurF);",
+    " vec4 b2=ribbon(QB,t,2.3,0.85,1.0,blurF);",
+    " vec4 b1=ribbon(QA,t,0.0,1.0,1.0,blurF);",
+    " if(u_cutout>0.5){",
+    "  vec3 c=vec3(0.0); float A=0.0;",
+    "  over(c,A,h1.rgb,h1.a*u_glow*0.55);",
+    "  over(c,A,h2.rgb,h2.a*u_glow*0.40);",
+    "  over(c,A,b2.rgb,b2.a*0.80);",
+    "  over(c,A,b1.rgb,b1.a*1.0);",
+    "  col=c; outA=A*u_opacity;",
+    " } else {",
+    "  float gt=mix(p.x,p.y,u_bgdir);",
+    "  vec3 ground=mix(u_bg,u_bg2,clamp(gt,0.0,1.0));",
+    "  col=ground;",
+    "  col=mix(col,h1.rgb,h1.a*u_glow*0.55);",
+    "  col=mix(col,h2.rgb,h2.a*u_glow*0.40);",
+    "  col=mix(col,b2.rgb,b2.a*0.80);",
+    "  col=mix(col,b1.rgb,b1.a*1.0);",
+    "  col=mix(ground,col,u_opacity);",
+    " }",
+    "#endif",
+    " col=pow(max(col,0.0),vec3(1.0/2.2));",
+    " float hn=fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453);",
+    " col+=(hn-0.5)*(1.6/255.0);",
+    " gl_FragColor=vec4(col,outA);}"
+  ].join("\n");
+
+  var VERT = "attribute vec2 a;void main(){gl_Position=vec4(a,0.0,1.0);}";
+  var UNIFORMS = ["u_res","u_time","u_twist","u_strands","u_width","u_glow","u_striate","u_tilt",
+                  "u_soft","u_zoom","u_panX","u_panY","u_cy","u_r0","u_cutout","u_opacity","u_blur","u_bspread","u_bang","u_bgdir","u_bpos","u_bg","u_bg2","k0","k1","k2","k3","g0","g1","g2","g3","s0","s1"];
+
+  // Presets are injected at build time from src/ribbon/presets.json — the same
+  // data published as ribbon-presets.json for the sites. Editing them here
+  // would not survive a build; edit the JSON.
+  var PRESETS = __RIBBON_PRESETS__;
+  var COLOURS = PRESETS.colours;
+  var FORMS = PRESETS.forms;
+
+  // Paint the colour chips from the data, so a retuned ramp shows up here too.
+  COLOURS.forEach(function(c, i){
+    var b = document.getElementById("pre" + i);
+    if (!b) return;
+    var stops = c.prog === 1
+      ? [c.ground[3], c.ground[1] + " 38%", c.ramp[1] + " 72%", c.ramp[2]]
+      : c.ramp;
+    b.style.background = "linear-gradient(" + (c.prog === 1 ? "150deg," : "135deg,") + stops.join(",") + ")";
+    b.title = c.name.replace("brand-", "").replace(/^./, function(s){ return s.toUpperCase(); }) + " — " + (c.about || "");
+  });
+  FORMS.forEach(function(f, i){
+    var b = document.getElementById("frm" + i);
+    if (b) b.title = f.name.replace(/^./, function(s){ return s.toUpperCase(); }) + " — " + (f.about || "");
+  });
+
+  function srgbToLinear(hex){
+    var n = parseInt(hex.slice(1), 16), out = [], i, c;
+    for (i = 2; i >= 0; i--){
+      c = ((n >> (i*8)) & 255) / 255;
+      out.push(c <= 0.04045 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4));
+    }
+    return out;
+  }
+
+  var canvas = document.getElementById("cv");
+  var gl = canvas.getContext("webgl", {antialias:false, alpha:true, premultipliedAlpha:false, powerPreference:"low-power"})
+        || canvas.getContext("experimental-webgl");
+  if (!gl){ document.getElementById("stage").classList.add("no-gl"); return; }
+
+  function build(defines){
+    function sh(type, src){
+      var o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o);
+      if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)){ console.error(gl.getShaderInfoLog(o)); return null; }
+      return o;
+    }
+    var src = defines + FRAG;
+    var vs = sh(gl.VERTEX_SHADER, VERT), fs = sh(gl.FRAGMENT_SHADER, src);
+    if (!vs || !fs) return null;
+    var prog = gl.createProgram();
+    gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)){ console.error(gl.getProgramInfoLog(prog)); return null; }
+    gl.useProgram(prog);
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(prog, "a");
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    var U = {};
+    UNIFORMS.forEach(function(n){ U[n] = gl.getUniformLocation(prog, n); });
+    return {
+      U:U, src:src,
+      use:function(){
+        gl.useProgram(prog);
+        gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+        gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+      },
+      draw:function(){ gl.drawArrays(gl.TRIANGLES, 0, 3); }
+    };
+  }
+
+  // derivatives let the striation term fade out before it aliases
+  var AA = gl.getExtension("OES_standard_derivatives")
+    ? "#extension GL_OES_standard_derivatives : enable\n#define AA 1\n" : "";
+  // compiled permutations, not one shader branching on uniforms.
+  // shape 0 = line (cartesian), shapes 1-2 = arc / circle (polar, same program).
+  var SHAPES = [
+    { name:"line",   polar:false, cy:0.5,   r0:0.30, bgdir:0 },
+    { name:"arc",    polar:true,  cy:-0.62, r0:1.16, bgdir:0 },
+    { name:"circle", polar:true,  cy:0.5,   r0:0.33, bgdir:1 }
+  ];
+  var cache = {};
+  function programFor(shape, dark){
+    var sh = SHAPES[shape];
+    var key = (sh.polar ? "p" : sh.cross ? "x" : "c") + (dark ? "d" : "l");
+    if (!cache[key]){
+      cache[key] = build(AA
+        + (sh.polar ? "#define POLAR 1\n" : "")
+        + (sh.cross ? "#define XSHAPE 1\n" : "")
+        + (dark ? "#define DARK 1\n" : ""));
+    }
+    return cache[key];
+  }
+  if (!programFor(0, false)){ document.getElementById("stage").classList.add("no-gl"); return; }
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var FPS = 30, FRAME = 1000/FPS;
+  var st = { t:4.0, playing:false, vis:true, scale:0, preset:0,
+             twist:0.52, width:0.54, strands:112, striate:1, glow:0.46, tilt:0, speed:0.6, soft:0.85, zoom:1, panX:0, panY:0, opacity:1, blur:0, bspread:0.45, bang:0, bx:0.5, by:0.5, colour:1, form:1, shape:0 };
+  var prog = programFor(0, false);
+  var cutout = false;
+
+  function themeBG(){
+    var attr = document.documentElement.getAttribute("data-theme");
+    var dark = attr === "dark" || (attr !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    return srgbToLinear(dark ? "#0B0D11" : "#FBFBFC");
+  }
+  function setColours(){
+    var preset = COLOURS[st.colour];
+    var ground = preset.ground || ["#cfe1f3","#8b7cf0","#3f34ab","#0f0f45"];
+    var strand = preset.strand || ["#c6d6ff","#ffffff"];
+    prog.use();
+    preset.ramp.forEach(function(hex,i){ var c=srgbToLinear(hex); gl.uniform3f(prog.U["k"+i], c[0],c[1],c[2]); });
+    ground.forEach(function(hex,i){ var c=srgbToLinear(hex); gl.uniform3f(prog.U["g"+i], c[0],c[1],c[2]); });
+    strand.forEach(function(hex,i){ var c=srgbToLinear(hex); gl.uniform3f(prog.U["s"+i], c[0],c[1],c[2]); });
+    var b0 = preset.bg ? srgbToLinear(preset.bg[0]) : themeBG();
+    var b1 = preset.bg ? srgbToLinear(preset.bg[1]) : b0;
+    gl.uniform3f(prog.U.u_bg,  b0[0], b0[1], b0[2]);
+    gl.uniform3f(prog.U.u_bg2, b1[0], b1[1], b1[2]);
+  }
+
+  function fit(){
+    var dpr = st.scale || Math.min(window.devicePixelRatio || 1, 2);
+    var w = Math.max(1, Math.round(canvas.clientWidth * dpr));
+    var h = Math.max(1, Math.round(canvas.clientHeight * dpr));
+    if (canvas.width !== w || canvas.height !== h){ canvas.width = w; canvas.height = h; gl.viewport(0,0,w,h); }
+  }
+  function pushUniforms(w, h){   // w,h are the drawing-buffer size
+    prog.use();
+    var U = prog.U;
+    gl.uniform2f(U.u_res, w, h);
+    gl.uniform1f(U.u_time, st.t);
+    gl.uniform1f(U.u_twist, st.twist);
+    gl.uniform1f(U.u_strands, st.strands);
+    gl.uniform1f(U.u_width, st.width);
+    gl.uniform1f(U.u_glow, st.glow);
+    gl.uniform1f(U.u_striate, st.striate);
+    gl.uniform1f(U.u_tilt, st.tilt * Math.PI / 180);
+    gl.uniform1f(U.u_soft, st.soft);
+    gl.uniform1f(U.u_zoom, st.zoom);
+    gl.uniform1f(U.u_panX, st.panX);
+    gl.uniform1f(U.u_panY, st.panY);
+    gl.uniform1f(U.u_cy, SHAPES[st.shape].cy);
+    gl.uniform1f(U.u_r0, SHAPES[st.shape].r0);
+    gl.uniform1f(U.u_bgdir, SHAPES[st.shape].bgdir || 0);
+    gl.uniform1f(U.u_cutout, cutout ? 1 : 0);
+    gl.uniform1f(U.u_opacity, st.opacity);
+    gl.uniform1f(U.u_blur, st.blur);
+    gl.uniform1f(U.u_bspread, st.bspread);
+    gl.uniform1f(U.u_bang, st.bang * Math.PI / 180);
+    gl.uniform2f(U.u_bpos, st.bx * (w / Math.max(h, 1)), st.by);
+  }
+  function render(){
+    fit();
+    pushUniforms(canvas.width, canvas.height);
+    prog.draw();
+    schedulePreviews();
+  }
+
+  // Previews reuse the one WebGL context: resize the drawing buffer, draw, blit
+  // into a 2D canvas, restore. All inside one task, so nothing flickers.
+  var PV = Array.prototype.slice.call(document.querySelectorAll(".pv"));
+  var pvTimer = 0, pvLast = 0;
+  function schedulePreviews(){
+    if (pvTimer) return;
+    pvTimer = setTimeout(function(){ pvTimer = 0; drawPreviews(); }, 220);
+  }
+  function drawPreviews(){
+    if (!PV.length) return;
+    var W = canvas.width, H = canvas.height;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    PV.forEach(function(pv){
+      var w = Math.max(1, Math.round(pv.clientWidth * dpr));
+      var h = Math.max(1, Math.round(pv.clientHeight * dpr));
+      if (pv.width !== w || pv.height !== h){ pv.width = w; pv.height = h; }
+      canvas.width = w; canvas.height = h;
+      gl.viewport(0, 0, w, h);
+      pushUniforms(w, h);
+      prog.draw();
+      var ctx = pv.getContext("2d");
+      if (ctx) ctx.drawImage(canvas, 0, 0, w, h);
+    });
+    canvas.width = W; canvas.height = H;
+    gl.viewport(0, 0, W, H);
+    pushUniforms(W, H);
+    prog.draw();
+    pvLast = performance.now();
+  }
+
+  var raf = 0, prev = 0, acc = 0;
+  function frame(now){
+    raf = requestAnimationFrame(frame);
+    if (!prev) prev = now;
+    var dt = Math.min(now - prev, 100); prev = now;
+    acc += dt;
+    if (acc >= FRAME){
+      st.t += (acc/1000) * st.speed; acc = 0;
+      fit(); pushUniforms(canvas.width, canvas.height); prog.draw();
+      if (now - pvLast > 1500) drawPreviews();
+    }
+  }
+  function sync(){
+    var on = st.playing && st.vis && !document.hidden && st.speed > 0;
+    if (on && !raf){ prev = 0; acc = 0; raf = requestAnimationFrame(frame); }
+    else if (!on && raf){ cancelAnimationFrame(raf); raf = 0; }
+  }
+
+  function measure(){
+    prog.use();
+    var px = new Uint8Array(4), i;
+    for (i = 0; i < 4; i++) prog.draw();
+    gl.readPixels(0,0,1,1,gl.RGBA,gl.UNSIGNED_BYTE,px);
+    var N = 12, t0 = performance.now();
+    for (i = 0; i < N; i++) prog.draw();
+    gl.readPixels(0,0,1,1,gl.RGBA,gl.UNSIGNED_BYTE,px);
+    var ms = (performance.now() - t0) / N;
+    var mpxs = (canvas.width * canvas.height / 1e6) / (ms / 1000);
+    document.getElementById("perfout").textContent =
+      ms.toFixed(2) + " ms/frame at " + canvas.width + "×" + canvas.height +
+      " · " + Math.round(mpxs) + " Mpx/s · ≈" +
+      ((2560*1440/1e6) / mpxs * 1000).toFixed(1) + " ms for a 2560×1440 hero";
+  }
+
+  /* ---------- controls ---------- */
+  var RANGES = [
+    ["cTwist","oTwist","twist",  function(v){ return v/100; }, function(v){ return (v/100).toFixed(2); }],
+    ["cWidth","oWidth","width",  function(v){ return v/100; }, function(v){ return (v/100).toFixed(2); }],
+    ["cStrands","oStrands","strands", function(v){ return v; }, function(v){ return String(v); }],
+    ["cStriate","oStriate","striate", function(v){ return v/100; }, function(v){ return (v/100).toFixed(2); }],
+    ["cGlow","oGlow","glow",     function(v){ return v/100; }, function(v){ return (v/100).toFixed(2); }],
+    ["cTilt","oTilt","tilt",     function(v){ return v; }, function(v){ return v + "°"; }],
+    ["cSoft","oSoft","soft",     function(v){ return v/100; }, function(v){ return (v/100).toFixed(2); }],
+    ["cSpeed","oSpeed","speed",  function(v){ return v/100; }, function(v){ return (v/100).toFixed(2); }],
+    ["cBlur","oBlur","blur",         function(v){ return v/100; }, function(v){ return v + "%"; }],
+    ["cBspread","oBspread","bspread", function(v){ return v/100; }, function(v){ return (v/100).toFixed(2); }],
+    ["cBang","oBang","bang",         function(v){ return v; },     function(v){ return v + "°"; }],
+    ["cOpacity","oOpacity","opacity", function(v){ return v/100; }, function(v){ return v + "%"; }],
+    ["cZoom","oZoom","zoom",     function(v){ return v/100; }, function(v){ return (v/100).toFixed(2) + "×"; }],
+    ["cPanX","oPanX","panX",     function(v){ return v/100; }, function(v){ return (v/100).toFixed(2); }],
+    ["cPanY","oPanY","panY",     function(v){ return v/100; }, function(v){ return (v/100).toFixed(2); }]
+  ];
+  RANGES.forEach(function(r){
+    var el = document.getElementById(r[0]), out = document.getElementById(r[1]);
+    el.addEventListener("change", commit);
+    el.addEventListener("input", function(){
+      var v = +el.value; st[r[2]] = r[3](v); out.textContent = r[4](v);
+      if (r[2] === "speed") sync();
+      if (r[2] === "blur" || r[2] === "bspread" || r[2] === "bang") showGuide(false);
+      render();
+    });
+  });
+  function paintRanges(){
+    RANGES.forEach(function(r){
+      var el = document.getElementById(r[0]), out = document.getElementById(r[1]);
+      out.textContent = r[4](+el.value);
+    });
+  }
+
+  function paintChips(prefix, active, count){
+    for (var n = 0; n < count; n++){
+      document.getElementById(prefix+n).setAttribute("aria-pressed", String(n === active));
+    }
+  }
+  function applyColour(i){
+    st.colour = i;
+    paintChips("pre", i, 3);
+    prog = programFor(st.shape, COLOURS[i].prog === 1);
+    setColours(); render(); measure(); syncAlphaToggle();
+  }
+  function applyShape(i){
+    st.shape = i;
+    paintChips("shp", i, 3);
+    prog = programFor(i, COLOURS[st.colour].prog === 1);
+    setColours(); render(); measure();
+  }
+  function applyForm(i){
+    st.form = i;
+    paintChips("frm", i, 4);
+    var p = FORMS[i].p;
+    Object.keys(p).forEach(function(key){
+      var el = document.getElementById("c" + key.charAt(0).toUpperCase() + key.slice(1));
+      if (el) el.value = p[key];
+    });
+    st.twist = p.twist/100; st.width = p.width/100; st.strands = p.strands;
+    st.striate = p.striate/100; st.glow = p.glow/100; st.tilt = p.tilt;
+    st.speed = p.speed/100; st.soft = p.soft/100;
+    paintRanges(); render(); sync(); measure();
+  }
+  function chips(prefix, fn, count){
+    var ids = [];
+    for (var n = 0; n < (count || 3); n++) ids.push(n);
+    ids.forEach(function(i){
+      document.getElementById(prefix+i).addEventListener("click", function(){
+        ids.forEach(function(j){
+          document.getElementById(prefix+j).setAttribute("aria-pressed", String(i===j));
+        });
+        fn(i);
+        commit();
+      });
+    });
+  }
+  chips("pre", applyColour);
+  chips("frm", applyForm, 4);
+  chips("shp", applyShape);
+
+  document.getElementById("ratio").addEventListener("change", function(){
+    document.getElementById("stage").style.aspectRatio = this.value;
+    commit();
+    setTimeout(function(){ render(); measure(); }, 60);
+  });
+  document.getElementById("scale").addEventListener("change", function(){
+    st.scale = +this.value || 0; render(); measure(); commit();
+  });
+  var playBtn = document.getElementById("play");
+  function paintPlay(){
+    playBtn.setAttribute("aria-pressed", String(st.playing));
+    playBtn.setAttribute("aria-label", st.playing ? "Pause" : "Play");
+    playBtn.setAttribute("title", st.playing ? "Pause (exporting also pauses, so the file matches the frame on screen)" : "Play");
+  }
+  paintPlay();
+  playBtn.addEventListener("click", function(){ st.playing = !st.playing; paintPlay(); sync(); });
+  document.getElementById("measure").addEventListener("click", measure);
+  document.getElementById("layoutW").addEventListener("change", function(){
+    document.documentElement.style.setProperty("--maxw", this.value);
+    setTimeout(function(){ render(); measure(); }, 80);
+  });
+
+  // Drag anywhere on the canvas to place the focus line the blur ramps away from.
+  var guide = document.getElementById("guide");
+  var gline = guide.querySelector(".gline");
+  var gdot = guide.querySelector(".gdot");
+  var guideTimer = 0;
+  function paintGuide(){
+    var left = (st.bx * 100) + "%", top = ((1 - st.by) * 100) + "%";
+    gline.style.left = left; gline.style.top = top;
+    gline.style.transform = "translate(-50%,-50%) rotate(" + (-st.bang) + "deg)";
+    gdot.style.left = left; gdot.style.top = top;
+  }
+  function showGuide(sticky){
+    paintGuide();
+    guide.classList.add("on");
+    clearTimeout(guideTimer);
+    if (!sticky) guideTimer = setTimeout(function(){ guide.classList.remove("on"); }, 1100);
+  }
+  function placeFrom(e){
+    var r = canvas.getBoundingClientRect();
+    st.bx = Math.min(1, Math.max(0, (e.clientX - r.left) / Math.max(r.width, 1)));
+    st.by = 1 - Math.min(1, Math.max(0, (e.clientY - r.top) / Math.max(r.height, 1)));
+    showGuide(true); render();
+  }
+  canvas.addEventListener("pointerdown", function(e){
+    canvas.setPointerCapture(e.pointerId); placeFrom(e); e.preventDefault();
+  });
+  canvas.addEventListener("pointermove", function(e){
+    if (e.buttons) placeFrom(e);
+  });
+  canvas.addEventListener("pointerup", function(){ showGuide(false); commit(); });
+  canvas.addEventListener("pointercancel", function(){ showGuide(false); });
+
+  function flash(btn, ok){
+    var was = btn.textContent;
+    btn.textContent = ok ? "Copied" : "Copy failed";
+    setTimeout(function(){ btn.textContent = was; }, 1500);
+  }
+  function legacyCopy(text){
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly","");
+      ta.style.cssText = "position:fixed;top:0;left:0;opacity:0";
+      document.body.appendChild(ta); ta.select();
+      var ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    } catch(e){ return false; }
+  }
+  function copy(text, btn){
+    try {
+      navigator.clipboard.writeText(text).then(
+        function(){ flash(btn, true); },
+        function(){ flash(btn, legacyCopy(text)); }
+      );
+    } catch(e){ flash(btn, legacyCopy(text)); }
+  }
+  document.getElementById("copyCfg").addEventListener("click", function(){
+    var pr = COLOURS[st.colour];
+    copy(JSON.stringify({
+      colour: pr.name,
+      form: FORMS[st.form].name,
+      shape: SHAPES[st.shape].name,
+      ramp: pr.ramp,
+      ground: pr.prog === 1 ? pr.ground : (pr.bg || "page background"),
+      strandColours: pr.prog === 1 ? pr.strand : null,
+      twist:+st.twist.toFixed(2), width:+st.width.toFixed(2), strandCount:st.strands,
+      striation:+st.striate.toFixed(2), glow:+st.glow.toFixed(2), tiltDeg:st.tilt, softness:+st.soft.toFixed(2),
+      speed:+st.speed.toFixed(2), time:+st.t.toFixed(3), opacity:+st.opacity.toFixed(2),
+      blur:+st.blur.toFixed(2), focusDepth:+st.bspread.toFixed(2), focusAngle:st.bang,
+      focusX:+st.bx.toFixed(3), focusY:+st.by.toFixed(3), zoom:+st.zoom.toFixed(2),
+      panX:+st.panX.toFixed(2), panY:+st.panY.toFixed(2),
+      ratio:document.getElementById("ratio").value
+    }, null, 2), this);
+  });
+  document.getElementById("copyGlsl").addEventListener("click", function(){ copy(prog.src, this); });
+
+  // Served from the design system's own host there is no window.claude; a
+  // plain anchor download works. The capability path is kept for the case
+  // where this file is opened inside the claude.ai viewer.
+  var dlCap = null;
+  try {
+    if (window.claude && typeof window.claude.use === "function") {
+      window.claude.use("downloads").then(function(ns){ dlCap = ns; }, function(){});
+    }
+  } catch(e){}
+
+  document.getElementById("reset").addEventListener("click", function(){
+    document.getElementById("cBlur").value = 0;
+    document.getElementById("cBspread").value = 45;
+    document.getElementById("cBang").value = 0;
+    document.getElementById("cOpacity").value = 100;
+    document.getElementById("cZoom").value = 100;
+    document.getElementById("cPanX").value = 0;
+    document.getElementById("cPanY").value = 0;
+    st.opacity = 1; st.zoom = 1; st.panX = 0; st.panY = 0;
+    st.blur = 0; st.bspread = 0.45; st.bang = 0; st.bx = 0.5; st.by = 0.5;
+    applyForm(st.form);                       // re-seeds the eight shape sliders
+    commit();
+  });
+
+  /* ---------- undo history ---------- */
+  var SNAP_KEYS = ["colour","form","shape","twist","width","strands","striate","glow","tilt",
+                   "soft","speed","opacity","zoom","panX","panY","blur","bspread","bang","bx","by"];
+  var RANGE_IDS = {twist:"cTwist", width:"cWidth", strands:"cStrands", striate:"cStriate", glow:"cGlow",
+                   tilt:"cTilt", soft:"cSoft", speed:"cSpeed", opacity:"cOpacity", zoom:"cZoom",
+                   panX:"cPanX", panY:"cPanY", blur:"cBlur", bspread:"cBspread", bang:"cBang"};
+  var history = [], redoStack = [], committed = null;
+
+  function snapshot(){
+    var o = {};
+    SNAP_KEYS.forEach(function(k){ o[k] = st[k]; });
+    o.ratio = document.getElementById("ratio").value;
+    o.scale = document.getElementById("scale").value;
+    RANGE_IDS && Object.keys(RANGE_IDS).forEach(function(k){
+      o["_" + k] = document.getElementById(RANGE_IDS[k]).value;   // keep slider positions exact
+    });
+    return o;
+  }
+  function restore(o){
+    SNAP_KEYS.forEach(function(k){ st[k] = o[k]; });
+    Object.keys(RANGE_IDS).forEach(function(k){
+      var el = document.getElementById(RANGE_IDS[k]);
+      if (o["_" + k] !== undefined) el.value = o["_" + k];
+    });
+    document.getElementById("ratio").value = o.ratio;
+    document.getElementById("scale").value = o.scale;
+    document.getElementById("stage").style.aspectRatio = o.ratio;
+    st.scale = +o.scale || 0;
+    [0,1,2].forEach(function(j){ document.getElementById("pre"+j).setAttribute("aria-pressed", String(st.colour===j)); });
+    [0,1,2,3].forEach(function(j){ document.getElementById("frm"+j).setAttribute("aria-pressed", String(st.form===j)); });
+    [0,1,2].forEach(function(j){ document.getElementById("shp"+j).setAttribute("aria-pressed", String(st.shape===j)); });
+    prog = programFor(st.shape, COLOURS[st.colour].prog === 1);
+    paintRanges(); setColours(); syncAlphaToggle(); render(); sync();
+  }
+  function paintHistoryUI(){
+    document.getElementById("undo").disabled = history.length === 0;
+    document.getElementById("redo").disabled = redoStack.length === 0;
+  }
+  // Call AFTER a change has been applied: banks the state that preceded it.
+  function commit(){
+    if (committed) history.push(committed);
+    if (history.length > 60) history.shift();
+    committed = snapshot();
+    redoStack = [];
+    paintHistoryUI();
+  }
+  document.getElementById("undo").addEventListener("click", function(){
+    if (!history.length) return;
+    redoStack.push(committed);
+    committed = history.pop();
+    restore(committed); paintHistoryUI();
+  });
+  document.getElementById("redo").addEventListener("click", function(){
+    if (!redoStack.length) return;
+    history.push(committed);
+    committed = redoStack.pop();
+    restore(committed); paintHistoryUI();
+  });
+  document.addEventListener("keydown", function(e){
+    if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== "z") return;
+    e.preventDefault();
+    document.getElementById(e.shiftKey ? "redo" : "undo").click();
+  });
+
+  function cutoutAvailable(){ return COLOURS[st.colour].prog !== 1; }
+  function syncAlphaToggle(){
+    var wrap = document.getElementById("alphaWrap");
+    var box = document.getElementById("alphaBg");
+    var ok = cutoutAvailable();
+    box.disabled = !ok;
+    if (!ok) box.checked = false;
+    wrap.classList.toggle("is-disabled", !ok);
+    wrap.title = ok
+      ? "Export the ribbon on a transparent background instead of its ground colour."
+      : "Not available on the dark treatment: its strands are additive light on the indigo ground — "
+        + "each pass adds to what is behind it rather than covering it, so with the ground removed there is "
+        + "no artwork left to cut out. Use the light or medium colours for a transparent export.";
+  }
+  document.getElementById("alphaBg").addEventListener("change", function(){
+    document.getElementById("exportOut").textContent = this.checked
+      ? "transparent export — PNG and WebP both keep alpha" : "";
+  });
+
+  function freezeForExport(){
+    if (st.playing){
+      st.playing = false;
+      paintPlay();
+      sync();               // stops the rAF, so st.t stops advancing
+    }
+  }
+
+  // Render at a multiple of the target and downsample: the striation sits near the
+  // pixel limit, so supersampling is what keeps strands from thinning out.
+  function renderExport(){
+    var targetW = +document.getElementById("exportW").value;
+    var aspect = canvas.clientWidth / Math.max(canvas.clientHeight, 1);
+    var targetH = Math.max(1, Math.round(targetW / aspect));
+    var maxDim = gl.getParameter(gl.MAX_RENDERBUFFER_SIZE) || 4096;
+    var ss = Math.max(1, Math.min(2, Math.floor(maxDim / Math.max(targetW, targetH))));
+    cutout = cutoutAvailable() && document.getElementById("alphaBg").checked;
+    var W = canvas.width, H = canvas.height;
+    canvas.width = targetW * ss; canvas.height = targetH * ss;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    pushUniforms(canvas.width, canvas.height);
+    prog.draw();
+    var out = document.createElement("canvas");
+    out.width = targetW; out.height = targetH;
+    var ctx = out.getContext("2d");
+    ctx.imageSmoothingEnabled = true;
+    try { ctx.imageSmoothingQuality = "high"; } catch(e){}
+    ctx.drawImage(canvas, 0, 0, targetW, targetH);
+    cutout = false;
+    canvas.width = W; canvas.height = H;
+    gl.viewport(0, 0, W, H);
+    pushUniforms(W, H);
+    prog.draw();
+    return { canvas:out, w:targetW, h:targetH, ss:ss };
+  }
+  function fileName(ext){
+    return ["ribbon", SHAPES[st.shape].name, COLOURS[st.colour].name, FORMS[st.form].name].join("-") + "." + ext;
+  }
+  function status(msg){ document.getElementById("exportOut").textContent = msg; }
+
+  function mimeOf(fmt){ return fmt === "webp" ? "image/webp" : "image/png"; }
+
+  function offerFile(blob, name){
+    var kb = Math.round(blob.size / 1024);
+    var size = kb > 1024 ? (kb / 1024).toFixed(1) + " MB" : kb + " KB";
+    var frame = " · frame t " + st.t.toFixed(2);
+    if (dlCap){
+      status(size + " · asking to save…");
+      dlCap.save({ filename: name, data: blob }).then(
+        function(){ status(size + " · saved as " + name + frame); },
+        function(err){
+          var code = (err && err.code) || "error";
+          if (code === "declined") status("save cancelled");
+          else if (code === "too_large") status(size + " is over the 16 MB limit — switch to WebP or a smaller width");
+          else if (code === "rate_limited") status("a save prompt is already open — try again in a moment");
+          else status("saving unavailable here (" + code + ") — use Copy image");
+        }
+      );
+      return;
+    }
+    try {
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 8000);
+      status(size + " · " + name + frame);
+    } catch(err){ status("download blocked here — use Copy image instead"); }
+  }
+
+  document.getElementById("dlPng").addEventListener("click", function(){
+    var fmt = document.getElementById("exportFmt").value;
+    freezeForExport();
+    var e = renderExport();
+    status("rendering " + e.w + "×" + e.h + (e.ss > 1 ? " (" + e.ss + "× supersampled)" : "") + "…");
+    e.canvas.toBlob(function(blob){
+      if (!blob){ status("this browser could not encode " + fmt.toUpperCase()); return; }
+      offerFile(blob, fileName(fmt));
+    }, mimeOf(fmt), fmt === "webp" ? 0.92 : undefined);
+  });
+
+  document.getElementById("cpPng").addEventListener("click", function(){
+    freezeForExport();
+    var e = renderExport();   // PNG regardless of the format select — clipboards want PNG
+    e.canvas.toBlob(function(blob){
+      if (!blob){ status("could not encode the PNG"); return; }
+      var kb = Math.round(blob.size / 1024);
+      try {
+        navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]).then(
+          function(){ status(e.w + "×" + e.h + " · " + kb + " KB · copied to clipboard"); },
+          function(){ status("clipboard refused the image — try Download"); }
+        );
+      } catch(err){ status("this browser can't copy images — try Download"); }
+    }, "image/png");
+  });
+  Array.prototype.forEach.call(document.querySelectorAll(".copy"), function(b){
+    b.addEventListener("click", function(){ copy(document.getElementById(b.getAttribute("data-copy")).textContent, b); });
+  });
+
+  if ("IntersectionObserver" in window){
+    new IntersectionObserver(function(es){ st.vis = es[0].isIntersecting; sync(); }, {rootMargin:"120px"}).observe(canvas);
+  }
+  document.addEventListener("visibilitychange", sync);
+  window.addEventListener("resize", render);
+  var mq = window.matchMedia("(prefers-color-scheme: dark)");
+  (mq.addEventListener ? mq.addEventListener.bind(mq,"change") : mq.addListener.bind(mq))(function(){ setColours(); render(); });
+  new MutationObserver(function(){ setColours(); render(); })
+    .observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
+
+  applyForm(2); applyShape(0); applyColour(1); syncAlphaToggle();
+  committed = snapshot(); paintHistoryUI();
+  setTimeout(measure, 500);
+})();
+</script>
+</body>
+</html>

@@ -13,11 +13,15 @@
  *   dist/index.html                  the styleguide (also a live smoke test: it
  *                                    consumes /v1/ like any other site would)
  *   dist/404.html                    served by Pages for any missing path
+ *   dist/ribbon-shader-studio.html   the Ribbon Shader Studio, presets injected from
+ *                                    src/ribbon/presets.json (also published as
+ *                                    <channel>/ribbon-presets.json for the sites)
  *   dist/manifest.json               versions and the hashed font map
  *   dist/_headers                    cache + CORS rules for Pages
  *
  * Each version folder contains:
  *   fonts.css     @font-face only (URLs rewritten to ../fonts/<hashed>)
+ *   fonts-ja.css  Noto Sans JP, linked in addition by pages with Japanese
  *   tokens.css    primitives + semantic
  *   base.css      element defaults, focus ring, type classes
  *   exaforce.css  fonts + tokens + base in one request
@@ -67,14 +71,17 @@ for (const file of readdirSync(fontSrc).filter((f) => f.endsWith('.woff2')).sort
 }
 cpSync(join(root, 'src/fonts/LICENSE-inter-tight.txt'), join(fontOut, 'LICENSE-inter-tight.txt'));
 cpSync(join(root, 'src/fonts/LICENSE-google-sans-flex.txt'), join(fontOut, 'LICENSE-google-sans-flex.txt'));
+cpSync(join(root, 'src/fonts/LICENSE-noto-sans-jp.txt'), join(fontOut, 'LICENSE-noto-sans-jp.txt'));
 
-const fontsCss = lean(read('src/fonts/fonts.css')).replace(
-  /url\(\s*['"]?\.\/files\/([^'")]+)['"]?\s*\)/g,
-  (_, file) => {
-    if (!fontMap[file]) throw new Error(`fonts.css references a file that is not in src/fonts/files: ${file}`);
+const rewriteFontUrls = (css, label) =>
+  css.replace(/url\(\s*['"]?\.\/files\/([^'")]+)['"]?\s*\)/g, (_, file) => {
+    if (!fontMap[file]) throw new Error(`${label} references a file that is not in src/fonts/files: ${file}`);
     return `url('../fonts/${fontMap[file]}')`;
-  },
-);
+  });
+const fontsCss = rewriteFontUrls(lean(read('src/fonts/fonts.css')), 'fonts.css');
+/* Japanese is opt-in per page — see the note at the top of fonts-ja.css. It is
+   deliberately NOT folded into exaforce.css. */
+const fontsJaCss = rewriteFontUrls(lean(read('src/fonts/fonts-ja.css')), 'fonts-ja.css');
 
 /* 2. CSS layers. */
 const primitives = lean(read('src/tokens/primitives.css'));
@@ -82,8 +89,11 @@ const semantic = lean(read('src/tokens/semantic.css'));
 const base = lean(read('src/base.css'));
 const themeJs = read('src/theme.js');
 
+const ribbonPresets = JSON.parse(read('src/ribbon/presets.json'));
 const files = {
+  'ribbon-presets.json': JSON.stringify(ribbonPresets, null, 2) + '\n',
   'fonts.css': banner('fonts') + fontsCss,
+  'fonts-ja.css': banner('fonts-ja (Noto Sans JP, opt-in per page)') + fontsJaCss,
   'tokens.css': banner('tokens (primitives + semantic)') + primitives + '\n' + semantic,
   'base.css': banner('base') + base,
   'exaforce.css': banner('exaforce.css (fonts + tokens + base)') + fontsCss + '\n' + primitives + '\n' + semantic + '\n' + base,
@@ -106,10 +116,23 @@ for (const group of readdirSync(iconRoot).sort()) {
     .sort()
     .map((f) => f.replace(/\.svg$/, ''));
 }
+/* Third-party logo sets: customers ship as <slug>-black/-white/-color, investors
+   as one currentColor file each, review marks as -color/-white. */
+const logoRoot = join(root, 'src/assets/logos');
+const logos = {};
+for (const group of readdirSync(logoRoot).sort()) {
+  const bySlug = {};
+  for (const f of readdirSync(join(logoRoot, group)).filter((f) => f.endsWith('.svg')).sort()) {
+    const m = /^(.*?)(?:-(black|white|color))?\.svg$/.exec(f);
+    (bySlug[m[1]] ||= []).push(m[2] || 'current');
+  }
+  logos[group] = bySlug;
+}
 const html = read('src/site/index.html')
   .replaceAll('__VERSION__', version)
   .replaceAll('__MAJOR__', major)
-  .replace('__ICONS_JSON__', JSON.stringify(icons));
+  .replace('__ICONS_JSON__', JSON.stringify(icons))
+  .replace('__LOGOS_JSON__', JSON.stringify(logos));
 write(dist, 'index.html', html);
 
 /* 404: Cloudflare Pages serves a root 404.html for any path it cannot find.
@@ -122,6 +145,17 @@ write(
     .replaceAll('__VERSION__', version)
     .replaceAll('__MAJOR__', major)
     .replace('__CHANNELS_JSON__', JSON.stringify([major, version])),
+);
+
+/* Ribbon Shader Studio: same page, presets injected so it can never disagree
+   with the published JSON. */
+write(
+  dist,
+  'ribbon-shader-studio.html',
+  read('src/site/ribbon-shader-studio.html')
+    .replaceAll('__VERSION__', version)
+    .replaceAll('__MAJOR__', major)
+    .replace('__RIBBON_PRESETS__', JSON.stringify(ribbonPresets)),
 );
 
 /* 4. Manifest + headers. */
@@ -172,6 +206,8 @@ write(
   Cache-Control: public, max-age=300
 /404.html
   Cache-Control: public, max-age=300
+/ribbon-shader-studio.html
+  Cache-Control: public, max-age=300
 /manifest.json
   Cache-Control: public, max-age=300
 `,
@@ -181,6 +217,7 @@ write(
 const size = (s) => `${(Buffer.byteLength(s) / 1024).toFixed(1)} KB`;
 console.log(`Exaforce Design System ${version} → dist/`);
 console.log(`  channels: /${major}/  /${version}/`);
-for (const [name, body] of Object.entries(files)) console.log(`  ${name.padEnd(13)} ${size(body)}`);
+for (const [name, body] of Object.entries(files)) console.log(`  ${name.padEnd(20)} ${size(body)}`);
 console.log(`  fonts: ${Object.keys(fontMap).length} files, hashed`);
 console.log(`  icons: ${Object.values(icons).reduce((n, a) => n + a.length, 0)} across ${Object.keys(icons).length} groups`);
+console.log(`  logos: ${Object.entries(logos).map(([g, s]) => `${g} ${Object.keys(s).length}`).join(', ')}`);

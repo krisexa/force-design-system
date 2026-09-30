@@ -19,15 +19,22 @@ Consumers today, and where each stands:
 src/
   tokens/primitives.css   raw values: the Tailwind v4 palette (oklch), sizes, type scale, motion
   tokens/semantic.css     what components use: --color-surface, --type-h1-size, … with light + dark
-  fonts/fonts.css         @font-face for Inter Tight Variable and Google Sans Flex Variable
-  fonts/files/*.woff2     17 subset files (Latin pages download two)
+  fonts/fonts.css         @font-face for Inter Tight Variable (upright + italic) and Google Sans Flex Variable
+  fonts/fonts-ja.css      Noto Sans JP Variable — linked IN ADDITION by pages with Japanese
+  fonts/files/*.woff2     17 Latin-face subsets (a Latin page downloads two) + 124 Noto JP slices
   base.css                element defaults, focus ring, .type-* classes, .text-* helpers
   theme.js                applies the saved light/dark/system choice before paint; toggle API
   index.css               fonts + tokens + base, for bundlers
   tokens.css              tokens only, for bundlers
   assets/logo/            wordmark and mark: black, white, currentColor, auto (OS dark mode)
-  assets/icons/           nav (47), trust (8), chain (3), ui (3)
+  assets/icons/           platform (15, first-party marks), nav (47), trust (8), chain (3), ui (3)
   assets/favicon/         favicon.svg/.ico, apple-touch-icon, PWA icons, site.webmanifest
+  assets/logos/customers/ 25 customers × -color / -black / -white (fixed ink, never recolour)
+  assets/logos/investors/ 9 investor marks, currentColor
+  assets/logos/review-marks/  G2 and Gartner, -color / -white
+  assets/email/           logo JPEG + social icons for email signatures (source; served from the website)
+  ribbon/presets.json     ribbon shader colourways and forms — the one file the studio, website and tools read
+  site/ribbon-shader-studio.html  the Ribbon Shader Studio, presets injected at build
   site/index.html         the styleguide, published at the root of the Pages site
   site/404.html           served for any missing path; names the published channels
 scripts/
@@ -54,6 +61,12 @@ vanilla and Astro sites anyway.
 `theme.js` goes first and synchronously, so the page never paints in the wrong
 theme. `exaforce.css` is fonts + tokens + base in one request. For tokens
 without element defaults, link `fonts.css` and `tokens.css` instead.
+
+A page that renders Japanese also links `fonts-ja.css`. Japanese is opt-in
+per page because its 124 sliced `@font-face` declarations weigh about 30 KB
+compressed, more than the rest of the system; the slices themselves only
+download for glyphs the page uses. Mark Japanese content `lang="ja"` and it
+sets entirely in Noto Sans JP, Latin letters included.
 
 A site that should default to dark when the visitor has never chosen:
 `<script src=".../theme.js" data-default="dark">`.
@@ -124,11 +137,27 @@ Rules that keep that safe:
 Kris approves after the fact; the floating `/v1/` path is what makes a
 revert a one-line version bump rather than a hunt across sites.
 
+## Ribbon shader
+
+The ribbon gradient's colourways and forms live in `src/ribbon/presets.json`
+and are published as `<channel>/ribbon-presets.json`. They are hex on
+purpose: the shader takes them as linear-light uniforms, so they are not
+tokens and never will be. The Ribbon Shader Studio at
+`/ribbon-shader-studio.html` on the design-system host reads the same JSON
+(injected at build). To retune: adjust in the studio, Copy settings, paste the
+ramp or form back into the JSON, bump the version. The website's
+`ribbon-presets.ts` and the tools' `ribbon.js` still carry their own copies
+plus site-specific fields (poster gradients, scrims); pointing them at the
+published JSON is the next step.
+
 ## Fonts
 
-Inter Tight Variable (body) and Google Sans Flex Variable (headings), both SIL
-Open Font License 1.1, from Fontsource (`inter-tight` 5.3.0,
-`google-sans-flex` 5.3.1). The `… Fallback` faces are Arial resized with
+Inter Tight Variable (body), Google Sans Flex Variable (headings) and Noto
+Sans JP Variable (Japanese), all SIL Open Font License 1.1, from Fontsource
+(`inter-tight` 5.3.0, `google-sans-flex` 5.3.1, `noto-sans-jp` 5.3.0). The
+two Latin stacks list Noto after their own face, so kana and kanji anywhere
+fall through to it once `fonts-ja.css` is linked; `:lang(ja)` content uses
+`--font-family-ja`, Noto first. The `… Fallback` faces are Arial resized with
 `size-adjust` so text painted before the woff2 arrives has the same width and
 line height, and the swap moves nothing. Their numbers are computed from these
 exact files; recompute if a face is swapped.

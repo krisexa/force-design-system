@@ -522,6 +522,7 @@
   --font-family-base: var(--font-sans);
   --font-family-mono: var(--font-mono);
   --font-family-heading: var(--font-heading);
+  --font-family-ja: var(--font-ja);
 
   /* Generic tight line-height for multi-line lockups that aren't one of the
      named type styles below (e.g. a stacked brand mark). */

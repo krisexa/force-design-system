@@ -27,7 +27,7 @@ const stripComments = (css) => css.replace(/\/\*[\s\S]*?\*\//g, '');
 const primitives = stripComments(read('src/tokens/primitives.css'));
 const semantic = stripComments(read('src/tokens/semantic.css'));
 const base = stripComments(read('src/base.css'));
-const fontsCss = stripComments(read('src/fonts/fonts.css'));
+const fontsCss = stripComments(read('src/fonts/fonts.css')) + '\n' + stripComments(read('src/fonts/fonts-ja.css'));
 
 let failed = false;
 function report(title, problems) {
@@ -124,9 +124,9 @@ const darkExplicit = block(semantic, /(^|\n)\s*:root\[data-theme=['"]dark['"]\]\
   const referenced = new Set(Array.from(fontsCss.matchAll(/url\(\s*['"]?\.\/files\/([^'")]+)['"]?\s*\)/g), (m) => m[1]));
   for (const f of referenced) if (!onDisk.has(f)) problems.push(`fonts.css references missing file ${f}`);
   for (const f of onDisk) if (!referenced.has(f)) problems.push(`src/fonts/files/${f} is not referenced by fonts.css`);
-  const bare = fontsCss.match(/font-family:\s*['"]?(Inter Tight|Google Sans Flex)['"]?\s*;/);
+  const bare = fontsCss.match(/font-family:\s*['"]?(Inter Tight|Google Sans Flex|Noto Sans JP)['"]?\s*;/);
   if (bare) problems.push(`fonts.css declares the bare family name "${bare[1]}" — must be the "… Variable" name (see the note in fonts.css)`);
-  report(`fonts.css and src/fonts/files agree (${onDisk.size} files)`, problems);
+  report(`fonts.css + fonts-ja.css and src/fonts/files agree (${onDisk.size} files)`, problems);
 }
 
 if (failed) {
