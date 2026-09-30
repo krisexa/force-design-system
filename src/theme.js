@@ -7,7 +7,11 @@
  * Load it synchronously in <head> (no defer/async), ideally before the
  * stylesheet, so the page never flashes the wrong theme:
  *
- *   <script src="https://<design-system-host>/v1/theme.js"></script>
+ *   <script src="https://<design-system-host>/v1/theme.js"><\/script>
+ *
+ * (The closing tag above is escaped on purpose: a site may inline this file
+ * inside its own <script> element, and a literal closing tag anywhere in the
+ * text, even in a comment, would end that element early.)
  *
  * Options, as data attributes on the script tag:
  *   data-key="theme"       localStorage key. Default "theme" — the key

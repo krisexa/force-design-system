@@ -129,6 +129,14 @@ const darkExplicit = block(semantic, /(^|\n)\s*:root\[data-theme=['"]dark['"]\]\
   report(`fonts.css + fonts-ja.css and src/fonts/files agree (${onDisk.size} files)`, problems);
 }
 
+/* 6. theme.js can be inlined in a <script> element, so it must not contain a
+   literal closing script tag anywhere, comments included. */
+{
+  const js = read('src/theme.js');
+  const problems = /<\/script/i.test(js) ? ['src/theme.js contains a literal closing script tag; escape it as <\\/script>'] : [];
+  report('theme.js is safe to inline', problems);
+}
+
 if (failed) {
   console.log('\ncheck failed');
   process.exit(1);
