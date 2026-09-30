@@ -1,6 +1,6 @@
 {
   "name": "@exaforce/design-system",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "description": "Exaforce marketing design system: design tokens, self-hosted typefaces, brand assets, and the theme script shared by every Exaforce web property.",
   "type": "module",
@@ -18,6 +18,7 @@
     "./tokens/semantic.css": "./src/tokens/semantic.css",
     "./fonts.css": "./src/fonts/fonts.css",
     "./fonts-ja.css": "./src/fonts/fonts-ja.css",
+    "./fonts/files/*": "./src/fonts/files/*",
     "./base.css": "./src/base.css",
     "./theme.js": "./src/theme.js",
     "./assets/*": "./src/assets/*"

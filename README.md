@@ -94,6 +94,9 @@ ship from the site's own origin with no extra request to this host. Copy
 `src/theme.js` into the layout as an inline script, or serve it from `public/`.
 Assets import as URLs:
 `import logo from '@exaforce/design-system/assets/logo/exaforce-logo-black.svg'`.
+Font files too, for a `<link rel="preload">` that must match the bundled
+`@font-face` URL:
+`import inter from '@exaforce/design-system/fonts/files/inter-tight-latin-wght-normal.woff2?url'`.
 
 For the website specifically: the two token files and the font
 declarations in `global.css` are byte-for-byte what this package ships, so the
@@ -198,6 +201,11 @@ from them. Three slightly different wordmark SVGs were in circulation (website,
 tools, campaigns): this is the one on the website. The mark comes from the
 tools repo, normalised from pure black to the wordmark's `#231f20` so the two
 match side by side.
+
+## Migrating a site
+
+MIGRATING.md is the prompt to hand a Claude Code session in a site repo. It is
+the recipe that moved an internal site and a bundler site.
 
 ## Local
 
