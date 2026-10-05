@@ -1,6 +1,6 @@
 {
   "name": "@exaforce/design-system",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "private": true,
   "description": "Exaforce marketing design system: design tokens, self-hosted typefaces, brand assets, and the theme script shared by every Exaforce web property.",
   "type": "module",

@@ -29,7 +29,7 @@ src/
   assets/logo/            wordmark and mark: black, white, currentColor, auto (OS dark mode)
   assets/icons/           platform (15, first-party marks), nav (47), trust (8), chain (3), ui (3)
   assets/favicon/         favicon.svg/.ico, apple-touch-icon, PWA icons, site.webmanifest
-  assets/logos/customers/ 24 customers × -color / -black / -white (fixed ink, never recolour)
+  assets/logos/customers/ 25 customers × -color / -black / -white (fixed ink, never recolour)
   assets/logos/investors/ 9 investor marks, currentColor
   assets/logos/review-marks/  G2 and Gartner, -color / -white
   assets/email/           logo JPEG + social icons for email signatures (source; served from the website)
