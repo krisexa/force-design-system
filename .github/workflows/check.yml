@@ -1,8 +1,12 @@
 name: check
 
-# Every push and pull request: the token invariants, then a full build. Nothing
-# to install — the scripts are plain Node. A failure here is what stops a bad
-# token from reaching every site that links /v1/.
+# Every push and pull request: the token invariants, then the same build
+# Cloudflare Pages runs (this version plus every tagged release). A failure
+# here is what stops a bad token from reaching every site that links /v1/, and
+# what stops a tagged version from being republished with different bytes.
+#
+# On main, a new `version` in package.json is then tagged `v<version>`. The
+# tag is what the Pages build republishes and what the bundler sites depend on.
 
 on:
   push:
@@ -15,11 +19,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .node-version
       - name: Invariants
         run: npm run check
-      - name: Build
-        run: npm run build
+      - name: Build (this version + tagged releases)
+        run: node scripts/build.mjs --releases
       - name: Report
         run: |
           echo "## Build" >> "$GITHUB_STEP_SUMMARY"
@@ -32,3 +36,21 @@ jobs:
           name: dist
           path: dist
           retention-days: 7
+
+  tag:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tag v<version> if it does not exist yet
+        run: |
+          v="v$(node -p "require('./package.json').version")"
+          git fetch --quiet origin "refs/tags/$v:refs/tags/$v" 2>/dev/null && { echo "$v already tagged"; exit 0; }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$v" -m "Exaforce Design System ${v#v}"
+          git push origin "$v"
+          echo "tagged $v at $GITHUB_SHA"

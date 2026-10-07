@@ -14,8 +14,10 @@ Consumers, and where each stands (2026-10-07):
 | a campaign site | vanilla HTML | still a hand-copied, drifted set of these files | next |
 | the website | Astro 7 + Sanity | still its own copy of the token files, the origin of this system | after campaigns |
 
-Not yet on Cloudflare Pages itself. Until it is, every consumer carries a copy
-of the build or the package rather than linking a hosted URL; see *Using it*.
+Hosted on Cloudflare Pages at `https://exaforce-design-system.pages.dev`
+(floating `/v1/`, exact `/1.x.y/`; see *Hosting*). The repository is public,
+so a bundler site can also depend on it by git tag. Consumers that already
+carry a copy may keep doing so; see *Using it*.
 
 ## What is in it
 
@@ -45,7 +47,7 @@ src/
 scripts/
   logo-variants.mjs       regenerates the white/current/auto logo files from the black sources
   check.mjs               invariants (no literals in semantic, every var() resolves, dark parity, font files)
-  build.mjs               produces dist/ for Cloudflare Pages
+  build.mjs               produces dist/; with --releases, also every tagged release (the Pages build)
 ```
 
 Deliberately **not** in it: page and component CSS, buttons and cards, the
@@ -55,28 +57,41 @@ Astro sites anyway.
 
 ## Using it
 
-Two shapes of consumer, and for now both carry a copy rather than fetching at
-build or page-load time, because this repository is private and nothing is
-hosted yet. **A private GitHub dependency does not work on Cloudflare Pages:**
-a bundler site depended on `github:krisexa/force-design-system#tag`, every laptop
-built fine, and every Pages build from 2026-09-30 to 10-02 failed silently
-because the build container has no GitHub credentials. Production sat on a
-stale commit while local builds were green. Either vendor (below) or make the
-repository public before depending on it by URL.
+Two shapes of consumer. A site without a build step links the host or vendors
+the build; a bundler site depends on the package by git tag or vendors it.
+Vendoring costs one extra step per release and buys independence from this
+host: the fonts ship from the site's own origin, nothing cross-origin, nothing
+to preconnect to. Linking the host costs one preconnect and buys releases
+reaching the site within an hour with no commit in the site repo. Both are
+fine; the tools site and a bundler site vendor because they were migrated while the repo
+was still private.
+
+A lesson from that period, kept here so it is not relearned: **a private
+GitHub dependency does not work on Cloudflare Pages.** a bundler site depended on
+`github:krisexa/force-design-system#tag`, every laptop built fine, and every
+Pages build from 2026-09-30 to 10-02 failed silently because the build
+container has no GitHub credentials. Production sat on a stale commit while
+local builds were green. The repository has been public since 2026-10-07; if
+it ever goes private again, every consumer must vendor.
 
 ### No build step (an internal site, campaign pages)
 
-Copy `dist/v1`, `dist/fonts` and `dist/manifest.json` into the site (the tools
-repo keeps them under `shared/design-system/` with a one-line refresh script),
-then link, in this order and before the site's own stylesheets:
+Link the host, in this order and before the site's own stylesheets:
 
 ```html
-<script src="/shared/design-system/v1/theme.js"></script>
-<link rel="stylesheet" href="/shared/design-system/v1/exaforce.css">
+<link rel="preconnect" href="https://exaforce-design-system.pages.dev" crossorigin>
+<script src="https://exaforce-design-system.pages.dev/v1/theme.js"></script>
+<link rel="stylesheet" href="https://exaforce-design-system.pages.dev/v1/exaforce.css">
 ```
 
-Once the system is hosted, the same tags point at `https://HOST/v1/…` with a
-`<link rel="preconnect">` added.
+The `crossorigin` on the preconnect matters: fonts are fetched in CORS mode,
+and a preconnect without it opens a connection the font request cannot reuse.
+Pin `/1.1.6/` in place of `/v1/` on a page that must not move.
+
+Or vendor: copy `dist/v1`, `dist/fonts` and `dist/manifest.json` into the site
+(the tools repo keeps them under `shared/design-system/` with a one-line
+refresh script) and link the same two tags from the local path, plus a
+`_headers` rule making the local fonts folder immutable.
 
 `theme.js` goes first and synchronously, so the page never paints in the wrong
 theme. `exaforce.css` is fonts + tokens + base in one request. For tokens
@@ -97,19 +112,19 @@ and delete the local `@font-face` and Google Fonts imports.
 
 ### With a bundler (Astro, Vite)
 
-Vendor the package and depend on the copy (what a bundler site does; its
-`scripts/sync-design-system.mjs` clones a tag with your credentials, copies
-`package.json` and `src/` into `vendor/design-system/`, and reinstalls):
+Depend on a release tag (the repository is public, so this resolves on
+Cloudflare Pages too):
+
+```sh
+npm install github:krisexa/force-design-system#v1.1.6
+```
+
+Or vendor the package and depend on the copy (what a bundler site does; its
+`scripts/sync-design-system.mjs` clones a tag, copies `package.json` and
+`src/` into `vendor/design-system/`, and reinstalls):
 
 ```json
 "@exaforce/design-system": "file:vendor/design-system"
-```
-
-A direct git dependency works on a machine with GitHub access but not on
-Cloudflare Pages while the repo is private:
-
-```sh
-npm install github:krisexa/force-design-system#v1.1.5
 ```
 
 ```css
@@ -144,8 +159,10 @@ The build publishes every release under two paths:
 | `/1.x.y/…` | exact (the current version is in `package.json` and `manifest.json`) | immutable, one year |
 | `/fonts/…` | content-hashed woff2, shared by both | immutable, one year |
 
-Releases are also git tags (`v1.1.5` and so on), which is what the vendoring
-scripts in the consuming repos pull.
+Releases are also git tags (`v1.1.6` and so on): what the bundler sites
+depend on, what the vendoring scripts pull, and what the Pages build
+republishes. CI creates the tag for a new `version` on every push to `main`,
+so a release is a version bump landing on `main`.
 
 Link `/v1/` to receive approved changes within an hour of deploy. Pin an exact
 version when a page must not move (a live event page the week of the event).
@@ -169,10 +186,48 @@ Rules that keep that safe:
    major for renames/removals).
 4. `npm run build` and open `dist/index.html` via `npm run serve` to eyeball
    the styleguide in both themes.
-5. Commit, push. Cloudflare Pages builds with `npm run build`, output `dist`.
+5. Commit, push. CI checks, builds, and tags the commit `v<version>`.
+   Cloudflare Pages builds `main` with `npm run build:pages` into `dist` and
+   the release is live under `/v1/` and `/<version>/` a minute or two later.
+
+If `src/` changes without a version bump after the version has been tagged,
+`npm run build:pages` refuses to build (and so CI and Pages fail) rather than
+republish an immutable path with different bytes.
 
 Kris approves after the fact; the floating `/v1/` path is what makes a
 revert a one-line version bump rather than a hunt across sites.
+
+## Hosting
+
+Cloudflare Pages, Git integration on `krisexa/force-design-system`, production
+branch `main`, like the other Exaforce sites. Project settings:
+
+| Setting | Value |
+|---|---|
+| Framework preset | None |
+| Build command | `npm run build:pages` |
+| Build output directory | `dist` |
+| Root directory | `/` |
+| Node | from `.node-version` (22); nothing to install |
+
+`npm run build:pages` runs the checks, builds the working tree's version, then
+fetches the `v1.*` tags and rebuilds each one with its own build script into
+the same `dist/`. A deployment therefore carries every 1.x ever released, so a
+page pinned to `/1.1.4/` keeps working after 1.1.5 and 1.1.6 ship. Fonts are
+content-hashed, so the versions share one `fonts/` folder and a file that never
+changed is stored once. The whole deployment is about 60 MB and 1,700 files,
+well inside Pages' limits (20,000 files, 25 MB each).
+
+`_headers` is generated with the build: open CORS and `nosniff` everywhere,
+`noindex` for the host, a year's immutable cache on `/fonts/` and every exact
+version, an hour plus a day of stale-while-revalidate on `/v1/`. Preview
+deployments (any branch other than `main`) get the same files on a
+`<hash>.exaforce-design-system.pages.dev` URL, which is how to look at a change
+on a real Pages origin before it lands.
+
+A custom domain (`design.exaforce.com`, say) is a DNS change in the Pages
+project; every consumer then changes one hostname. Until then the
+`pages.dev` hostname is the one to link.
 
 ## Ribbon shader
 
@@ -245,19 +300,20 @@ the recipe that moved an internal site and a bundler site.
 
 LICENSE.md: the code is MIT, the typefaces are SIL OFL 1.1, the Exaforce marks
 are all rights reserved, and the customer, investor and review logos belong to
-their owners and are included only for Exaforce's own properties. Everything in
-`dist/` is served unauthenticated to browsers by the consuming sites, so the
-repository being private protects nothing that matters; what it does do is
-break any consumer that depends on it by URL from a build environment without
+their owners and are included only for Exaforce's own properties. The
+repository is public (since 2026-10-07): everything in `dist/` is served
+unauthenticated to browsers anyway, and a private repository breaks any
+consumer that depends on it by URL from a build environment without
 credentials (see *Using it*).
 
 ## Local
 
 ```sh
-npm run check   # invariants
-npm run build   # dist/
-npm run serve   # http://localhost:3000, the styleguide against the built files;
-                # missing paths return a real 404 and render 404.html, like Pages
+npm run check        # invariants
+npm run build        # dist/ with the working tree's version only
+npm run build:pages  # what Pages runs: checks, this version, and every tagged release
+npm run serve        # http://localhost:3000, the styleguide against the built files;
+                     # missing paths return a real 404 and render 404.html, like Pages
 ```
 
 No dependencies. Node 20 or newer.

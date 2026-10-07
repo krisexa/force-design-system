@@ -16,30 +16,36 @@ semantic, light/dark via `data-theme`), three self-hosted typefaces (Inter
 Tight Variable with italic, Google Sans Flex Variable, Noto Sans JP Variable as
 opt-in `fonts-ja.css`), `base.css` element defaults and `.type-*` classes,
 `theme.js`, logo variants, icon sets, customer/investor/review logos, ribbon
-presets JSON. It is not on Cloudflare Pages yet, so it is consumed as a
-vendored build or as a package from git, never from a CDN URL.
+presets JSON. It is hosted at `https://exaforce-design-system.pages.dev`
+(`/v1/` floating, `/{VERSION}/` exact, `/manifest.json`) and the repository
+is public.
 
 **This site.** `{ONE LINE: stack, hosting, anything unusual — e.g. "Astro on
 Cloudflare Pages, generates OG images with satori", or "vanilla HTML, no build
 step, internal, defaults to dark"}`.
 
 **How to consume, by shape.**
-- No build step: run `sh ../force-design-system/…/update-design-system.sh`
-  pattern — copy `dist/v1`, `dist/fonts` and `dist/manifest.json` into
-  `shared/design-system/` (or this repo's equivalent shared folder), add a
-  refresh script, and link in every page `<head>`, in this order and before the
-  site's own stylesheets: `theme.js` (synchronous, with `data-key` set to
-  whatever localStorage key the site already uses for its theme, and
-  `data-default="dark"` only if the site defaults to dark today), then
-  `fonts.css`, `tokens.css`, and `fonts-ja.css` on pages that render Japanese.
-  Add a `_headers` rule making `/shared/design-system/fonts/*` immutable.
-- Build step (Astro/Vite): the repo is private, and a `github:` dependency
-  fails on Cloudflare Pages (no credentials in the build container; a bundler site lost
-  two days of deploys to this). Vendor it instead: copy the release's
-  `package.json` and `src/` into `vendor/design-system/` with a sync script
-  like a bundler site's `scripts/sync-design-system.mjs`, depend on it as
-  `"@exaforce/design-system": "file:vendor/design-system"`, and replace the
-  local token and font imports with
+- No build step: either link the host (`<link rel="preconnect"
+  href="https://exaforce-design-system.pages.dev" crossorigin>` then the
+  `/v1/` or exact-version files), or vendor it the an internal site way: copy
+  `dist/v1`, `dist/fonts` and `dist/manifest.json` into `shared/design-system/`
+  (or this repo's equivalent shared folder), add a refresh script, and add a
+  `_headers` rule making `/shared/design-system/fonts/*` immutable. Prefer the
+  host for a public page that should pick up approved changes; vendor when the
+  site must have no cross-origin requests. Either way, link in every page
+  `<head>`, in this order and before the site's own stylesheets: `theme.js`
+  (synchronous, with `data-key` set to whatever localStorage key the site
+  already uses for its theme, and `data-default="dark"` only if the site
+  defaults to dark today), then `fonts.css`, `tokens.css`, and `fonts-ja.css`
+  on pages that render Japanese.
+- Build step (Astro/Vite): depend on the release tag,
+  `"@exaforce/design-system": "github:krisexa/force-design-system#v{VERSION}"`
+  (the repo is public, so this resolves on Cloudflare Pages; while it was
+  private it failed silently there and a bundler site lost two days of deploys), or vendor
+  it: copy the release's `package.json` and `src/` into `vendor/design-system/`
+  with a sync script like a bundler site's `scripts/sync-design-system.mjs` and
+  depend on it as `"@exaforce/design-system": "file:vendor/design-system"`.
+  Then replace the local token and font imports with
   `@import '@exaforce/design-system'` (or `tokens.css` + `fonts.css` à la
   carte, plus `fonts-ja.css` where Japanese renders). Delete the local copies
   of `primitives.css`, `semantic.css`, the `@font-face` blocks and the

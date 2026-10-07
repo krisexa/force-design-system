@@ -24,7 +24,9 @@ working on the repo itself.
   check scripts are plain Node so Cloudflare Pages builds them with nothing
   installed.
 - Do not republish an exact version path (`/1.x.y/`) with different bytes. It
-  is cached immutable. Bump `version` in package.json.
+  is cached immutable. Bump `version` in package.json. CI tags every new
+  version on `main`, and `npm run build:pages` refuses to build a tagged
+  version whose `src/` differs, so forgetting the bump fails the deploy.
 - Do not declare the bare family names `Inter Tight` or `Google Sans Flex`.
   Only `… Variable` and `… Fallback`. See the note at the top of fonts.css.
 - Do not add site-specific CSS (buttons, cards, page blocks). It cannot be
@@ -41,4 +43,12 @@ copies, at which point this repo is the only source.
 ## Workflow
 
 `npm run check` → edit → bump version → `npm run build` → `npm run serve` and
-look at the styleguide in both themes → commit.
+look at the styleguide in both themes → commit → push (CI tags it; Cloudflare
+Pages builds `main` with `npm run build:pages`, which also republishes every
+tagged release so exact paths survive).
+
+## Hosting
+
+Cloudflare Pages, Git integration, production branch `main`, build command
+`npm run build:pages`, output `dist`, Node from `.node-version`. Live at
+`https://exaforce-design-system.pages.dev`. README *Hosting* has the detail.

@@ -19,6 +19,14 @@
  *   dist/manifest.json               versions and the hashed font map
  *   dist/_headers                    cache + CORS rules for Pages
  *
+ * `npm run build` builds the working tree's version only. `npm run build:pages`
+ * (the Cloudflare Pages build command) also rebuilds every tagged release
+ * (`v1.x.y`) into the same dist/, so an exact path keeps serving after the
+ * next release replaces the deployment. Fonts are content-hashed, so the
+ * versions share one dist/fonts/. In that mode the build refuses to continue
+ * if the working tree's version already has a tag whose src/ differs: that is
+ * the "never republish an exact version with different bytes" rule, enforced.
+ *
  * Each version folder contains:
  *   fonts.css     @font-face only (URLs rewritten to ../fonts/<hashed>)
  *   fonts-ja.css  Noto Sans JP, linked in addition by pages with Japanese
@@ -28,8 +36,10 @@
  *   theme.js
  *   assets/       logo, icons, favicon
  */
-import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -107,6 +117,64 @@ for (const channel of [major, version]) {
   cpSync(join(root, 'src/assets'), join(dir, 'assets'), { recursive: true });
 }
 
+/* 2b. Earlier releases (--releases). Each tag is exported with git archive,
+   built with ITS OWN scripts/build.mjs in a scratch directory, and its exact
+   channel plus any font files it introduced are merged in. Only tags of this
+   major are republished: a /v2/ deployment keeps every 1.x reachable only if
+   the 2.x build is told to, which is a decision for then. */
+const withReleases = process.argv.includes('--releases');
+const releases = [];
+if (withReleases) {
+  const git = (...args) => execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+  /* Build containers clone shallow and without tags; fetch them. Best effort,
+     so an offline local run still builds from whatever tags it has. */
+  try {
+    git('fetch', '--quiet', ...(process.env.CF_PAGES || process.env.CI ? ['--depth=1'] : []), 'origin', `refs/tags/${major}.*:refs/tags/${major}.*`);
+  } catch (e) {
+    console.warn(`  warning: could not fetch tags (${String(e.stderr || e.message).trim().split('\n')[0]}); using local tags`);
+  }
+  const tags = git('tag', '--list', `${major}.*`).split('\n').filter(Boolean);
+  const byVersion = (a, b) => {
+    const [x, y] = [a, b].map((t) => t.slice(1).split('.').map(Number));
+    return x[0] - y[0] || x[1] - y[1] || x[2] - y[2];
+  };
+  tags.sort(byVersion);
+
+  /* The guard. A tag for the working tree's version means that version is
+     released; its src/ and build script must then be byte-identical. */
+  if (tags.includes(`v${version}`)) {
+    try {
+      git('diff', '--quiet', `v${version}`, '--', 'src', 'scripts/build.mjs');
+    } catch {
+      console.error(`\nerror: ${version} is already released as tag v${version}, and src/ or scripts/build.mjs differ from it.`);
+      console.error(`       /${version}/ is cached immutable wherever it has been seen. Bump "version" in package.json.\n`);
+      process.exit(1);
+    }
+  }
+
+  const scratch = join(tmpdir(), `exaforce-design-system-releases-${process.pid}`);
+  rmSync(scratch, { recursive: true, force: true });
+  for (const tag of tags) {
+    const v = tag.slice(1);
+    if (v === version) continue;
+    const dir = join(scratch, v);
+    mkdirSync(dir, { recursive: true });
+    execFileSync('sh', ['-c', `git archive "${tag}" | tar -x -C "${dir}"`], { cwd: root, stdio: ['ignore', 'ignore', 'inherit'] });
+    execFileSync(process.execPath, [join(dir, 'scripts/build.mjs')], { cwd: dir, stdio: ['ignore', 'ignore', 'inherit'] });
+    const built = join(dir, 'dist', v);
+    if (!existsSync(built)) throw new Error(`${tag} built without a /${v}/ channel`);
+    cpSync(built, join(dist, v), { recursive: true });
+    for (const f of readdirSync(join(dir, 'dist/fonts'))) {
+      if (!existsSync(join(fontOut, f))) cpSync(join(dir, 'dist/fonts', f), join(fontOut, f));
+    }
+    releases.push(v);
+  }
+  rmSync(scratch, { recursive: true, force: true });
+}
+/* Exact channels present in this dist, newest first. */
+const exact = [version, ...releases.slice().reverse()];
+const channels = [major, ...exact];
+
 /* 3. Styleguide. The icon inventory is injected so the page never goes stale. */
 const iconRoot = join(root, 'src/assets/icons');
 const icons = {};
@@ -144,7 +212,7 @@ write(
   read('src/site/404.html')
     .replaceAll('__VERSION__', version)
     .replaceAll('__MAJOR__', major)
-    .replace('__CHANNELS_JSON__', JSON.stringify([major, version])),
+    .replace('__CHANNELS_JSON__', JSON.stringify(channels)),
 );
 
 /* Ribbon Shader Studio: same page, presets injected so it can never disagree
@@ -166,7 +234,7 @@ write(
     {
       name: pkg.name,
       version,
-      channels: { [major]: `/${major}/`, [version]: `/${version}/` },
+      channels: Object.fromEntries(channels.map((c) => [c, `/${c}/`])),
       files: Object.keys(files).concat(['assets/']),
       fonts: fontMap,
       builtAt: new Date().toISOString(),
@@ -193,9 +261,8 @@ write(
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Exact version: never republished with different bytes (bump instead).
-/${version}/*
-  Cache-Control: public, max-age=31536000, immutable
+# Exact versions: never republished with different bytes (bump instead).
+${exact.map((v) => `/${v}/*\n  Cache-Control: public, max-age=31536000, immutable`).join('\n')}
 
 # Floating major: picks up each release within an hour, serves stale while it
 # refreshes so no visitor waits on the revalidation.
@@ -216,7 +283,7 @@ write(
 /* 5. Report. */
 const size = (s) => `${(Buffer.byteLength(s) / 1024).toFixed(1)} KB`;
 console.log(`Exaforce Design System ${version} → dist/`);
-console.log(`  channels: /${major}/  /${version}/`);
+console.log(`  channels: ${channels.map((c) => `/${c}/`).join('  ')}${withReleases ? '' : '  (npm run build:pages adds the tagged releases)'}`);
 for (const [name, body] of Object.entries(files)) console.log(`  ${name.padEnd(20)} ${size(body)}`);
 console.log(`  fonts: ${Object.keys(fontMap).length} files, hashed`);
 console.log(`  icons: ${Object.values(icons).reduce((n, a) => n + a.length, 0)} across ${Object.keys(icons).length} groups`);
