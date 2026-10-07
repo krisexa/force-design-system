@@ -13,17 +13,7 @@
     /* Semantic tokens only, like the styleguide. */
     body { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
     .wrap { max-width: var(--measure-wide); margin-inline: auto; padding-inline: var(--space-gutter); width: 100%; }
-    header .wrap { display: flex; align-items: center; gap: var(--space-md); min-height: var(--header-height); }
-    /* Same lockup as the styleguide header: wordmark | label, version under the label. */
-    header .lockup { display: inline-flex; align-items: center; gap: var(--space-xs); color: var(--color-text-primary); text-decoration: none; }
-    header .lockup:hover { color: var(--color-text-primary); opacity: .8; }
-    header .lockup .logo { display: inline-flex; flex: none; }
-    header .lockup .tag { white-space: nowrap; }
-    header .lockup .logo svg { height: 1.25rem; width: auto; }
-    header .lockup .rule { width: 1px; height: var(--space-md); background: var(--color-border-strong); flex: none; }
-    header .lockup .tag { display: grid; line-height: var(--line-height-tight); font-family: var(--font-family-heading); font-size: var(--type-small-size); font-weight: var(--type-small-weight); letter-spacing: var(--letter-spacing-snug); }
-    header .lockup .ver { font-family: var(--font-family-mono); font-size: var(--type-micro-size); letter-spacing: var(--letter-spacing-normal); color: var(--color-text-muted); }
-    header .btn { margin-left: auto; }
+    __SITE_HEADER_CSS__
     .btn {
       display: inline-flex; align-items: center; gap: var(--space-2xs); white-space: nowrap;
       padding: var(--space-2xs) var(--space-sm); border-radius: var(--radius-button);
@@ -32,8 +22,6 @@
       cursor: pointer; text-decoration: none; transition: background-color var(--motion-fast), border-color var(--motion-fast);
     }
     .btn:hover { background: var(--color-control-secondary-hover); }
-    .btn .btn-short { display: none; }
-    @media (max-width: 767px) { .btn [data-theme-label] { display: none; } .btn .btn-short { display: inline; } }
     .btn-primary { background: var(--color-control); border-color: var(--color-control); color: var(--color-control-text); }
     .btn-primary:hover { background: var(--color-control-hover); border-color: var(--color-control-hover); }
     main { display: grid; align-items: center; padding-block: var(--space-2xl); }
@@ -50,16 +38,7 @@
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <a class="lockup" href="/" aria-label="Exaforce Marcom System __VERSION__">
-        <span class="logo" data-inline-svg="/__MAJOR__/assets/logo/exaforce-logo-current.svg"></span>
-        <span class="rule" aria-hidden="true"></span>
-        <span class="tag">Marcom System<span class="ver">__VERSION__</span></span>
-      </a>
-      <button class="btn" type="button" data-theme-toggle><span data-theme-label data-theme-word="Theme"></span><span class="btn-short">Theme</span></button>
-    </div>
-  </header>
+  __SITE_HEADER__
 
   <main>
     <div class="wrap">

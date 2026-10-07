@@ -196,9 +196,17 @@ for (const group of readdirSync(logoRoot).sort()) {
   }
   logos[group] = bySlug;
 }
-const html = read('src/site/index.html')
-  .replaceAll('__VERSION__', version)
-  .replaceAll('__MAJOR__', major)
+/* Every page gets the shared header (src/site/_header.html + _header.css),
+   with aria-current on the nav link for the page being built. */
+const headerHtml = read('src/site/_header.html');
+const headerCss = read('src/site/_header.css');
+const page = (file, current) =>
+  read(file)
+    .replace('__SITE_HEADER_CSS__', () => headerCss)
+    .replace('__SITE_HEADER__', () => headerHtml.replace(`data-page="${current}"`, `data-page="${current}" aria-current="page"`))
+    .replaceAll('__VERSION__', version)
+    .replaceAll('__MAJOR__', major);
+const html = page('src/site/index.html', 'index')
   .replace('__ICONS_JSON__', JSON.stringify(icons))
   .replace('__LOGOS_JSON__', JSON.stringify(logos));
 write(dist, 'index.html', html);
@@ -209,10 +217,7 @@ write(dist, 'index.html', html);
 write(
   dist,
   '404.html',
-  read('src/site/404.html')
-    .replaceAll('__VERSION__', version)
-    .replaceAll('__MAJOR__', major)
-    .replace('__CHANNELS_JSON__', JSON.stringify(channels)),
+  page('src/site/404.html', '404').replace('__CHANNELS_JSON__', JSON.stringify(channels)),
 );
 
 /* Ribbon Shader Studio: same page, presets injected so it can never disagree
@@ -220,10 +225,7 @@ write(
 write(
   dist,
   'ribbon-shader-studio.html',
-  read('src/site/ribbon-shader-studio.html')
-    .replaceAll('__VERSION__', version)
-    .replaceAll('__MAJOR__', major)
-    .replace('__RIBBON_PRESETS__', JSON.stringify(ribbonPresets)),
+  page('src/site/ribbon-shader-studio.html', 'ribbon-shader-studio').replace('__RIBBON_PRESETS__', JSON.stringify(ribbonPresets)),
 );
 
 /* 4. Manifest + headers. */

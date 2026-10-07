@@ -16,36 +16,7 @@
   <style>
     /* Everything below reads semantic tokens only — this page is also a test. */
     .wrap { max-width: var(--measure-wide); margin-inline: auto; padding-inline: var(--space-gutter); }
-    header.top {
-      position: sticky; top: 0; z-index: var(--z-sticky);
-      background: color-mix(in srgb, var(--color-surface) 88%, transparent);
-      backdrop-filter: blur(var(--blur-scrim));
-      border-bottom: 1px solid var(--color-border);
-    }
-    header.top .wrap { display: flex; align-items: center; gap: var(--space-md); min-height: var(--header-height); }
-    /* Lockup: wordmark | label, version small under the label. Mirrors the
-       "Exaforce | Tools" lockup on an internal site so the two read as siblings. */
-    header.top .lockup { display: inline-flex; align-items: center; gap: var(--space-xs); color: var(--color-text-primary); text-decoration: none; }
-    header.top .lockup:hover { color: var(--color-text-primary); opacity: .8; }
-    header.top .lockup .logo { display: inline-flex; flex: none; }
-    header.top .lockup .tag { white-space: nowrap; }
-    header.top .lockup .logo svg { height: 1.25rem; width: auto; }
-    header.top .lockup .rule { width: 1px; height: var(--space-md); background: var(--color-border-strong); flex: none; }
-    header.top .lockup .tag { display: grid; line-height: var(--line-height-tight); font-family: var(--font-family-heading); font-size: var(--type-small-size); font-weight: var(--type-small-weight); letter-spacing: var(--letter-spacing-snug); }
-    header.top .lockup .ver { font-family: var(--font-family-mono); font-size: var(--type-micro-size); letter-spacing: var(--letter-spacing-normal); color: var(--color-text-muted); }
-    header.top nav { margin-left: auto; display: flex; gap: var(--space-sm); flex-wrap: wrap; }
-    header.top nav a { font-size: var(--type-small-size); color: var(--color-text-secondary); text-decoration: none; }
-    header.top nav a:hover { color: var(--color-accent); }
-    .btn {
-      display: inline-flex; align-items: center; gap: var(--space-2xs);
-      padding: var(--space-2xs) var(--space-sm); border-radius: var(--radius-button);
-      border: 1px solid var(--color-border-strong); background: var(--color-control-secondary);
-      color: var(--color-text-primary); font: inherit; font-size: var(--type-control-size); font-weight: var(--type-control-weight);
-      cursor: pointer; transition: background-color var(--motion-fast), border-color var(--motion-fast);
-    }
-    .btn:hover { background: var(--color-control-secondary-hover); }
-    .btn .btn-short { display: none; }
-    @media (max-width: 767px) { .btn [data-theme-label] { display: none; } .btn .btn-short { display: inline; } }
+    __SITE_HEADER_CSS__
     /* Page grid: a sticky in-page nav on the left, content on the right. The
        header keeps only links to other pages; everything on this page lives
        in the sidebar. Inside the grid .wrap gives up its own measure and
@@ -134,24 +105,11 @@
     pre { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-surface); padding: var(--space-sm) var(--space-md); overflow-x: auto; font-family: var(--font-family-mono); font-size: var(--type-caption-size); line-height: var(--line-height-normal); margin-block: var(--space-xs) var(--space-md); }
     .note { padding: var(--space-sm) var(--space-md); border-left: 3px solid var(--color-accent); background: var(--color-accent-subtle); border-radius: var(--radius-control); color: var(--color-text-secondary); max-width: var(--measure-content); }
     footer { padding-block: var(--space-xl); color: var(--color-text-muted); }
-    .btn { white-space: nowrap; }
-    @media (max-width: 767px) { .typerow { grid-template-columns: 1fr; gap: var(--space-3xs); } header.top nav { display: none; } header.top .btn { margin-left: auto; } }
+    @media (max-width: 767px) { .typerow { grid-template-columns: 1fr; gap: var(--space-3xs); } section[id] { scroll-margin-top: calc(var(--header-height) + var(--space-xl)); } }
   </style>
 </head>
 <body>
-  <header class="top">
-    <div class="wrap">
-      <a class="lockup" href="#" aria-label="Exaforce Marcom System __VERSION__">
-        <span class="logo" data-inline-svg="__MAJOR__/assets/logo/exaforce-logo-current.svg"></span>
-        <span class="rule" aria-hidden="true"></span>
-        <span class="tag">Marcom System<span class="ver">__VERSION__</span></span>
-      </a>
-      <nav aria-label="Other pages">
-        <a href="ribbon-shader-studio.html">Ribbon studio</a>
-      </nav>
-      <button class="btn" type="button" data-theme-toggle><span data-theme-label data-theme-word="Theme"></span><span class="btn-short">Theme</span></button>
-    </div>
-  </header>
+  __SITE_HEADER__
 
   <div class="page">
   <aside class="toc">
@@ -435,7 +393,7 @@ ExaforceTheme.set('light'); ExaforceTheme.resolved(); // "light" | "dark"</pre>
       const targets = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
       const setCurrent = (id) => links.forEach(a => a.getAttribute('href') === '#' + id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'));
       const update = () => {
-        const line = document.querySelector('header.top').offsetHeight + 48;
+        const line = document.querySelector('header.site').offsetHeight + 48;
         let current = null;
         for (const t of targets) if (t.getBoundingClientRect().top <= line) current = t.id;
         if (!current && targets[0] && targets[0].getBoundingClientRect().top <= window.innerHeight / 2) current = targets[0].id;

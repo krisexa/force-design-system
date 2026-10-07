@@ -1,0 +1,49 @@
+/* Shared site header — injected by scripts/build.mjs inside each page's
+   <style>. Semantic tokens only. A page can widen the inner track by setting
+   --site-header-width / --site-header-gutter (the Ribbon studio does). */
+header.site {
+  position: sticky; top: 0; z-index: var(--z-sticky);
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  backdrop-filter: blur(var(--blur-scrim));
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+}
+header.site .site-inner {
+  max-width: var(--site-header-width, var(--measure-wide)); margin-inline: auto;
+  padding-inline: var(--site-header-gutter, var(--space-gutter));
+  display: flex; align-items: center; gap: var(--space-md); min-height: var(--header-height);
+}
+/* Lockup: wordmark | label, version small under the label. Mirrors the
+   "Exaforce | Tools" lockup on an internal site so the two read as siblings. */
+header.site .lockup { display: inline-flex; align-items: center; gap: var(--space-xs); color: var(--color-text-primary); text-decoration: none; }
+header.site .lockup:hover { color: var(--color-text-primary); opacity: .8; }
+header.site .lockup .logo { display: inline-flex; flex: none; }
+header.site .lockup .logo svg { height: 1.25rem; width: auto; }
+header.site .lockup .rule { width: 1px; height: var(--space-md); background: var(--color-border-strong); flex: none; }
+header.site .lockup .tag { display: grid; white-space: nowrap; line-height: var(--line-height-tight); font-family: var(--font-family-heading); font-size: var(--type-small-size); font-weight: var(--type-small-weight); letter-spacing: var(--letter-spacing-snug); }
+header.site .lockup .ver { font-family: var(--font-family-mono); font-size: var(--type-micro-size); letter-spacing: var(--letter-spacing-normal); color: var(--color-text-muted); }
+/* Cross-page links only; in-page navigation belongs to the page. */
+header.site nav { margin-left: auto; display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+header.site nav a { font-size: var(--type-small-size); color: var(--color-text-secondary); text-decoration: none; transition: color var(--motion-fast); }
+header.site nav a:hover { color: var(--color-accent); }
+header.site nav a[aria-current] { color: var(--color-text-primary); font-weight: var(--font-weight-medium); }
+header.site .btn {
+  display: inline-flex; align-items: center; gap: var(--space-2xs); white-space: nowrap;
+  padding: var(--space-2xs) var(--space-sm); border-radius: var(--radius-button);
+  border: 1px solid var(--color-border-strong); background: var(--color-control-secondary);
+  color: var(--color-text-primary); font: inherit; font-size: var(--type-control-size); font-weight: var(--type-control-weight);
+  line-height: var(--line-height-normal); letter-spacing: var(--letter-spacing-normal); text-transform: none; box-shadow: none;
+  cursor: pointer; transition: background-color var(--motion-fast), border-color var(--motion-fast);
+}
+header.site .btn:hover { background: var(--color-control-secondary-hover); }
+header.site .btn .btn-short { display: none; }
+/* Phones: the toggle shrinks to its bare word and the page links drop to a
+   second row so every page stays reachable. */
+@media (max-width: 767px) {
+  header.site .site-inner { flex-wrap: wrap; row-gap: 0; padding-bottom: var(--space-2xs); }
+  header.site .btn { margin-left: auto; }
+  header.site .btn [data-theme-label] { display: none; }
+  header.site .btn .btn-short { display: inline; }
+  header.site nav { order: 3; flex-basis: 100%; margin-left: 0; }
+}

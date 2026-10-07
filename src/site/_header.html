@@ -1,0 +1,26 @@
+<!-- Shared site header. Injected by scripts/build.mjs on
+     every page in place of the SITE_HEADER placeholder; the build adds aria-current="page" to the nav link whose
+     data-page matches the page being built. Paths are root-absolute because
+     404.html renders at any depth. Add a page here and it appears everywhere. -->
+<header class="site">
+  <div class="site-inner">
+    <a class="lockup" href="/" aria-label="Exaforce Marcom System __VERSION__">
+      <span class="logo" data-inline-svg="/__MAJOR__/assets/logo/exaforce-logo-current.svg"></span>
+      <span class="rule" aria-hidden="true"></span>
+      <span class="tag">Marcom System<span class="ver">__VERSION__</span></span>
+    </a>
+    <nav aria-label="Pages">
+      <a href="/" data-page="index">Design system</a>
+      <a href="/ribbon-shader-studio.html" data-page="ribbon-shader-studio">Ribbon studio</a>
+    </nav>
+    <button class="btn" type="button" data-theme-toggle><span data-theme-label data-theme-word="Theme"></span><span class="btn-short">Theme</span></button>
+  </div>
+  <script>
+    /* Inline the wordmark so it takes currentColor. The attribute is removed
+       first so a page's own inliner does not fetch it a second time. */
+    for (const el of document.querySelectorAll('header.site [data-inline-svg]')) {
+      const src = el.getAttribute('data-inline-svg'); el.removeAttribute('data-inline-svg');
+      fetch(src).then(r => r.text()).then(svg => { el.innerHTML = svg; }).catch(() => {});
+    }
+  </script>
+</header>

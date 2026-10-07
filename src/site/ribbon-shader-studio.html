@@ -14,6 +14,9 @@
 <link rel="stylesheet" href="__MAJOR__/fonts.css">
 <link rel="stylesheet" href="__MAJOR__/tokens.css">
 <style>
+/* Site header, shared with the styleguide; the studio widens it to its own
+   workbench width so the lockup lines up with the stage. */
+__SITE_HEADER_CSS__
 :root{
   --bg:#FAFAFB; --surface:#F1F2F5; --surface-2:#E9EBEF;
   --ink:#12151A; --ink-soft:#333A45; --muted:#5B6472;
@@ -44,6 +47,7 @@
 body{
   margin:0; background:var(--bg); color:var(--ink);
   font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  --site-header-width:var(--maxw,1560px); --site-header-gutter:clamp(14px,2.2vw,32px);
 }
 .wrap{max-width:var(--maxw,1560px); margin:0 auto; padding:22px clamp(14px,2.2vw,32px) 72px}
 a{color:var(--accent-ink)}
@@ -60,7 +64,6 @@ button,select,input{font-family:inherit}
 }
 .masthead .sub{font-size:.9rem; color:var(--muted); max-width:62ch}
 .masthead .spacer{flex:1}
-.masthead .back{font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; text-decoration:none}
 .kbd{font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
 
 /* ---------- stage ---------- */
@@ -206,10 +209,11 @@ code:not(pre code){font-family:var(--mono); font-size:.85em; color:var(--ink)}
 </head>
 <body>
 
+__SITE_HEADER__
+
 <div class="wrap">
 
   <div class="masthead">
-    <a class="back" href="./">&larr; Design system</a>
     <h1>Ribbon Shader Studio</h1>
     <span class="sub">Swept-strand gradient, drawn per pixel. Colour, form and shape pick independently &mdash; then tune. Presets come from <code>ribbon-presets.json</code>; retune here, paste back there.</span>
     <span class="spacer"></span>
