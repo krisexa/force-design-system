@@ -23,9 +23,15 @@
       border-bottom: 1px solid var(--color-border);
     }
     header.top .wrap { display: flex; align-items: center; gap: var(--space-md); min-height: var(--header-height); }
-    header.top .logo { display: inline-flex; color: var(--color-text-primary); }
-    header.top .logo svg { height: 1.25rem; width: auto; }
-    header.top .ver { font-family: var(--font-family-mono); font-size: var(--type-caption-size); color: var(--color-text-muted); }
+    /* Lockup: wordmark | label, version small under the label. Mirrors the
+       "Exaforce | Tools" lockup on an internal site so the two read as siblings. */
+    header.top .lockup { display: inline-flex; align-items: center; gap: var(--space-xs); color: var(--color-text-primary); text-decoration: none; }
+    header.top .lockup:hover { color: var(--color-text-primary); opacity: .8; }
+    header.top .lockup .logo { display: inline-flex; }
+    header.top .lockup .logo svg { height: 1.25rem; width: auto; }
+    header.top .lockup .rule { width: 1px; height: var(--space-md); background: var(--color-border-strong); flex: none; }
+    header.top .lockup .tag { display: grid; line-height: var(--line-height-tight); font-family: var(--font-family-heading); font-size: var(--type-small-size); font-weight: var(--type-small-weight); letter-spacing: var(--letter-spacing-snug); }
+    header.top .lockup .ver { font-family: var(--font-family-mono); font-size: var(--type-micro-size); letter-spacing: var(--letter-spacing-normal); color: var(--color-text-muted); }
     header.top nav { margin-left: auto; display: flex; gap: var(--space-sm); flex-wrap: wrap; }
     header.top nav a { font-size: var(--type-small-size); color: var(--color-text-secondary); text-decoration: none; }
     header.top nav a:hover { color: var(--color-accent); }
@@ -104,14 +110,17 @@
     .note { padding: var(--space-sm) var(--space-md); border-left: 3px solid var(--color-accent); background: var(--color-accent-subtle); border-radius: var(--radius-control); color: var(--color-text-secondary); max-width: var(--measure-content); }
     footer { padding-block: var(--space-xl); color: var(--color-text-muted); }
     .btn { white-space: nowrap; }
-    @media (max-width: 767px) { .typerow { grid-template-columns: 1fr; gap: var(--space-3xs); } header.top nav, header.top .ver { display: none; } header.top .btn { margin-left: auto; } }
+    @media (max-width: 767px) { .typerow { grid-template-columns: 1fr; gap: var(--space-3xs); } header.top nav { display: none; } header.top .btn { margin-left: auto; } }
   </style>
 </head>
 <body>
   <header class="top">
     <div class="wrap">
-      <a class="logo" href="#" aria-label="Exaforce design system" data-inline-svg="__MAJOR__/assets/logo/exaforce-logo-current.svg"></a>
-      <span class="ver">design system __VERSION__</span>
+      <a class="lockup" href="#" aria-label="Exaforce Marcom System __VERSION__">
+        <span class="logo" data-inline-svg="__MAJOR__/assets/logo/exaforce-logo-current.svg"></span>
+        <span class="rule" aria-hidden="true"></span>
+        <span class="tag">Marcom System<span class="ver">__VERSION__</span></span>
+      </a>
       <nav>
         <a href="#type">Type</a><a href="#color">Colour</a><a href="#space">Space</a><a href="#brand">Brand</a><a href="#icons">Icons</a><a href="#logos">Logos</a><a href="ribbon-shader-studio.html">Ribbon studio</a><a href="#use">Use it</a>
       </nav>

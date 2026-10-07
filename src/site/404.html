@@ -14,9 +14,14 @@
     body { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
     .wrap { max-width: var(--measure-wide); margin-inline: auto; padding-inline: var(--space-gutter); width: 100%; }
     header .wrap { display: flex; align-items: center; gap: var(--space-md); min-height: var(--header-height); }
-    header .logo { display: inline-flex; color: var(--color-text-primary); }
-    header .logo svg { height: 1.25rem; width: auto; }
-    header .ver { font-family: var(--font-family-mono); font-size: var(--type-caption-size); color: var(--color-text-muted); }
+    /* Same lockup as the styleguide header: wordmark | label, version under the label. */
+    header .lockup { display: inline-flex; align-items: center; gap: var(--space-xs); color: var(--color-text-primary); text-decoration: none; }
+    header .lockup:hover { color: var(--color-text-primary); opacity: .8; }
+    header .lockup .logo { display: inline-flex; }
+    header .lockup .logo svg { height: 1.25rem; width: auto; }
+    header .lockup .rule { width: 1px; height: var(--space-md); background: var(--color-border-strong); flex: none; }
+    header .lockup .tag { display: grid; line-height: var(--line-height-tight); font-family: var(--font-family-heading); font-size: var(--type-small-size); font-weight: var(--type-small-weight); letter-spacing: var(--letter-spacing-snug); }
+    header .lockup .ver { font-family: var(--font-family-mono); font-size: var(--type-micro-size); letter-spacing: var(--letter-spacing-normal); color: var(--color-text-muted); }
     header .btn { margin-left: auto; }
     .btn {
       display: inline-flex; align-items: center; gap: var(--space-2xs); white-space: nowrap;
@@ -38,14 +43,17 @@
     .hint { color: var(--color-text-secondary); max-width: var(--measure-prose); }
     .hint a { color: var(--color-accent); }
     footer { padding-block: var(--space-lg); color: var(--color-text-muted); border-top: 1px solid var(--color-border); }
-    @media (max-width: 767px) { main .wrap { grid-template-columns: 1fr; } .mark { order: -1; width: 5rem; } header .ver { display: none; } }
+    @media (max-width: 767px) { main .wrap { grid-template-columns: 1fr; } .mark { order: -1; width: 5rem; } }
   </style>
 </head>
 <body>
   <header>
     <div class="wrap">
-      <a class="logo" href="/" aria-label="Exaforce design system" data-inline-svg="/__MAJOR__/assets/logo/exaforce-logo-current.svg"></a>
-      <span class="ver">design system __VERSION__</span>
+      <a class="lockup" href="/" aria-label="Exaforce Marcom System __VERSION__">
+        <span class="logo" data-inline-svg="/__MAJOR__/assets/logo/exaforce-logo-current.svg"></span>
+        <span class="rule" aria-hidden="true"></span>
+        <span class="tag">Marcom System<span class="ver">__VERSION__</span></span>
+      </a>
       <button class="btn" type="button" data-theme-toggle><span data-theme-label data-theme-word="Theme"></span></button>
     </div>
   </header>
