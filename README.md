@@ -33,6 +33,7 @@ src/
   assets/logos/investors/ 9 investor marks, currentColor
   assets/logos/review-marks/  G2 and Gartner, -color / -white
   assets/email/           logo JPEG + social icons for email signatures (source; served from the website)
+  assets/fonts/           installable variable TTFs of the three typefaces + their OFL licences (for the tools site's Typography page; the web uses fonts/)
   ribbon/presets.json     ribbon shader colourways and forms — the one file the studio, website and tools read
   site/ribbon-shader-studio.html  the Ribbon Shader Studio, presets injected at build
   site/index.html         the styleguide, published at the root of the Pages site
