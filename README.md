@@ -41,6 +41,7 @@ src/
   assets/email/           logo JPEG + social icons for email signatures (source; served from the website)
   assets/fonts/           installable variable TTFs of the three typefaces + their OFL licences (for the tools site's Typography page; the web uses fonts/)
   ribbon/presets.json     ribbon shader colourways and forms — the one file the studio, website and tools read
+  site/_header.html, _header.css  the one site header (lockup, page nav, theme toggle); build.mjs injects it into every page below and marks the current page
   site/ribbon-shader-studio.html  the Ribbon Shader Studio, presets injected at build
   site/index.html         the styleguide, published at the root of the Pages site
   site/404.html           served for any missing path; names the published channels
