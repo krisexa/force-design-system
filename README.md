@@ -1,17 +1,21 @@
 # Exaforce Design System
 
-The one place brand-level web assets live: design tokens, the two self-hosted
-typefaces, the logo and icon set, favicons, and the theme script. Every
-Exaforce web property links to it or installs it. Nothing here is copied into a
-site again.
+The one place brand-level web assets live: design tokens, the three self-hosted
+typefaces, the logo and icon sets, customer and investor logos, favicons, the
+ribbon shader presets, and the theme script. Every Exaforce web property takes
+them from here. Nothing brand-level is copied into a site by hand again.
 
-Consumers today, and where each stands:
+Consumers, and where each stands (2026-10-07):
 
-| Property | Stack | Status |
-|---|---|---|
-| an internal site | vanilla HTML, Cloudflare Pages | pilot: first to switch |
-| a campaign site | vanilla HTML | carries a hand-copied, already-drifted set of these files |
-| the website | Astro 7 + Sanity | the origin of these tokens; should become a consumer |
+| Property | Stack | How it consumes | Status |
+|---|---|---|---|
+| an internal site | vanilla HTML, Cloudflare Pages | built copy vendored under `shared/design-system/`, refreshed by its `update-design-system.sh` | live since 2026-09-30 |
+| a bundler site | Astro 7, pnpm, Cloudflare Pages | package vendored under `vendor/design-system/` (`file:` dependency), refreshed by `pnpm sync:design-system <tag>` | live since 2026-09-30 |
+| a campaign site | vanilla HTML | still a hand-copied, drifted set of these files | next |
+| the website | Astro 7 + Sanity | still its own copy of the token files, the origin of this system | after campaigns |
+
+Not yet on Cloudflare Pages itself. Until it is, every consumer carries a copy
+of the build or the package rather than linking a hosted URL; see *Using it*.
 
 ## What is in it
 
@@ -45,19 +49,34 @@ scripts/
 ```
 
 Deliberately **not** in it: page and component CSS, buttons and cards, the
-Tailwind bridge, ribbon shader presets, anything that belongs to one site. The
-system is tokens, type, assets and theming. Components can't be shared across
-vanilla and Astro sites anyway.
+Tailwind bridge, anything that belongs to one site. The system is tokens, type,
+assets, shader data and theming. Components can't be shared across vanilla and
+Astro sites anyway.
 
 ## Using it
 
+Two shapes of consumer, and for now both carry a copy rather than fetching at
+build or page-load time, because this repository is private and nothing is
+hosted yet. **A private GitHub dependency does not work on Cloudflare Pages:**
+a bundler site depended on `github:krisexa/force-design-system#tag`, every laptop
+built fine, and every Pages build from 2026-09-30 to 10-02 failed silently
+because the build container has no GitHub credentials. Production sat on a
+stale commit while local builds were green. Either vendor (below) or make the
+repository public before depending on it by URL.
+
 ### No build step (an internal site, campaign pages)
 
+Copy `dist/v1`, `dist/fonts` and `dist/manifest.json` into the site (the tools
+repo keeps them under `shared/design-system/` with a one-line refresh script),
+then link, in this order and before the site's own stylesheets:
+
 ```html
-<link rel="preconnect" href="https://HOST">
-<script src="https://HOST/v1/theme.js"></script>
-<link rel="stylesheet" href="https://HOST/v1/exaforce.css">
+<script src="/shared/design-system/v1/theme.js"></script>
+<link rel="stylesheet" href="/shared/design-system/v1/exaforce.css">
 ```
+
+Once the system is hosted, the same tags point at `https://HOST/v1/…` with a
+`<link rel="preconnect">` added.
 
 `theme.js` goes first and synchronously, so the page never paints in the wrong
 theme. `exaforce.css` is fonts + tokens + base in one request. For tokens
@@ -78,8 +97,19 @@ and delete the local `@font-face` and Google Fonts imports.
 
 ### With a bundler (Astro, Vite)
 
+Vendor the package and depend on the copy (what a bundler site does; its
+`scripts/sync-design-system.mjs` clones a tag with your credentials, copies
+`package.json` and `src/` into `vendor/design-system/`, and reinstalls):
+
+```json
+"@exaforce/design-system": "file:vendor/design-system"
+```
+
+A direct git dependency works on a machine with GitHub access but not on
+Cloudflare Pages while the repo is private:
+
 ```sh
-npm install github:exaforce/force-design-system#v1.0.0
+npm install github:krisexa/force-design-system#v1.1.5
 ```
 
 ```css
@@ -111,8 +141,11 @@ The build publishes every release under two paths:
 | Path | Meaning | Cache |
 |---|---|---|
 | `/v1/…` | floating: the newest 1.x | 1 hour, stale-while-revalidate a day |
-| `/1.0.0/…` | exact | immutable, one year |
+| `/1.x.y/…` | exact (the current version is in `package.json` and `manifest.json`) | immutable, one year |
 | `/fonts/…` | content-hashed woff2, shared by both | immutable, one year |
+
+Releases are also git tags (`v1.1.5` and so on), which is what the vendoring
+scripts in the consuming repos pull.
 
 Link `/v1/` to receive approved changes within an hour of deploy. Pin an exact
 version when a page must not move (a live event page the week of the event).
@@ -207,6 +240,16 @@ match side by side.
 
 MIGRATING.md is the prompt to hand a Claude Code session in a site repo. It is
 the recipe that moved an internal site and a bundler site.
+
+## Licence and visibility
+
+LICENSE.md: the code is MIT, the typefaces are SIL OFL 1.1, the Exaforce marks
+are all rights reserved, and the customer, investor and review logos belong to
+their owners and are included only for Exaforce's own properties. Everything in
+`dist/` is served unauthenticated to browsers by the consuming sites, so the
+repository being private protects nothing that matters; what it does do is
+break any consumer that depends on it by URL from a build environment without
+credentials (see *Using it*).
 
 ## Local
 

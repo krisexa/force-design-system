@@ -33,8 +33,13 @@ step, internal, defaults to dark"}`.
   `data-default="dark"` only if the site defaults to dark today), then
   `fonts.css`, `tokens.css`, and `fonts-ja.css` on pages that render Japanese.
   Add a `_headers` rule making `/shared/design-system/fonts/*` immutable.
-- Build step (Astro/Vite): `npm install github:krisexa/force-design-system#v{VERSION}`
-  and replace the local token and font imports with
+- Build step (Astro/Vite): the repo is private, and a `github:` dependency
+  fails on Cloudflare Pages (no credentials in the build container; a bundler site lost
+  two days of deploys to this). Vendor it instead: copy the release's
+  `package.json` and `src/` into `vendor/design-system/` with a sync script
+  like a bundler site's `scripts/sync-design-system.mjs`, depend on it as
+  `"@exaforce/design-system": "file:vendor/design-system"`, and replace the
+  local token and font imports with
   `@import '@exaforce/design-system'` (or `tokens.css` + `fonts.css` à la
   carte, plus `fonts-ja.css` where Japanese renders). Delete the local copies
   of `primitives.css`, `semantic.css`, the `@font-face` blocks and the
