@@ -17,7 +17,8 @@
     /* Same lockup as the styleguide header: wordmark | label, version under the label. */
     header .lockup { display: inline-flex; align-items: center; gap: var(--space-xs); color: var(--color-text-primary); text-decoration: none; }
     header .lockup:hover { color: var(--color-text-primary); opacity: .8; }
-    header .lockup .logo { display: inline-flex; }
+    header .lockup .logo { display: inline-flex; flex: none; }
+    header .lockup .tag { white-space: nowrap; }
     header .lockup .logo svg { height: 1.25rem; width: auto; }
     header .lockup .rule { width: 1px; height: var(--space-md); background: var(--color-border-strong); flex: none; }
     header .lockup .tag { display: grid; line-height: var(--line-height-tight); font-family: var(--font-family-heading); font-size: var(--type-small-size); font-weight: var(--type-small-weight); letter-spacing: var(--letter-spacing-snug); }
@@ -31,6 +32,8 @@
       cursor: pointer; text-decoration: none; transition: background-color var(--motion-fast), border-color var(--motion-fast);
     }
     .btn:hover { background: var(--color-control-secondary-hover); }
+    .btn .btn-short { display: none; }
+    @media (max-width: 767px) { .btn [data-theme-label] { display: none; } .btn .btn-short { display: inline; } }
     .btn-primary { background: var(--color-control); border-color: var(--color-control); color: var(--color-control-text); }
     .btn-primary:hover { background: var(--color-control-hover); border-color: var(--color-control-hover); }
     main { display: grid; align-items: center; padding-block: var(--space-2xl); }
@@ -54,7 +57,7 @@
         <span class="rule" aria-hidden="true"></span>
         <span class="tag">Marcom System<span class="ver">__VERSION__</span></span>
       </a>
-      <button class="btn" type="button" data-theme-toggle><span data-theme-label data-theme-word="Theme"></span></button>
+      <button class="btn" type="button" data-theme-toggle><span data-theme-label data-theme-word="Theme"></span><span class="btn-short">Theme</span></button>
     </div>
   </header>
 

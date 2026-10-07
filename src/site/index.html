@@ -27,7 +27,8 @@
        "Exaforce | Tools" lockup on an internal site so the two read as siblings. */
     header.top .lockup { display: inline-flex; align-items: center; gap: var(--space-xs); color: var(--color-text-primary); text-decoration: none; }
     header.top .lockup:hover { color: var(--color-text-primary); opacity: .8; }
-    header.top .lockup .logo { display: inline-flex; }
+    header.top .lockup .logo { display: inline-flex; flex: none; }
+    header.top .lockup .tag { white-space: nowrap; }
     header.top .lockup .logo svg { height: 1.25rem; width: auto; }
     header.top .lockup .rule { width: 1px; height: var(--space-md); background: var(--color-border-strong); flex: none; }
     header.top .lockup .tag { display: grid; line-height: var(--line-height-tight); font-family: var(--font-family-heading); font-size: var(--type-small-size); font-weight: var(--type-small-weight); letter-spacing: var(--letter-spacing-snug); }
@@ -43,6 +44,30 @@
       cursor: pointer; transition: background-color var(--motion-fast), border-color var(--motion-fast);
     }
     .btn:hover { background: var(--color-control-secondary-hover); }
+    .btn .btn-short { display: none; }
+    @media (max-width: 767px) { .btn [data-theme-label] { display: none; } .btn .btn-short { display: inline; } }
+    /* Page grid: a sticky in-page nav on the left, content on the right. The
+       header keeps only links to other pages; everything on this page lives
+       in the sidebar. Inside the grid .wrap gives up its own measure and
+       gutter — the grid carries them. */
+    .page { max-width: var(--measure-wide); margin-inline: auto; padding-inline: var(--space-gutter); display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: var(--space-2xl); align-items: start; }
+    .page .wrap { max-width: none; margin-inline: 0; padding-inline: 0; }
+    .page main { min-width: 0; }
+    .toc { position: sticky; top: calc(var(--header-height) + var(--space-2xl)); padding-top: var(--space-2xl); }
+    .toc nav { display: grid; gap: var(--space-3xs); }
+    .toc .type-eyebrow { color: var(--color-text-muted); margin-bottom: var(--space-2xs); }
+    .toc a { font-size: var(--type-small-size); color: var(--color-text-secondary); text-decoration: none; padding: var(--space-3xs) var(--space-xs); margin-left: calc(-1 * var(--space-xs)); border-left: 2px solid transparent; border-radius: 0 var(--radius-inline) var(--radius-inline) 0; transition: color var(--motion-fast), border-color var(--motion-fast); }
+    .toc a:hover { color: var(--color-text-primary); }
+    .toc a[aria-current='true'] { color: var(--color-text-primary); border-left-color: var(--color-accent); }
+    section[id] { scroll-margin-top: calc(var(--header-height) + var(--space-md)); }
+    @media (max-width: 1023px) {
+      .page { grid-template-columns: 1fr; gap: 0; }
+      .toc { position: static; padding-top: var(--space-md); border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-md); }
+      .toc nav { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2xs) var(--space-sm); }
+      .toc .type-eyebrow { margin: 0; flex-basis: 100%; }
+      .toc a { padding: 0; margin: 0; border-left: 0; border-radius: 0; }
+      .toc a[aria-current='true'] { border-left: 0; text-decoration: underline; text-underline-offset: 0.2em; }
+    }
     section { padding-block: var(--space-2xl); border-bottom: 1px solid var(--color-border); }
     section h2 { margin-bottom: var(--space-xs); }
     section > .wrap > p.lede { color: var(--color-text-secondary); max-width: var(--measure-prose); margin-bottom: var(--space-lg); }
@@ -121,12 +146,27 @@
         <span class="rule" aria-hidden="true"></span>
         <span class="tag">Marcom System<span class="ver">__VERSION__</span></span>
       </a>
-      <nav>
-        <a href="#type">Type</a><a href="#color">Colour</a><a href="#space">Space</a><a href="#brand">Brand</a><a href="#icons">Icons</a><a href="#logos">Logos</a><a href="ribbon-shader-studio.html">Ribbon studio</a><a href="#use">Use it</a>
+      <nav aria-label="Other pages">
+        <a href="ribbon-shader-studio.html">Ribbon studio</a>
       </nav>
-      <button class="btn" type="button" data-theme-toggle><span data-theme-label data-theme-word="Theme"></span></button>
+      <button class="btn" type="button" data-theme-toggle><span data-theme-label data-theme-word="Theme"></span><span class="btn-short">Theme</span></button>
     </div>
   </header>
+
+  <div class="page">
+  <aside class="toc">
+    <nav aria-label="On this page">
+      <p class="type-eyebrow">On this page</p>
+      <a href="#type">Type</a>
+      <a href="#color">Colour</a>
+      <a href="#space">Space</a>
+      <a href="#brand">Brand</a>
+      <a href="#icons">Icons</a>
+      <a href="#logos">Logos</a>
+      <a href="#use">Use it</a>
+    </nav>
+  </aside>
+  <main>
 
   <section>
     <div class="wrap">
@@ -292,6 +332,9 @@ ExaforceTheme.set('light'); ExaforceTheme.resolved(); // "light" | "dark"</pre>
     <div class="wrap type-small">Exaforce Design System __VERSION__ · fonts under the SIL Open Font License 1.1 · <a href="manifest.json">manifest</a></div>
   </footer>
 
+  </main>
+  </div>
+
   <script>
     const ICONS = __ICONS_JSON__;
     const MAJOR = '__MAJOR__';
@@ -383,6 +426,24 @@ ExaforceTheme.set('light'); ExaforceTheme.resolved(); // "light" | "dark"</pre>
        currentColor applies. This is the whole technique for the -current logos. */
     for (const el of document.querySelectorAll('[data-inline-svg]')) {
       fetch(el.getAttribute('data-inline-svg')).then(r => r.text()).then(svg => { el.innerHTML = svg; }).catch(() => {});
+    }
+
+    /* Sidebar scrollspy: mark the section whose heading most recently crossed
+       the line just under the sticky header. */
+    {
+      const links = [...document.querySelectorAll('.toc a[href^="#"]')];
+      const targets = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+      const setCurrent = (id) => links.forEach(a => a.getAttribute('href') === '#' + id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'));
+      const update = () => {
+        const line = document.querySelector('header.top').offsetHeight + 48;
+        let current = null;
+        for (const t of targets) if (t.getBoundingClientRect().top <= line) current = t.id;
+        if (!current && targets[0] && targets[0].getBoundingClientRect().top <= window.innerHeight / 2) current = targets[0].id;
+        if (current) setCurrent(current); else links.forEach(a => a.removeAttribute('aria-current'));
+      };
+      addEventListener('scroll', update, { passive: true });
+      addEventListener('resize', update);
+      update();
     }
 
     /* Logos: fixed-ink files as <img> on the surface they are meant for;
