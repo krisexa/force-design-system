@@ -5,15 +5,6 @@ typefaces, the logo and icon sets, customer and investor logos, favicons, the
 ribbon shader presets, and the theme script. Every Exaforce web property takes
 them from here. Nothing brand-level is copied into a site by hand again.
 
-Consumers, and where each stands (2026-10-07):
-
-| Property | Stack | How it consumes | Status |
-|---|---|---|---|
-| an internal site | vanilla HTML, Cloudflare Pages | built copy vendored under `shared/design-system/`, refreshed by its `update-design-system.sh` | live since 2026-09-30 |
-| a bundler site | Astro 7, pnpm, Cloudflare Pages | package vendored under `vendor/design-system/` (`file:` dependency), refreshed by `pnpm sync:design-system <tag>` | live since 2026-09-30 |
-| a campaign site | vanilla HTML | still a hand-copied, drifted set of these files | next |
-| the website | Astro 7 + Sanity | still its own copy of the token files, the origin of this system | after campaigns |
-
 Hosted on Cloudflare Pages at `https://exaforce-design-system.pages.dev`
 (floating `/v1/`, exact `/1.x.y/`; see *Hosting*). The repository is public,
 so a bundler site can also depend on it by git tag. Consumers that already
@@ -38,9 +29,9 @@ src/
   assets/logos/customers/ 25 customers × -color / -black / -white (fixed ink, never recolour)
   assets/logos/investors/ 9 investor marks, currentColor
   assets/logos/review-marks/  G2 and Gartner, -color / -white
-  assets/email/           logo JPEG + social icons for email signatures (source; served from the website)
-  assets/fonts/           installable variable TTFs of the three typefaces + their OFL licences (for the tools site's Typography page; the web uses fonts/)
-  ribbon/presets.json     ribbon shader colourways and forms — the one file the studio, website and tools read
+  assets/email/           logo JPEG + social icons for email signatures (source; served from the marketing site at stable paths)
+  assets/fonts/           installable variable TTFs of the three typefaces + their OFL licences (for installing locally; the web uses fonts/)
+  ribbon/presets.json     ribbon shader colourways and forms — the one file the studio and every site read
   site/_header.html, _header.css  the one site header (lockup, page nav, theme toggle); build.mjs injects it into every page below and marks the current page
   site/ribbon-shader-studio.html  the Ribbon Shader Studio, presets injected at build
   site/index.html         the styleguide, published at the root of the Pages site
@@ -64,18 +55,17 @@ Vendoring costs one extra step per release and buys independence from this
 host: the fonts ship from the site's own origin, nothing cross-origin, nothing
 to preconnect to. Linking the host costs one preconnect and buys releases
 reaching the site within an hour with no commit in the site repo. Both are
-fine; the tools site and a bundler site vendor because they were migrated while the repo
-was still private.
+fine.
 
 A lesson from that period, kept here so it is not relearned: **a private
-GitHub dependency does not work on Cloudflare Pages.** a bundler site depended on
+GitHub dependency does not work on Cloudflare Pages.** A site depended on
 `github:krisexa/force-design-system#tag`, every laptop built fine, and every
-Pages build from 2026-09-30 to 10-02 failed silently because the build
-container has no GitHub credentials. Production sat on a stale commit while
-local builds were green. The repository has been public since 2026-10-07; if
-it ever goes private again, every consumer must vendor.
+Pages build failed silently for days because the build container has no
+GitHub credentials. Production sat on a stale commit while local builds were
+green. The repository is public; if it ever goes private again, every
+consumer must vendor.
 
-### No build step (an internal site, campaign pages)
+### No build step
 
 Link the host, in this order and before the site's own stylesheets:
 
@@ -90,7 +80,7 @@ and a preconnect without it opens a connection the font request cannot reuse.
 Pin `/1.1.6/` in place of `/v1/` on a page that must not move.
 
 Or vendor: copy `dist/v1`, `dist/fonts` and `dist/manifest.json` into the site
-(the tools repo keeps them under `shared/design-system/` with a one-line
+(a shared folder such as `shared/design-system/`, with a one-line
 refresh script) and link the same two tags from the local path, plus a
 `_headers` rule making the local fonts folder immutable.
 
@@ -120,9 +110,9 @@ Cloudflare Pages too):
 npm install github:krisexa/force-design-system#v1.1.6
 ```
 
-Or vendor the package and depend on the copy (what a bundler site does; its
-`scripts/sync-design-system.mjs` clones a tag, copies `package.json` and
-`src/` into `vendor/design-system/`, and reinstalls):
+Or vendor the package and depend on the copy (a sync script clones a tag,
+copies `package.json` and `src/` into `vendor/design-system/`, and
+reinstalls):
 
 ```json
 "@exaforce/design-system": "file:vendor/design-system"
@@ -145,9 +135,9 @@ Font files too, for a `<link rel="preload">` that must match the bundled
 `@font-face` URL:
 `import inter from '@exaforce/design-system/fonts/files/inter-tight-latin-wght-normal.woff2?url'`.
 
-For the website specifically: the two token files and the font
-declarations in `global.css` are byte-for-byte what this package ships, so the
-switch is replacing those imports and deleting the local copies. Its Tailwind
+For the site the tokens came from: its two token files and font declarations
+are byte-for-byte what this package ships, so the switch is replacing those
+imports and deleting the local copies. Its Tailwind
 `@theme inline` bridge stays in the site; it reads the tokens, it doesn't own them.
 
 ## Versions and caching
@@ -238,10 +228,9 @@ purpose: the shader takes them as linear-light uniforms, so they are not
 tokens and never will be. The Ribbon Shader Studio at
 `/ribbon-shader-studio.html` on the design-system host reads the same JSON
 (injected at build). To retune: adjust in the studio, Copy settings, paste the
-ramp or form back into the JSON, bump the version. The website's
-`ribbon-presets.ts` and the tools' `ribbon.js` still carry their own copies
-plus site-specific fields (poster gradients, scrims); pointing them at the
-published JSON is the next step.
+ramp or form back into the JSON, bump the version. A site that still carries
+its own copy, with site-specific fields on top, should read the published JSON
+instead.
 
 ## Fonts
 
@@ -260,8 +249,8 @@ Family names are always the `… Variable` ones. Never declare the bare
 and once put a third-party font download and a layout shift on every page.
 
 To refresh from Fontsource: copy the `*-wght-normal.woff2` files from
-`node_modules/@fontsource-variable/{inter-tight,google-sans-flex}/files/` in the
-website repo into `src/fonts/files/`, and regenerate the declarations in
+`node_modules/@fontsource-variable/{inter-tight,google-sans-flex}/files/` of
+any install into `src/fonts/files/`, and regenerate the declarations in
 `fonts.css` from each package's `index.css` (keep the `./files/` paths).
 
 ## Logo and mark
@@ -282,20 +271,19 @@ know the background; `-auto` only when you control neither the markup nor the
 theme. `-current` does nothing as an `<img src>` because an image can't see
 the page's colour; browsers render it black.
 
-the website uses a fifth approach: `-black` as `<img>` with
-`filter: var(--logo-filter)`, a semantic token that inverts it in dark mode.
+A fifth approach: `-black` as `<img>` with `filter: var(--logo-filter)`, a
+semantic token that inverts it in dark mode.
 That also follows the toggle and works for any fixed-colour asset.
 
 The black files are the sources; `npm run logos` regenerates the other three
-from them. Three slightly different wordmark SVGs were in circulation (website,
-tools, campaigns): this is the one on the website. The mark comes from the
-tools repo, normalised from pure black to the wordmark's `#231f20` so the two
-match side by side.
+from them. Three slightly different wordmark SVGs were in circulation; this is
+the canonical one. The mark is normalised from pure black to the wordmark's
+`#231f20` so the two match side by side.
 
 ## Migrating a site
 
 MIGRATING.md is the prompt to hand a Claude Code session in a site repo. It is
-the recipe that moved an internal site and a bundler site.
+the recipe every site so far has been moved with.
 
 ## Licence and visibility
 

@@ -1,5 +1,5 @@
 {
-  "_about": "Ribbon shader presets — the single source the Ribbon Shader Studio, www.exaforce.com and the tools site read. Colour ramps are brand data tuned by eye in the studio; forms are shader tunings. Hex values on purpose: they are fed to a GPU as linear-light uniforms, not to CSS, so they do not map onto the design tokens. Retune in the studio (ribbon-shader-studio.html), paste the result here, bump the version.",
+  "_about": "Ribbon shader presets — the single source the Ribbon Shader Studio and every site read. Colour ramps are brand data tuned by eye in the studio; forms are shader tunings. Hex values on purpose: they are fed to a GPU as linear-light uniforms, not to CSS, so they do not map onto the design tokens. Retune in the studio (ribbon-shader-studio.html), paste the result here, bump the version.",
   "colours": [
     {
       "name": "brand-light",

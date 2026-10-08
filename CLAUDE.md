@@ -1,9 +1,10 @@
 # force-design-system
 
 Exaforce's marketing design system: tokens, typefaces, brand assets, theme
-script. Consumed by the website (Astro), an internal site and the campaign
-pages (vanilla HTML). README.md has the consumer-facing docs; this file is for
-working on the repo itself.
+script. Consumed by Exaforce's web properties, Astro and vanilla HTML alike.
+README.md has the consumer-facing docs; this file is for working on the repo
+itself. Do not name consuming sites, their repos or local paths anywhere in
+this repository: it is public.
 
 ## Layering rule
 
@@ -34,11 +35,10 @@ working on the repo itself.
 
 ## Upstream
 
-The token files were extracted from
-`the website's token folder` on 2026-09-29. Until
-that site consumes this package, a token change there needs mirroring here.
-The goal is for that site to import `@exaforce/design-system` and delete its
-copies, at which point this repo is the only source.
+The token files were extracted from the marketing website's own token folder
+on 2026-09-29. Until that site consumes this package, a token change there
+needs mirroring here. The goal is for it to import `@exaforce/design-system`
+and delete its copies, at which point this repo is the only source.
 
 ## Workflow
 

@@ -1,7 +1,7 @@
 # Migrating a site onto the design system
 
 The prompt below is what to give a Claude Code session opened inside a site
-repo. It is the recipe that moved an internal site (2026-09-30). Fill in the two
+repo. It is the recipe every site so far has been moved with. Fill in the two
 placeholders, paste the whole thing.
 
 ---
@@ -9,8 +9,7 @@ placeholders, paste the whole thing.
 Migrate this site onto the Exaforce Design System without changing how the site
 behaves or looks beyond what the system itself dictates.
 
-**The system.** Local repo at `this repository`, GitHub
-`krisexa/force-design-system`, version `{VERSION}`. Read its `README.md` and
+**The system.** GitHub `krisexa/force-design-system`, version `{VERSION}`. Read its `README.md` and
 `CLAUDE.md` first. It provides: CSS custom-property tokens (primitives +
 semantic, light/dark via `data-theme`), three self-hosted typefaces (Inter
 Tight Variable with italic, Google Sans Flex Variable, Noto Sans JP Variable as
@@ -27,9 +26,9 @@ step, internal, defaults to dark"}`.
 **How to consume, by shape.**
 - No build step: either link the host (`<link rel="preconnect"
   href="https://exaforce-design-system.pages.dev" crossorigin>` then the
-  `/v1/` or exact-version files), or vendor it the an internal site way: copy
-  `dist/v1`, `dist/fonts` and `dist/manifest.json` into `shared/design-system/`
-  (or this repo's equivalent shared folder), add a refresh script, and add a
+  `/v1/` or exact-version files), or vendor it: copy `dist/v1`, `dist/fonts`
+  and `dist/manifest.json` into a shared folder such as `shared/design-system/`,
+  add a refresh script, and add a
   `_headers` rule making `/shared/design-system/fonts/*` immutable. Prefer the
   host for a public page that should pick up approved changes; vendor when the
   site must have no cross-origin requests. Either way, link in every page
@@ -41,9 +40,8 @@ step, internal, defaults to dark"}`.
 - Build step (Astro/Vite): depend on the release tag,
   `"@exaforce/design-system": "github:krisexa/force-design-system#v{VERSION}"`
   (the repo is public, so this resolves on Cloudflare Pages; while it was
-  private it failed silently there and a bundler site lost two days of deploys), or vendor
-  it: copy the release's `package.json` and `src/` into `vendor/design-system/`
-  with a sync script like a bundler site's `scripts/sync-design-system.mjs` and
+  private it failed silently there), or vendor it: copy the release's
+  `package.json` and `src/` into `vendor/design-system/` with a sync script and
   depend on it as `"@exaforce/design-system": "file:vendor/design-system"`.
   Then replace the local token and font imports with
   `@import '@exaforce/design-system'` (or `tokens.css` + `fonts.css` à la
@@ -105,7 +103,7 @@ deploys.
 
 ---
 
-Notes from the tools migration worth carrying over: the accent moving from
+Notes from earlier migrations worth carrying over: the accent moving from
 blue to indigo is expected; a site that used one grey for "inputs, toggles,
 nested surfaces" maps best onto `--color-control-secondary`; six of its
 customer logo files had drifted from the current pack, so replacing rather

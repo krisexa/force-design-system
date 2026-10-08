@@ -14,8 +14,8 @@ header.site .site-inner {
   padding-inline: var(--site-header-gutter, var(--space-gutter));
   display: flex; align-items: center; gap: var(--space-md); min-height: var(--header-height);
 }
-/* Lockup: wordmark | label, version small under the label. Mirrors the
-   "Exaforce | Tools" lockup on an internal site so the two read as siblings. */
+/* Lockup: wordmark | label, version small under the label. The same lockup
+   Exaforce's other internal pages use, so they read as siblings. */
 header.site .lockup { display: inline-flex; align-items: center; gap: var(--space-xs); color: var(--color-text-primary); text-decoration: none; }
 header.site .lockup:hover { color: var(--color-text-primary); opacity: .8; }
 header.site .lockup .logo { display: inline-flex; flex: none; }
