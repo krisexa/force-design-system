@@ -64,6 +64,47 @@ const lean = (css) =>
 const banner = (what) =>
   `/*! Exaforce Design System ${version} — ${what}. Built by scripts/build.mjs from src/; edit the source, not this file. */\n`;
 
+const withReleases = process.argv.includes('--releases');
+const releases = [];
+let tags = [];
+const offlineReleases = process.argv.includes('--offline-releases');
+if (offlineReleases && (!withReleases || process.env.CI || process.env.CF_PAGES)) {
+  console.error('error: --offline-releases requires --releases and is forbidden in CI/Pages');
+  process.exit(1);
+}
+if (withReleases) {
+  const git = (...args) => execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+  // Production release builds must have an authoritative tag inventory.
+  if (offlineReleases) {
+    console.warn('warning: offline release build; local tags only, not deployable');
+  } else {
+    try {
+      git('fetch', '--quiet', ...(process.env.CF_PAGES || process.env.CI ? ['--depth=1'] : []), 'origin', `refs/tags/${major}.*:refs/tags/${major}.*`);
+    } catch {
+      console.error('error: release tag fetch failed; refusing incomplete release output. For local preview only, use --releases --offline-releases.');
+      process.exit(1);
+    }
+  }
+  tags = git('tag', '--list', `${major}.*`).split('\n').filter((tag) => /^v\d+\.\d+\.\d+$/.test(tag));
+  const byVersion = (a, b) => {
+    const [x, y] = [a, b].map((t) => t.slice(1).split('.').map(Number));
+    return x[0] - y[0] || x[1] - y[1] || x[2] - y[2];
+  };
+  tags.sort(byVersion);
+
+  /* The guard. A tag for the working tree's version means that version is
+     released; its src/ and build script must then be byte-identical. */
+  if (tags.includes(`v${version}`)) {
+    try {
+      git('diff', '--quiet', `v${version}`, '--', 'src', 'scripts/build.mjs');
+    } catch {
+      console.error(`\nerror: ${version} is already released as tag v${version}, and src/ or scripts/build.mjs differ from it.`);
+      console.error(`       /${version}/ is cached immutable wherever it has been seen. Bump "version" in package.json.\n`);
+      process.exit(1);
+    }
+  }
+}
+
 rmSync(dist, { recursive: true, force: true });
 mkdirSync(dist, { recursive: true });
 
@@ -122,36 +163,7 @@ for (const channel of [major, version]) {
    channel plus any font files it introduced are merged in. Only tags of this
    major are republished: a /v2/ deployment keeps every 1.x reachable only if
    the 2.x build is told to, which is a decision for then. */
-const withReleases = process.argv.includes('--releases');
-const releases = [];
 if (withReleases) {
-  const git = (...args) => execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
-  /* Build containers clone shallow and without tags; fetch them. Best effort,
-     so an offline local run still builds from whatever tags it has. */
-  try {
-    git('fetch', '--quiet', ...(process.env.CF_PAGES || process.env.CI ? ['--depth=1'] : []), 'origin', `refs/tags/${major}.*:refs/tags/${major}.*`);
-  } catch (e) {
-    console.warn(`  warning: could not fetch tags (${String(e.stderr || e.message).trim().split('\n')[0]}); using local tags`);
-  }
-  const tags = git('tag', '--list', `${major}.*`).split('\n').filter(Boolean);
-  const byVersion = (a, b) => {
-    const [x, y] = [a, b].map((t) => t.slice(1).split('.').map(Number));
-    return x[0] - y[0] || x[1] - y[1] || x[2] - y[2];
-  };
-  tags.sort(byVersion);
-
-  /* The guard. A tag for the working tree's version means that version is
-     released; its src/ and build script must then be byte-identical. */
-  if (tags.includes(`v${version}`)) {
-    try {
-      git('diff', '--quiet', `v${version}`, '--', 'src', 'scripts/build.mjs');
-    } catch {
-      console.error(`\nerror: ${version} is already released as tag v${version}, and src/ or scripts/build.mjs differ from it.`);
-      console.error(`       /${version}/ is cached immutable wherever it has been seen. Bump "version" in package.json.\n`);
-      process.exit(1);
-    }
-  }
-
   const scratch = join(tmpdir(), `exaforce-design-system-releases-${process.pid}`);
   rmSync(scratch, { recursive: true, force: true });
   for (const tag of tags) {

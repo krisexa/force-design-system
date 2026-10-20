@@ -1,11 +1,11 @@
 {
   "name": "@exaforce/design-system",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "private": true,
   "description": "Exaforce marketing design system: design tokens, self-hosted typefaces, brand assets, and the theme script shared by every Exaforce web property.",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": "22.x"
   },
   "files": [
     "src"
@@ -29,6 +29,7 @@
     "prebuild": "node scripts/check.mjs",
     "build": "node scripts/build.mjs",
     "build:pages": "node scripts/check.mjs && node scripts/build.mjs --releases",
-    "serve": "node scripts/serve.mjs"
+    "serve": "node scripts/serve.mjs",
+    "test": "node --test scripts/tests/*.test.mjs"
   }
 }

@@ -12,14 +12,19 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: .node-version
+      - name: Regression tests
+        run: npm test
       - name: Invariants
         run: npm run check
       - name: Build (this version + tagged releases)
@@ -31,7 +36,7 @@ jobs:
           node -e "const m=require('./dist/manifest.json');console.log('version',m.version);console.log('channels',Object.keys(m.channels).join(', '));console.log('fonts',Object.keys(m.fonts).length)" >> "$GITHUB_STEP_SUMMARY"
           du -sh dist >> "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: dist
           path: dist
@@ -44,11 +49,18 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .node-version
       - name: Tag v<version> if it does not exist yet
         run: |
           v="v$(node -p "require('./package.json').version")"
-          git fetch --quiet origin "refs/tags/$v:refs/tags/$v" 2>/dev/null && { echo "$v already tagged"; exit 0; }
+          remote_tag="$(git ls-remote --tags origin "refs/tags/$v")"
+          if [ -n "$remote_tag" ]; then
+            echo "$v already tagged"
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag -a "$v" -m "Exaforce Design System ${v#v}"

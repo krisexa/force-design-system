@@ -20,7 +20,7 @@
        first so a page's own inliner does not fetch it a second time. */
     for (const el of document.querySelectorAll('header.site [data-inline-svg]')) {
       const src = el.getAttribute('data-inline-svg'); el.removeAttribute('data-inline-svg');
-      fetch(src).then(r => r.text()).then(svg => { el.innerHTML = svg; }).catch(() => {});
+      fetch(src).then(r => { if (!r.ok) throw new Error('Asset unavailable'); return r.text(); }).then(svg => { el.innerHTML = svg; }).catch(() => { el.textContent = 'Asset unavailable'; console.warn('Could not load a design-system asset.'); });
     }
   </script>
 </header>

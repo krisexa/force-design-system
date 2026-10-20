@@ -10,7 +10,7 @@ Migrate this site onto the Exaforce Design System without changing how the site
 behaves or looks beyond what the system itself dictates.
 
 **The system.** GitHub `krisexa/force-design-system`, version `{VERSION}`. Read its `README.md` and
-`CLAUDE.md` first. It provides: CSS custom-property tokens (primitives +
+`AGENTS.md` first. It provides: CSS custom-property tokens (primitives +
 semantic, light/dark via `data-theme`), three self-hosted typefaces (Inter
 Tight Variable with italic, Google Sans Flex Variable, Noto Sans JP Variable as
 opt-in `fonts-ja.css`), `base.css` element defaults and `.type-*` classes,
@@ -97,9 +97,8 @@ screenshots of every page type in both themes look right; any export path
 link checks if it has them.
 
 **Report** everything changed and everything deliberately left, with the
-before/after request and byte counts for fonts and CSS. Commit with a message
-that records the mapping decisions; do not push unless told, because a push
-deploys.
+before/after request and byte counts for fonts and CSS. Only commit when explicitly authorized, with a message that records the mapping
+decisions; do not push unless authorized, because a push can deploy.
 
 ---
 

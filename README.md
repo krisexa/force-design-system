@@ -10,6 +10,19 @@ Hosted on Cloudflare Pages at `https://exaforce-design-system.pages.dev`
 so a bundler site can also depend on it by git tag. Consumers that already
 carry a copy may keep doing so; see *Using it*.
 
+## Development entry points
+
+Both Claude Code and Codex use [AGENTS.md](AGENTS.md). Read
+[PROJECT_STATUS.md](PROJECT_STATUS.md) for task ownership, audit findings and the
+latest handoff. CLAUDE.md imports the shared instructions. Use one agent per
+working tree; use separate worktrees for concurrent tasks.
+
+This is plain CSS, HTML and browser JavaScript, built by Node ESM scripts using
+only the standard library. There are no npm runtime or development dependencies,
+CMS, database, application backend or configured external API credentials.
+GitHub Actions validates and tags releases; Cloudflare Pages hosting is documented
+below, but live account settings must be verified separately.
+
 ## What is in it
 
 ```
@@ -18,7 +31,7 @@ src/
   tokens/semantic.css     what components use: --color-surface, --type-h1-size, … with light + dark
   fonts/fonts.css         @font-face for Inter Tight Variable (upright + italic) and Google Sans Flex Variable
   fonts/fonts-ja.css      Noto Sans JP Variable — linked IN ADDITION by pages with Japanese
-  fonts/files/*.woff2     17 Latin-face subsets (a Latin page downloads two) + 124 Noto JP slices
+  fonts/files/*.woff2     148 font subsets/slices total (verified by npm run check)
   base.css                element defaults, focus ring, .type-* classes, .text-* helpers
   theme.js                applies the saved light/dark/system choice before paint; toggle API
   index.css               fonts + tokens + base, for bundlers
@@ -57,7 +70,8 @@ to preconnect to. Linking the host costs one preconnect and buys releases
 reaching the site within an hour with no commit in the site repo. Both are
 fine.
 
-A lesson from that period, kept here so it is not relearned: **a private
+Historical account retained from the previous README (not independently verified
+in the 2026-10-19 audit): **a private
 GitHub dependency does not work on Cloudflare Pages.** A site depended on
 `github:krisexa/force-design-system#tag`, every laptop built fine, and every
 Pages build failed silently for days because the build container has no
@@ -177,7 +191,8 @@ Rules that keep that safe:
    major for renames/removals).
 4. `npm run build` and open `dist/index.html` via `npm run serve` to eyeball
    the styleguide in both themes.
-5. Commit, push. CI checks, builds, and tags the commit `v<version>`.
+5. After explicit authorization, commit and push. CI checks, builds, and tags
+   a new version on `main` as `v<version>`.
    Cloudflare Pages builds `main` with `npm run build:pages` into `dist` and
    the release is live under `/v1/` and `/<version>/` a minute or two later.
 
@@ -185,11 +200,12 @@ If `src/` changes without a version bump after the version has been tagged,
 `npm run build:pages` refuses to build (and so CI and Pages fail) rather than
 republish an immutable path with different bytes.
 
-Kris approves after the fact; the floating `/v1/` path is what makes a
-revert a one-line version bump rather than a hunt across sites.
+Releases require explicit authorization before committing or pushing. A rollback
+that changes published bytes needs a new version; never rewrite an immutable path.
 
 ## Hosting
 
+Documented hosting target (live account configuration not verified in this audit):
 Cloudflare Pages, Git integration on `krisexa/force-design-system`, production
 branch `main`, like the other Exaforce sites. Project settings:
 
@@ -206,8 +222,11 @@ fetches the `v1.*` tags and rebuilds each one with its own build script into
 the same `dist/`. A deployment therefore carries every 1.x ever released, so a
 page pinned to `/1.1.4/` keeps working after 1.1.5 and 1.1.6 ship. Fonts are
 content-hashed, so the versions share one `fonts/` folder and a file that never
-changed is stored once. The whole deployment is about 60 MB and 1,700 files,
-well inside Pages' limits (20,000 files, 25 MB each).
+changed is stored once. Output size grows with release history; measure `dist/`
+and verify current Pages limits before releasing. See PROJECT_STATUS.md for the
+latest observed size. Release builds stop if tag fetching fails, before replacing
+`dist/`. For local offline preview only, run
+`node scripts/build.mjs --releases --offline-releases`; CI/Pages rejects that flag.
 
 `_headers` is generated with the build: open CORS and `nosniff` everywhere,
 `noindex` for the host, a year's immutable cache on `/fonts/` and every exact
@@ -305,4 +324,50 @@ npm run serve        # http://localhost:3000, the styleguide against the built f
                      # missing paths return a real 404 and render 404.html, like Pages
 ```
 
-No dependencies. Node 20 or newer.
+Use patched Node 22 as selected by `.node-version`, `engines` and CI. No dependency
+installation is needed. Build first, then serve; the server has no watch/rebuild
+loop. Rebuild and refresh after edits. Builds recreate `dist/`.
+
+| Command | Actual purpose |
+|---|---|
+| `npm run check` | Six categories of token, dark-theme, font and inline-script invariants |
+| `npm run build` | Runs `prebuild` checks, then generates this version and floating major |
+| `npm run build:pages` | Checks and builds historical releases; requires successful remote tag fetch |
+| `npm run serve` | Serves existing `dist/`; default port 3000; stop with Ctrl-C |
+| `npm run logos` | Rewrites all eight logo/mark variants, including normalized black sources |
+| `npm test` | Built-in Node regression tests for release integrity and preview error handling |
+| Lint / typecheck | No scripts or dedicated configurations present |
+
+Optional syntax checking: `node --check scripts/build.mjs` (likewise the other
+`.mjs` scripts and `src/theme.js`). This does not validate browser behavior or
+inline scripts. CI runs regression tests, invariants, the release build and artifact upload. Actions
+are pinned to verified commit IDs, with read-only default permissions and write
+permission scoped to release tagging. Browser, accessibility, lint and type checking
+are not configured.
+
+### Environment and local configuration
+
+No `.env` loading or required application secrets. Recognized environment names:
+
+- `PORT`: preview server port, default 3000; for example `PORT=8080 npm run serve`.
+- `CI`, `CF_PAGES`: truthy values select shallow tag fetching in release builds;
+  normally supplied by the build environment; also forbid offline release mode.
+- `GITHUB_STEP_SUMMARY`, `GITHUB_SHA`: used by GitHub Actions for reporting/tagging.
+
+Do not commit credentials. `.gitignore` covers generated files, `.env` variants
+(except example templates), private key files, local cloud credentials and Claude
+local settings. Review staged files even when ignores are present. GitHub repository
+access and Cloudflare Git integration are account settings, not application env
+requirements. The preview server binds to `127.0.0.1`, accepts a numeric `PORT`
+from 1 through 65535, and does not reproduce generated Pages headers/caching.
+
+### Verification limits and historical notes
+
+Statements about prior migrations, the initial token extraction, repository
+visibility changes and consuming-site adoption are inherited documentation, not
+verified current requirements. The earlier CLAUDE.md recorded extraction on
+2026-09-29 and pending adoption; adoption is unverified. Git remote configuration
+does not prove public visibility or deployment health. README hosting capacity
+figures are historical estimates; measure generated output and check current
+hosting limits before release. See PROJECT_STATUS.md for observed results and
+remaining manual checks.
