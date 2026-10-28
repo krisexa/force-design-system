@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-app-lumos-exabot-search-gradient)" d="M2 17.345V5.836h4.918v11.4h11.474v4.745H2v-4.636Zm8.198-9.586c0 3.182 2.642 5.76 5.901 5.76S22 10.938 22 7.758C22 4.58 19.359 2 16.1 2c-3.26 0-5.902 2.578-5.902 5.76Z"/>
+  <defs>
+    <linearGradient id="pi-app-lumos-exabot-search-gradient" x1="19.808" x2="5.311" y1="4.296" y2="18.793" gradientUnits="userSpaceOnUse">
+      <stop offset=".04" stop-color="#FE9519"/>
+      <stop offset=".44" stop-color="#FE5019"/>
+      <stop offset=".58" stop-color="#FF007A"/>
+    </linearGradient>
+  </defs>
+</svg>

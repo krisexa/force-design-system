@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <g clip-path="url(#pi-app-artifact-file-yaml-fileyaml_a)">
+    <path fill="#fff" stroke="#D4D4D8" d="M7 2.5h7.135L20.5 8.467V20a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 20V4A1.5 1.5 0 0 1 7 2.5Z"/>
+    <path fill="#D4D4D8" d="M13.5 7.5V3a.5.5 0 0 1 1 0v4.5a1 1 0 0 0 1 1H20a.5.5 0 0 1 0 1h-4.5a2 2 0 0 1-2-2Z"/>
+  </g>
+  <rect width="19" height="9" x="2" y="10" fill="#CB171E" rx="1"/>
+  <path fill="#fff" d="M3.161 12.636h1.033l.995 1.88h.043l.995-1.88H7.26l-1.59 2.821V17h-.916v-1.543l-1.592-2.82ZM7.951 17h-.988l1.506-4.364h1.189L11.162 17h-.989L9.08 13.633h-.034L7.951 17Zm-.062-1.715h2.336v.72H7.889v-.72Zm3.678-2.649h1.138l1.202 2.932h.05l1.203-2.932h1.137V17h-.895v-2.84h-.036l-1.129 2.819h-.61l-1.129-2.83h-.036V17h-.895v-4.364ZM16.937 17v-4.364h.923v3.603h1.87V17h-2.793Z"/>
+  <defs>
+    <clipPath id="pi-app-artifact-file-yaml-fileyaml_a">
+      <path fill="#fff" d="M5 2h16v20H5z"/>
+    </clipPath>
+  </defs>
+</svg>

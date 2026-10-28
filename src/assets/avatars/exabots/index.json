@@ -1,0 +1,66 @@
+[
+  {
+    "id": "force",
+    "label": "Force",
+    "colorway": "full-spectrum",
+    "file": "full-spectrum/exabot-force-full-spectrum.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "lightning-bolt",
+    "label": "Lightning bolt",
+    "colorway": "full-spectrum",
+    "file": "full-spectrum/exabot-lightning-bolt-full-spectrum.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "long-pill",
+    "label": "Long pill",
+    "colorway": "full-spectrum",
+    "file": "full-spectrum/exabot-long-pill-full-spectrum.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "magnifying-glass",
+    "label": "Magnifying glass",
+    "colorway": "full-spectrum",
+    "file": "full-spectrum/exabot-magnifying-glass-full-spectrum.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "shield",
+    "label": "Shield",
+    "colorway": "full-spectrum",
+    "file": "full-spectrum/exabot-shield-full-spectrum.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "spark",
+    "label": "Spark",
+    "colorway": "full-spectrum",
+    "file": "full-spectrum/exabot-spark-full-spectrum.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "square",
+    "label": "Square",
+    "colorway": "full-spectrum",
+    "file": "full-spectrum/exabot-square-full-spectrum.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "triangle",
+    "label": "Triangle",
+    "colorway": "full-spectrum",
+    "file": "full-spectrum/exabot-triangle-full-spectrum.svg",
+    "width": 512,
+    "height": 512
+  }
+]

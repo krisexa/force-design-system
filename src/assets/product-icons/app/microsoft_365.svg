@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-app-microsoft-365-ms365_gradient_0)" d="m10.042 1.513-.112.068a4.004 4.004 0 0 0-.504.36l.324-.227h2.75L13 5.5 10.5 8 8 9.738v2.004a4 4 0 0 0 1.929 3.422l2.632 1.593L7.001 20H5.927l-2-1.21A4 4 0 0 1 2 15.369V8.63a4 4 0 0 1 1.93-3.422l6-3.63.112-.065Z"/>
+  <path fill="url(#pi-app-microsoft-365-ms365_gradient_1)" d="m10.042 1.513-.112.068a4.004 4.004 0 0 0-.504.36l.324-.227h2.75L13 5.5 10.5 8 8 9.738v2.004a4 4 0 0 0 1.929 3.422l2.632 1.593L7.001 20H5.927l-2-1.21A4 4 0 0 1 2 15.369V8.63a4 4 0 0 1 1.93-3.422l6-3.63.112-.065Z"/>
+  <path fill="url(#pi-app-microsoft-365-ms365_gradient_2)" d="M16 9.499v2.24a4 4 0 0 1-1.928 3.422l-6 3.632a4 4 0 0 1-4.004.08l5.861 3.549a4 4 0 0 0 4.143 0l6-3.632a4 4 0 0 0 1.929-3.422v-1.619l-.5-.75L16 9.5Z"/>
+  <path fill="url(#pi-app-microsoft-365-ms365_gradient_3)" d="M16 9.499v2.24a4 4 0 0 1-1.928 3.422l-6 3.632a4 4 0 0 1-4.004.08l5.861 3.549a4 4 0 0 0 4.143 0l6-3.632a4 4 0 0 0 1.929-3.422v-1.619l-.5-.75L16 9.5Z"/>
+  <path fill="url(#pi-app-microsoft-365-ms365_gradient_4)" d="m20.071 5.207-6-3.63a4 4 0 0 0-4.022-.069l-.119.072A4 4 0 0 0 8 5.003v4.742l1.93-1.167a4 4 0 0 1 4.14 0l6.001 3.63a4 4 0 0 1 1.928 3.29l.002-.13V8.63a4 4 0 0 0-1.93-3.423Z"/>
+  <path fill="url(#pi-app-microsoft-365-ms365_gradient_5)" d="m20.071 5.207-6-3.63a4 4 0 0 0-4.022-.069l-.119.072A4 4 0 0 0 8 5.003v4.742l1.93-1.167a4 4 0 0 1 4.14 0l6.001 3.63a4 4 0 0 1 1.928 3.29l.002-.13V8.63a4 4 0 0 0-1.93-3.423Z"/>
+  <defs>
+    <radialGradient id="pi-app-microsoft-365-ms365_gradient_0" cx="0" cy="0" r="1" gradientTransform="rotate(110.528 2.51 5.679) scale(16.6835 29.0995)" gradientUnits="userSpaceOnUse">
+      <stop offset=".064" stop-color="#AE7FE2"/>
+      <stop offset="1" stop-color="#0078D4"/>
+    </radialGradient>
+    <radialGradient id="pi-app-microsoft-365-ms365_gradient_2" cx="0" cy="0" r="1" gradientTransform="matrix(15.36055 -2.2592 1.49235 10.14664 5.215 18.174)" gradientUnits="userSpaceOnUse">
+      <stop offset=".134" stop-color="#D59DFF"/>
+      <stop offset="1" stop-color="#5E438F"/>
+    </radialGradient>
+    <radialGradient id="pi-app-microsoft-365-ms365_gradient_4" cx="0" cy="0" r="1" gradientTransform="matrix(-12.07964 -3.0629 5.15612 -20.335 20.528 13.252)" gradientUnits="userSpaceOnUse">
+      <stop offset=".058" stop-color="#50E6FF"/>
+      <stop offset="1" stop-color="#436DCD"/>
+    </radialGradient>
+    <linearGradient id="pi-app-microsoft-365-ms365_gradient_1" x1="8.756" x2="6.376" y1="18.935" y2="14.818" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#114A8B"/>
+      <stop offset="1" stop-color="#0078D4" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="pi-app-microsoft-365-ms365_gradient_3" x1="20.179" x2="17.628" y1="12.688" y2="16.345" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#493474"/>
+      <stop offset="1" stop-color="#8C66BA" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="pi-app-microsoft-365-ms365_gradient_5" x1="8.488" x2="12.244" y1="1.527" y2="1.527" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2D3F80"/>
+      <stop offset="1" stop-color="#436DCD" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>

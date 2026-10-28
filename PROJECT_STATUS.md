@@ -4,25 +4,54 @@ Audit date: 2026-10-19. Shared rules: [AGENTS.md](AGENTS.md).
 
 ## Current handoff
 
-- Task: implement audit fixes, explicitly authorized by “Fix now”.
-- Owner: Codex; released for handoff when this turn completes.
-- Branch / base: `main`, `410cf8e`; package bumped to `1.1.11` for source/build changes.
-- Pre-existing work preserved: uncommitted audit docs in README.md, CLAUDE.md,
-  MIGRATING.md, AGENTS.md and this file. Ignored generated dist/ was regenerated.
-- Changes: release preflight and explicit offline mode; preview loopback/400/500/
-  startup handling; environment/key/local-settings ignores; asset HTTP checks and
-  visible fallbacks; Node 22 engines; SHA-pinned CI actions, default read permission,
-  regression test step and reliable tag lookup; dependency-free regression tests.
-- Changed implementation files: package.json, .gitignore, .github/workflows/check.yml,
-  scripts/build.mjs, scripts/serve.mjs, scripts/tests/preview.test.mjs,
-  scripts/tests/releases.test.mjs, src/site/index.html, src/site/_header.html,
-  src/site/404.html. Shared documentation updated to describe current behavior.
-- User explicitly authorized commit and push of these changes on 2026-10-19.
-  Publication is being performed from main after confirming origin/main matches
-  the base. The push may trigger CI tagging and Cloudflare production deployment.
-- No install, merge, CMS write or account-setting change.
-- Next step after publication: verify the resulting CI/release tag and deployment;
-  remaining validation and account findings are recorded below.
+- Task (2026-10-28): user authorized adding the eight supplied full-spectrum
+  Exabot avatars for design-system usage. Owner: Codex; released for handoff.
+- Branch / base: `main`, `e825eae65cf2c554d680daf17ba397bc61878e41`.
+- Added `src/assets/avatars/exabots/`: eight unchanged SVGs, `index.json` and
+  usage README. Root README includes hosted/bundler examples; LICENSE.md now
+  explicitly covers Exabot brand artwork. No styleguide UI changes.
+- Pre-existing work preserved: product-icon generator and generated assets,
+  package.json version `1.2.0` and script, README product-icon documentation,
+  LICENSE.md third-party note, and prior handoff below. The pending minor
+  version already covers these additive assets; package.json was not changed
+  during this task.
+- Validation: `npm run check`, `npm test` (2 tests), `npm run build` and
+  `git diff --check` PASS on Node 25.9.0. All eight SVGs parsed as XML, matched
+  supplied originals byte for byte, contained no script/foreignObject/image or
+  external hrefs, and matched output in both v1 and 1.2.0 channels.
+- Existing ignored dist/ was backed up outside the repository before rebuilding.
+  Node 22 and visual/browser checks were not run. No dependencies installed.
+- User authorized committing and pushing the pending 1.2.0 release on 2026-10-28,
+  including the existing product-icon additions. Remote main matches the base;
+  v1.2.0 does not yet exist. `npm run build:pages` PASS with remote tag fetch
+  and all historical 1.1.0–1.1.11 channels. Generator syntax check PASS.
+- Publication: committing and pushing main in this turn; CI tags v1.2.0 after
+  checks and the main push can trigger Cloudflare deployment. Next step: verify
+  CI/tag and hosted avatar availability. Node 22 local/browser checks remain open.
+
+## Previous product-icon handoff
+
+- Task (2026-10-21): add the product icon library from the two product icon
+  sheets ("Exaforce Icons", "Exaforce Graph Node Types and Icons") so marketing
+  can rebuild product UI and graphs. Mappings/node types deliberately excluded.
+- Owner: Claude Code; released for handoff when this turn completes.
+- Branch / base: `main`, `e825eae` (= origin/main, tagged v1.1.11). Package
+  bumped to `1.2.0` (minor: additions). Uncommitted; no commit/push authorized yet.
+- Changes: new `scripts/product-icons.mjs` (+ `npm run product-icons`), new
+  generated `src/assets/product-icons/` (1,944 SVGs + index.json, ~3.2 MB),
+  README *Product icons* section and file tree, LICENSE.md third-party note,
+  package.json version/script.
+- Validation: `npm run check`, `npm run build`, `npm test` PASS (Node 25.9.0, not
+  22). CSV and Sheets-JSON imports produce byte-identical output; partial export
+  refused; all SVG ids prefixed per icon (no duplicate ids, no dangling refs).
+  Headless Chrome contact sheet of every set eyeballed. No styleguide UI added.
+- Sheet issues reported to the owner, first row kept: exf/workflow, app/rest,
+  app/datadog, app/odoo, app/axonius reuse a name for different drawings;
+  graph Network/PublicAddress and Network/Aggregation have conflicting colours.
+- Next step: review, then commit/push only with explicit authorization (push
+  tags v1.2.0 and deploys). Optional follow-up: searchable gallery in styleguide.
+- Earlier handoff (Codex, 1.1.11 audit fixes) was published; its validation
+  record follows.
 
 ## Fix validation (2026-10-19)
 

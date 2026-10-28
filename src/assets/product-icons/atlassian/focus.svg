@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-atlassian-focus-atlasian_focus_param_0)" d="M22 12.259c-1.893-2.073-4.971-2.051-6.844 0l-1.577 1.726c-.87.953-2.284.953-3.155 0l-1.31-1.434-3.423 3.748 1.31 1.434c2.76 3.023 7.239 3.023 10 0L22 12.259Zm-20-.516c1.893 2.073 4.932 2.093 6.826.02l1.597-1.748c.87-.953 2.284-.953 3.154 0l1.31 1.434 3.423-3.748L17 6.267c-2.76-3.023-7.238-3.023-9.999 0l-5 5.474-.001.002Z"/>
+  <defs>
+    <linearGradient id="pi-atlassian-focus-atlasian_focus_param_0" x1="12" x2="12" y1="4" y2="20" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2684FF"/>
+      <stop offset="1" stop-color="#0E66E1"/>
+    </linearGradient>
+  </defs>
+</svg>

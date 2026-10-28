@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <g clip-path="url(#pi-app-thinkstcanary-thinkscanary_0)">
+    <rect width="20" height="20" x="2" y="2.5" fill="#6CD187" rx="4"/>
+    <mask id="pi-app-thinkstcanary-thinkscanary_1" width="21" height="21" x="1" y="2" maskUnits="userSpaceOnUse" style="mask-type:alpha">
+      <path fill="#2ECC71" d="M19.4 2.7H4.2a2.4 2.4 0 0 0-2.4 2.4v15.2a2.4 2.4 0 0 0 2.4 2.4h15.2a2.4 2.4 0 0 0 2.4-2.4V5.1a2.4 2.4 0 0 0-2.4-2.4Z"/>
+    </mask>
+    <g mask="url(#pi-app-thinkstcanary-thinkscanary_1)">
+      <path fill="#fff" d="M3.1 17.605c-.4.04-.967.817-1.2 1.2v3.8h9.2c-.267.333-.31.55 1.65-1.25 2.45-2.25 2.9-4.8 2.95-5.65.04-.68-.317-1.483-.5-1.8l-.05-.705c-.1-1.05.9-3.095.9-3.445 0-.35 2.9-1.2 2.55-1.4-.28-.16-1.817-.2-2.55-.2-1.6-1.4-3.167-1.35-3.75-1.15-2.84.48-4.05 3.866-4.3 5.5-1.75.25-4.4 5.05-4.9 5.1ZM19.2 7.7a2.4 2.4 0 1 0 0-4.8 2.4 2.4 0 0 0 0 4.8Z"/>
+      <path fill="#E74C3C" d="M19.2 6.9a1.6 1.6 0 1 0 0-3.2 1.6 1.6 0 0 0 0 3.2Z"/>
+    </g>
+  </g>
+  <defs>
+    <clipPath id="pi-app-thinkstcanary-thinkscanary_0">
+      <rect width="20" height="20" x="2" y="2.5" fill="#fff" rx="4"/>
+    </clipPath>
+  </defs>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-azure-rbac-azure_rbac_param_0)" d="M18.585 22.274a1.685 1.685 0 0 0 1.71-1.658v-.038c.006-.07.006-.139 0-.208-.674-5.375-3.73-9.747-9.584-9.747-5.855 0-8.962 3.71-9.598 9.77a1.731 1.731 0 0 0 1.543 1.891l15.929-.01Z"/>
+  <path fill="#fff" d="M10.814 11.887a5.398 5.398 0 0 1-2.927-.854l2.823 7.55 2.88-7.499a5.443 5.443 0 0 1-2.776.803Z" opacity=".8"/>
+  <path fill="url(#pi-azure-rbac-azure_rbac_param_1)" d="M10.75 11.9a5.4 5.4 0 1 0 0-10.801 5.4 5.4 0 0 0 0 10.802Z"/>
+  <path fill="#EF7100" d="M23.105 14.866v5.492l-4.714 2.758v-5.492l4.714-2.758Z"/>
+  <path fill="#F78D1E" d="m23.105 14.866-4.714 2.758-4.714-2.758 4.714-2.759 4.714 2.76Z"/>
+  <path fill="#FAA21D" d="M18.391 17.624v5.492l-4.714-2.758v-5.492l4.714 2.758Z"/>
+  <path fill="#FFB34D" d="m13.677 20.358 4.714-2.734v5.492l-4.714-2.758Z"/>
+  <path fill="#F78D1E" d="m23.105 20.358-4.714-2.734v5.492l4.714-2.758Z"/>
+  <defs>
+    <linearGradient id="pi-azure-rbac-azure_rbac_param_0" x1="10.703" x2="10.703" y1="23.698" y2="7.729" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5E9624"/>
+      <stop offset="1" stop-color="#B4EC36"/>
+    </linearGradient>
+    <linearGradient id="pi-azure-rbac-azure_rbac_param_1" x1="10.749" x2="10.749" y1="12.379" y2="-2.165" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5E9624"/>
+      <stop offset="1" stop-color="#B4EC36"/>
+    </linearGradient>
+  </defs>
+</svg>

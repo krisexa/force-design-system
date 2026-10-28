@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-atlassian-atlas-atlasian_atlas_param_0)" d="M12 22C6.485 22 2 17.515 2 12 2 6.484 6.485 2 12 2v1.592c-4.638 0-8.407 3.77-8.407 8.408S7.362 20.407 12 20.407V22Z"/>
+  <path fill="url(#pi-atlassian-atlas-atlasian_atlas_param_1)" d="M12 22v-1.593c4.638 0 8.408-3.769 8.408-8.407H22c0 5.515-4.485 10-10 10Z"/>
+  <path fill="url(#pi-atlassian-atlas-atlasian_atlas_param_2)" d="M22 12h-1.592c0-4.638-3.77-8.408-8.408-8.408V2c5.515 0 10 4.485 10 10Z"/>
+  <path fill="url(#pi-atlassian-atlas-atlasian_atlas_param_3)" d="M16.681 14.5c-1.1-.15-1.968-.423-3.411-.88-.398-.121-.837-.26-1.339-.416a62.252 62.252 0 0 0-.86-.261c-2.176-.674-3.372-1.041-4.838-1.041-1.028 0-1.801.195-2.232.562a.98.98 0 0 0-.305.408.731.731 0 0 0-.022.46l-1.618.217a1.558 1.558 0 0 1 .043-.962 2.07 2.07 0 0 1 .627-.858c.526-.445 1.562-.979 3.507-.979 1.817 0 3.283.456 5.507 1.14.27.084.55.173.853.262.51.156.956.295 1.355.423 1.378.434 2.136.673 3.052.795l-.319 1.13Z"/>
+  <path fill="url(#pi-atlassian-atlas-atlasian_atlas_param_4)" d="M18.354 14.5A8.61 8.61 0 0 1 17 14.399l.268-1.032c.362.056.717.081 1.086.081.858 0 1.509-.162 1.884-.472a.977.977 0 0 0 .369-.884l1.38-.092c.074.64-.18 1.24-.723 1.687-.45.37-1.314.813-2.91.813Z"/>
+  <path fill="url(#pi-atlassian-atlas-atlasian_atlas_param_5)" d="M11.494 22v-1.562c2.947 0 4.702-2.287 4.702-6.115 0-3.827-1.785-7.035-5.446-10.001l1.498-1.072c4.038 3.268 6.002 6.892 6.002 11.073 0 4.733-2.59 7.677-6.756 7.677Z"/>
+  <path fill="url(#pi-atlassian-atlas-atlasian_atlas_param_6)" d="M12.518 22c-4.303 0-6.768-2.748-6.768-7.544 0-5.595 3.12-8.722 6.036-11.206l1.464 1.057c-3.398 2.9-5.507 5.603-5.507 10.149 0 4.946 2.6 5.98 4.775 5.98V22Z"/>
+  <path fill="#1D7AFC" d="M7.637 12.771c.501 0 .981-.182 1.335-.506s.553-.764.553-1.223c0-.458-.199-.898-.553-1.222a1.979 1.979 0 0 0-1.335-.506c-.5 0-.98.182-1.334.506a1.658 1.658 0 0 0-.553 1.223c0 .458.199.898.553 1.222a1.98 1.98 0 0 0 1.334.506Zm8.726 2.979c.5 0 .98-.182 1.334-.506a1.66 1.66 0 0 0 .553-1.223c0-.458-.199-.898-.553-1.222a1.98 1.98 0 0 0-1.334-.506 1.98 1.98 0 0 0-1.335.506 1.658 1.658 0 0 0-.553 1.222c0 .459.199.898.553 1.223a1.98 1.98 0 0 0 1.335.506ZM11.957 5.457c.501 0 .981-.182 1.335-.506s.553-.764.553-1.222a1.66 1.66 0 0 0-.553-1.223A1.98 1.98 0 0 0 11.957 2c-.5 0-.98.182-1.334.506a1.658 1.658 0 0 0-.553 1.223c0 .458.199.898.553 1.222a1.98 1.98 0 0 0 1.334.506Z"/>
+  <defs>
+    <linearGradient id="pi-atlassian-atlas-atlasian_atlas_param_0" x1="13.149" x2="12.768" y1="22.169" y2="2.169" gradientUnits="userSpaceOnUse">
+      <stop offset=".5" stop-color="#1D7AFC"/>
+      <stop offset="1" stop-color="#05C"/>
+    </linearGradient>
+    <linearGradient id="pi-atlassian-atlas-atlasian_atlas_param_1" x1="22.341" x2="4.634" y1="3.756" y2="22.063" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#05C"/>
+      <stop offset="1" stop-color="#05C"/>
+    </linearGradient>
+    <linearGradient id="pi-atlassian-atlas-atlasian_atlas_param_2" x1="12" x2="12" y1="2" y2="22" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1D7AFC"/>
+      <stop offset=".59" stop-color="#1D7AFC"/>
+      <stop offset="1" stop-color="#05C"/>
+    </linearGradient>
+    <linearGradient id="pi-atlassian-atlas-atlasian_atlas_param_3" x1="2" x2="22" y1="11.999" y2="11.999" gradientUnits="userSpaceOnUse">
+      <stop offset=".26" stop-color="#1D7AFC"/>
+      <stop offset="1" stop-color="#05C"/>
+    </linearGradient>
+    <linearGradient id="pi-atlassian-atlas-atlasian_atlas_param_4" x1="7.573" x2="23.311" y1="19.84" y2="8.802" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#05C"/>
+      <stop offset="1" stop-color="#05C"/>
+    </linearGradient>
+    <linearGradient id="pi-atlassian-atlas-atlasian_atlas_param_5" x1="11.999" x2="11.999" y1="22" y2="2" gradientUnits="userSpaceOnUse">
+      <stop offset=".36" stop-color="#1D7AFC"/>
+      <stop offset="1" stop-color="#05C"/>
+    </linearGradient>
+    <linearGradient id="pi-atlassian-atlas-atlasian_atlas_param_6" x1="12" x2="12" y1="22" y2="2" gradientUnits="userSpaceOnUse">
+      <stop offset=".06" stop-color="#1D7AFC"/>
+      <stop offset=".58" stop-color="#05C"/>
+      <stop offset="1" stop-color="#1D7AFC"/>
+    </linearGradient>
+  </defs>
+</svg>

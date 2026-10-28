@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" viewBox="0 0 50 50">
+  <path fill="#009739" d="M0 41V9h50L0 41Z"/>
+  <path fill="#C8102E" d="M50 9v32H0L50 9Z"/>
+  <mask id="pi-flag-KN-a" width="50" height="32" x="0" y="9" maskUnits="userSpaceOnUse" style="mask-type:luminance">
+    <path fill="#fff" d="M0 9h50v32H0V9Z"/>
+  </mask>
+  <g mask="url(#pi-flag-KN-a)">
+    <path fill="#FFCD00" fill-rule="evenodd" d="m53.883 14.591-50 32-7.766-11.183 50-32 7.766 11.183Z" clip-rule="evenodd"/>
+    <path fill="#000" fill-rule="evenodd" d="m52.774 12.993-50 32-5.547-7.987 50-32 5.547 7.987Z" clip-rule="evenodd"/>
+  </g>
+  <path fill="#fff" d="m13.043 27.782 6.966 5.283-8.87-.343 7.386-4.727-3.08 7.992-2.402-8.205Zm19.231-12.307 6.965 5.282-8.869-.343 7.385-4.727-3.08 7.992-2.4-8.204Z"/>
+</svg>

@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-app-mozilla-mozilla_path_00)" d="M20.022 5.932a9.886 9.886 0 0 0-7.602-3.93c-2.327-.046-3.933.653-4.843 1.215 1.217-.705 2.977-1.106 4.518-1.086 3.965.05 8.223 2.75 8.856 7.617.726 5.586-3.165 10.249-8.64 10.263-6.021.015-9.684-5.316-8.726-10.106.017-.235.052-.468.103-.698a9.47 9.47 0 0 1 1.05-3.51c-.693.358-1.576 1.493-2.012 2.545a10.357 10.357 0 0 0-.65 5.053c.014.13.028.26.045.388a10.034 10.034 0 1 0 17.901-7.75Z"/>
+  <path fill="url(#pi-app-mozilla-mozilla_path_01)" d="M20.022 5.932a9.886 9.886 0 0 0-7.602-3.93c-2.327-.046-3.933.653-4.843 1.215 1.217-.705 2.977-1.106 4.518-1.086 3.965.05 8.223 2.75 8.856 7.617.726 5.586-3.165 10.249-8.64 10.263-6.021.015-9.684-5.316-8.726-10.106.017-.235.052-.468.103-.698a9.47 9.47 0 0 1 1.05-3.51c-.693.358-1.576 1.493-2.012 2.545a10.357 10.357 0 0 0-.65 5.053c.014.13.028.26.045.388a10.034 10.034 0 1 0 17.901-7.75Z"/>
+  <path fill="url(#pi-app-mozilla-mozilla_path_02)" d="M20.022 5.932a9.886 9.886 0 0 0-7.602-3.93c-2.327-.046-3.933.653-4.843 1.215 1.217-.705 2.977-1.106 4.518-1.086 3.965.05 8.223 2.75 8.856 7.617.726 5.586-3.165 10.249-8.64 10.263-6.021.015-9.684-5.316-8.726-10.106.017-.235.052-.468.103-.698a9.47 9.47 0 0 1 1.05-3.51c-.693.358-1.576 1.493-2.012 2.545a10.357 10.357 0 0 0-.65 5.053c.014.13.028.26.045.388a10.034 10.034 0 1 0 17.901-7.75Z"/>
+  <path fill="url(#pi-app-mozilla-mozilla_path_03)" d="M20.022 5.932a9.886 9.886 0 0 0-7.602-3.93c-2.327-.046-3.933.653-4.843 1.215 1.217-.705 2.977-1.106 4.518-1.086 3.965.05 8.223 2.75 8.856 7.617.726 5.586-3.165 10.249-8.64 10.263-6.021.015-9.684-5.316-8.726-10.106.017-.235.052-.468.103-.698a9.47 9.47 0 0 1 1.05-3.51c-.693.358-1.576 1.493-2.012 2.545a10.357 10.357 0 0 0-.65 5.053c.014.13.028.26.045.388a10.034 10.034 0 1 0 17.901-7.75Z"/>
+  <path fill="url(#pi-app-mozilla-mozilla_path_04)" d="M20.022 5.932a9.886 9.886 0 0 0-7.602-3.93c-2.327-.046-3.933.653-4.843 1.215 1.217-.705 2.977-1.106 4.518-1.086 3.965.05 8.223 2.75 8.856 7.617.726 5.586-3.165 10.249-8.64 10.263-6.021.015-9.684-5.316-8.726-10.106.017-.235.052-.468.103-.698a9.47 9.47 0 0 1 1.05-3.51c-.693.358-1.576 1.493-2.012 2.545a10.357 10.357 0 0 0-.65 5.053c.014.13.028.26.045.388a10.034 10.034 0 1 0 17.901-7.75Z"/>
+  <path fill="url(#pi-app-mozilla-mozilla_path_05)" d="M20.95 9.748c.08.602.104 1.209.076 1.815.332-.05.665-.095.998-.133a10.02 10.02 0 0 0-2.002-5.498 9.886 9.886 0 0 0-7.602-3.93c-2.327-.046-3.933.653-4.843 1.215 1.217-.705 2.977-1.106 4.518-1.086 3.965.05 8.223 2.75 8.856 7.617Z"/>
+  <path fill="url(#pi-app-mozilla-mozilla_path_06)" d="M21.194 9.47c-.563-5.086-5.1-7.372-9.099-7.339-1.541.013-3.301.38-4.518 1.086-.321.19-.62.418-.891.676.032-.027.129-.106.288-.216l.016-.01.014-.01c.59-.4 1.24-.701 1.927-.895a10.894 10.894 0 0 1 3.301-.386 8.328 8.328 0 0 1 7.827 8.012c.091 3.308-2.616 5.945-5.736 6.098-2.27.111-4.408-.987-5.452-3.184a5.43 5.43 0 0 1-.492-1.586c-.495-3.343 1.75-6.195 3.81-6.9-1.112-.97-3.895-.905-5.966.619-1.492 1.097-2.46 2.767-2.78 4.758a8.251 8.251 0 0 0 .586 4.508 8.841 8.841 0 0 0 7.536 5.37c.248.02.497.03.747.03 6.627 0 9.502-5.032 8.882-10.63Z"/>
+  <path fill="url(#pi-app-mozilla-mozilla_path_07)" d="M21.194 9.47c-.563-5.086-5.1-7.372-9.099-7.339-1.541.013-3.301.38-4.518 1.086-.321.19-.62.418-.891.676.032-.027.129-.106.288-.216l.016-.01.014-.01c.59-.4 1.24-.701 1.927-.895a10.894 10.894 0 0 1 3.301-.386 8.328 8.328 0 0 1 7.827 8.012c.091 3.308-2.616 5.945-5.736 6.098-2.27.111-4.408-.987-5.452-3.184a5.43 5.43 0 0 1-.492-1.586c-.495-3.343 1.75-6.195 3.81-6.9-1.112-.97-3.895-.905-5.966.619-1.492 1.097-2.46 2.767-2.78 4.758a8.251 8.251 0 0 0 .586 4.508 8.841 8.841 0 0 0 7.536 5.37c.248.02.497.03.747.03 6.627 0 9.502-5.032 8.882-10.63Z"/>
+  <path fill="url(#pi-app-mozilla-mozilla_path_08)" d="M21.194 9.47c-.563-5.086-5.1-7.372-9.099-7.339-1.541.013-3.301.38-4.518 1.086-.321.19-.62.418-.891.676.032-.027.129-.106.288-.216l.016-.01.014-.01c.59-.4 1.24-.701 1.927-.895a10.894 10.894 0 0 1 3.301-.386 8.328 8.328 0 0 1 7.827 8.012c.091 3.308-2.616 5.945-5.736 6.098-2.27.111-4.408-.987-5.452-3.184a5.43 5.43 0 0 1-.492-1.586c-.495-3.343 1.75-6.195 3.81-6.9-1.112-.97-3.895-.905-5.966.619-1.492 1.097-2.46 2.767-2.78 4.758a8.251 8.251 0 0 0 .586 4.508 8.841 8.841 0 0 0 7.536 5.37c.248.02.497.03.747.03 6.627 0 9.502-5.032 8.882-10.63Z"/>
+  <path fill="url(#pi-app-mozilla-mozilla_path_09)" d="M21.194 9.47c-.563-5.086-5.1-7.372-9.099-7.339-1.541.013-3.301.38-4.518 1.086-.321.19-.62.418-.891.676.032-.027.129-.106.288-.216l.016-.01.014-.01c.59-.4 1.24-.701 1.927-.895a10.894 10.894 0 0 1 3.301-.386 8.328 8.328 0 0 1 7.827 8.012c.091 3.308-2.616 5.945-5.736 6.098-2.27.111-4.408-.987-5.452-3.184a5.43 5.43 0 0 1-.492-1.586c-.495-3.343 1.75-6.195 3.81-6.9-1.112-.97-3.895-.905-5.966.619-1.492 1.097-2.46 2.767-2.78 4.758a8.251 8.251 0 0 0 .586 4.508 8.841 8.841 0 0 0 7.536 5.37c.248.02.497.03.747.03 6.627 0 9.502-5.032 8.882-10.63Z"/>
+  <path fill="url(#pi-app-mozilla-mozilla_path_10)" d="M14.323 16.486c4.282-.26 6.116-3.807 6.23-6.322.18-3.931-2.152-8.169-8.32-7.788-1.115-.04-2.228.09-3.302.386a7.226 7.226 0 0 0-1.927.895l-.014.01-.016.01a5.09 5.09 0 0 0-.28.212 8.385 8.385 0 0 1 5.253-.986c3.542.465 6.78 3.22 6.78 6.856 0 2.797-2.162 4.933-4.693 4.78-3.76-.226-4.708-4.082-2.752-5.749-.528-.113-1.519.11-2.21 1.141-.619.927-.583 2.357-.201 3.371a5.54 5.54 0 0 0 5.452 3.184Z"/>
+  <path fill="url(#pi-app-mozilla-mozilla_path_11)" d="M20.022 5.932a10.07 10.07 0 0 0-.872-.997 7.85 7.85 0 0 0-.796-.733c.163.141.317.291.463.449.549.585.965 1.28 1.223 2.04.523 1.584.49 3.568-.51 5.126a5.896 5.896 0 0 1-5.223 2.729c-.09 0-.181 0-.273-.007-3.76-.226-4.708-4.082-2.752-5.749-.528-.113-1.519.11-2.21 1.141-.619.927-.583 2.357-.201 3.371a5.43 5.43 0 0 1-.492-1.586c-.495-3.343 1.75-6.195 3.81-6.9-1.112-.97-3.895-.905-5.966.619a6.974 6.974 0 0 0-2.527 3.656 9.646 9.646 0 0 1 1.042-3.395c-.693.36-1.576 1.494-2.012 2.546a10.357 10.357 0 0 0-.65 5.053c.014.13.028.26.045.388a10.034 10.034 0 1 0 17.901-7.75Z"/>
+  <path fill="url(#pi-app-mozilla-mozilla_path_12)" d="M20.04 6.69a5.627 5.627 0 0 0-1.223-2.04 7.57 7.57 0 0 0-2.277-1.626 10.149 10.149 0 0 0-2.24-.793 9.976 9.976 0 0 0-4.148-.025c-1.423.3-2.674.916-3.466 1.686a8.04 8.04 0 0 1 2.011-.801 8.406 8.406 0 0 1 7.807 2.028c.416.395.78.84 1.084 1.328 1.226 1.993 1.11 4.499.154 5.977-.71 1.098-2.23 2.128-3.649 2.116a5.919 5.919 0 0 0 5.437-2.723c1-1.558 1.033-3.542.51-5.127Z"/>
+  <path fill="url(#pi-app-mozilla-mozilla_path_13)" d="M20.04 6.69a5.627 5.627 0 0 0-1.223-2.04 7.57 7.57 0 0 0-2.277-1.626 10.149 10.149 0 0 0-2.24-.793 9.976 9.976 0 0 0-4.148-.025c-1.423.3-2.674.916-3.466 1.686a8.04 8.04 0 0 1 2.011-.801 8.406 8.406 0 0 1 7.807 2.028c.416.395.78.84 1.084 1.328 1.226 1.993 1.11 4.499.154 5.977-.71 1.098-2.23 2.128-3.649 2.116a5.919 5.919 0 0 0 5.437-2.723c1-1.558 1.033-3.542.51-5.127Z"/>
+  <defs>
+    <radialGradient id="pi-app-mozilla-mozilla_path_00" cx="0" cy="0" r="1" gradientTransform="matrix(22.7355 0 0 22.7359 19.919 6.104)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF36E"/>
+      <stop offset=".5" stop-color="#FC4055"/>
+      <stop offset="1" stop-color="#E31587"/>
+    </radialGradient>
+    <radialGradient id="pi-app-mozilla-mozilla_path_01" cx="0" cy="0" r="1" gradientTransform="matrix(13.4555 0 0 13.4557 3.664 7.044)" gradientUnits="userSpaceOnUse">
+      <stop offset=".001" stop-color="#C60084"/>
+      <stop offset="1" stop-color="#FC4055" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="pi-app-mozilla-mozilla_path_02" cx="0" cy="0" r="1" gradientTransform="matrix(26.6973 0 0 26.6978 21.862 4.81)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFDE67" stop-opacity=".6"/>
+      <stop offset=".093" stop-color="#FFD966" stop-opacity=".581"/>
+      <stop offset=".203" stop-color="#FFCA65" stop-opacity=".525"/>
+      <stop offset=".321" stop-color="#FEB262" stop-opacity=".432"/>
+      <stop offset=".446" stop-color="#FE8F5E" stop-opacity=".302"/>
+      <stop offset=".573" stop-color="#FD6459" stop-opacity=".137"/>
+      <stop offset=".664" stop-color="#FC4055" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="pi-app-mozilla-mozilla_path_03" cx="0" cy="0" r="1" gradientTransform="matrix(34.4416 0 0 34.4423 12.594 13.121)" gradientUnits="userSpaceOnUse">
+      <stop offset=".153" stop-color="#810220"/>
+      <stop offset=".167" stop-color="#920B27" stop-opacity=".861"/>
+      <stop offset=".216" stop-color="#CB2740" stop-opacity=".398"/>
+      <stop offset=".253" stop-color="#EF394F" stop-opacity=".11"/>
+      <stop offset=".272" stop-color="#FC4055" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="pi-app-mozilla-mozilla_path_04" cx="0" cy="0" r="1" gradientTransform="matrix(34.4416 0 0 34.4423 9.988 12.688)" gradientUnits="userSpaceOnUse">
+      <stop offset=".113" stop-color="#810220"/>
+      <stop offset=".133" stop-color="#920B27" stop-opacity=".861"/>
+      <stop offset=".204" stop-color="#CB2740" stop-opacity=".398"/>
+      <stop offset=".257" stop-color="#EF394F" stop-opacity=".11"/>
+      <stop offset=".284" stop-color="#FC4055" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="pi-app-mozilla-mozilla_path_06" cx="0" cy="0" r="1" gradientTransform="matrix(23.8588 0 0 23.8043 19.94 5.225)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF9640"/>
+      <stop offset=".8" stop-color="#FC4055"/>
+    </radialGradient>
+    <radialGradient id="pi-app-mozilla-mozilla_path_07" cx="0" cy="0" r="1" gradientTransform="matrix(23.8588 0 0 23.8043 19.94 5.225)" gradientUnits="userSpaceOnUse">
+      <stop offset=".084" stop-color="#FFDE67"/>
+      <stop offset=".147" stop-color="#FFDC66" stop-opacity=".968"/>
+      <stop offset=".246" stop-color="#FFD562" stop-opacity=".879"/>
+      <stop offset=".369" stop-color="#FFCB5D" stop-opacity=".734"/>
+      <stop offset=".511" stop-color="#FFBC55" stop-opacity=".533"/>
+      <stop offset=".667" stop-color="#FFAA4B" stop-opacity=".28"/>
+      <stop offset=".822" stop-color="#FF9640" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="pi-app-mozilla-mozilla_path_08" cx="0" cy="0" r="1" gradientTransform="matrix(2.88986 11.31107 -11.82739 3.02178 14.476 12.63)" gradientUnits="userSpaceOnUse">
+      <stop offset=".363" stop-color="#FC4055"/>
+      <stop offset=".443" stop-color="#FD604D" stop-opacity=".633"/>
+      <stop offset=".545" stop-color="#FE8644" stop-opacity=".181"/>
+      <stop offset=".59" stop-color="#FF9640" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="pi-app-mozilla-mozilla_path_09" cx="0" cy="0" r="1" gradientTransform="matrix(11.6999 0 0 11.6489 12.46 13.59)" gradientUnits="userSpaceOnUse">
+      <stop offset=".216" stop-color="#FC4055" stop-opacity=".8"/>
+      <stop offset=".267" stop-color="#FD5251" stop-opacity=".633"/>
+      <stop offset=".41" stop-color="#FE8345" stop-opacity=".181"/>
+      <stop offset=".474" stop-color="#FF9640" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="pi-app-mozilla-mozilla_path_10" cx="0" cy="0" r="1" gradientTransform="matrix(52.1183 0 0 51.0907 26.511 2.368)" gradientUnits="userSpaceOnUse">
+      <stop offset=".054" stop-color="#FFF36E"/>
+      <stop offset=".457" stop-color="#FF9640"/>
+      <stop offset=".639" stop-color="#FF9640"/>
+    </radialGradient>
+    <linearGradient id="pi-app-mozilla-mozilla_path_05" x1="10.191" x2="24.304" y1="6.079" y2="22.291" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFBD4F"/>
+      <stop offset=".508" stop-color="#FF9640" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="pi-app-mozilla-mozilla_path_11" x1="16.793" x2="4.686" y1="1.554" y2="20.248" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF36E" stop-opacity=".8"/>
+      <stop offset=".094" stop-color="#FFF36E" stop-opacity=".699"/>
+      <stop offset=".752" stop-color="#FFF36E" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="pi-app-mozilla-mozilla_path_12" x1="10.026" x2="19.269" y1="1.733" y2="26.331" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B833E1"/>
+      <stop offset=".371" stop-color="#9059FF"/>
+      <stop offset=".614" stop-color="#5B6DF8"/>
+      <stop offset="1" stop-color="#0090ED"/>
+    </linearGradient>
+    <linearGradient id="pi-app-mozilla-mozilla_path_13" x1="8.944" x2="19.052" y1="2.081" y2="12.19" gradientUnits="userSpaceOnUse">
+      <stop offset=".805" stop-color="#722291" stop-opacity="0"/>
+      <stop offset="1" stop-color="#592ACB" stop-opacity=".5"/>
+    </linearGradient>
+  </defs>
+</svg>

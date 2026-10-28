@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <g clip-path="url(#pi-azure-microsoft-excel-azure_excel_param_0)">
+    <path fill="#185C37" d="M14.558 12.025 6.651 10.6v10.53c0 .48.382.87.853.87h13.643c.471 0 .853-.39.853-.87v-3.88l-7.442-5.225Z"/>
+    <path fill="#21A366" d="M14.558 3H7.504a.862.862 0 0 0-.853.87v3.88l7.907 4.75 4.186 1.425L22 12.5V7.75L14.558 3Z"/>
+    <path fill="#107C41" d="M6.651 7.75h7.907v4.75H6.651V7.75Z"/>
+    <path fill="#000" d="M12.31 6.8H6.651v11.875h5.66a.865.865 0 0 0 .852-.87V7.67a.865.865 0 0 0-.853-.871Z" opacity=".1"/>
+    <path fill="#000" d="M11.845 7.275H6.651V19.15h5.194a.864.864 0 0 0 .853-.87V8.145a.865.865 0 0 0-.853-.871Z" opacity=".2"/>
+    <path fill="#000" d="M11.845 7.275H6.651V18.2h5.194a.864.864 0 0 0 .853-.87V8.145a.865.865 0 0 0-.853-.871Z" opacity=".2"/>
+    <path fill="#000" d="M11.38 7.275H6.651V18.2h4.729a.864.864 0 0 0 .852-.87V8.145a.865.865 0 0 0-.852-.871Z" opacity=".2"/>
+    <path fill="url(#pi-azure-microsoft-excel-azure_excel_param_1)" d="M2.853 7.275h8.527c.47 0 .852.39.852.87v8.71c0 .48-.381.87-.852.87H2.853a.862.862 0 0 1-.853-.87v-8.71c0-.48.382-.87.853-.87Z"/>
+    <path fill="#fff" d="m4.64 15.33 1.794-2.838L4.79 9.669h1.321l.897 1.805c.083.172.14.3.17.383h.012c.059-.136.121-.27.186-.398l.959-1.789h1.213l-1.685 2.806 1.728 2.854h-1.29l-1.036-1.981a1.675 1.675 0 0 1-.124-.265h-.015c-.03.09-.07.176-.12.257L5.939 15.33H4.64Z"/>
+    <path fill="#33C481" d="M21.147 3h-6.589v4.75H22V3.87c0-.48-.382-.87-.853-.87Z"/>
+    <path fill="#107C41" d="M14.558 12.5H22v4.75h-7.442V12.5Z"/>
+  </g>
+  <defs>
+    <linearGradient id="pi-azure-microsoft-excel-azure_excel_param_1" x1="3.778" x2="10.668" y1="6.595" y2="18.28" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#18884F"/>
+      <stop offset=".5" stop-color="#117E43"/>
+      <stop offset="1" stop-color="#0B6631"/>
+    </linearGradient>
+    <clipPath id="pi-azure-microsoft-excel-azure_excel_param_0">
+      <path fill="#fff" d="M2 3h20v19H2z"/>
+    </clipPath>
+  </defs>
+</svg>

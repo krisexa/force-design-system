@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="#2684FF" d="M22.065.807h-10.17c0 1.268.483 2.484 1.344 3.381a4.5 4.5 0 0 0 3.246 1.401h1.874v1.884c.002 2.639 2.055 4.778 4.588 4.78V1.726c0-.508-.395-.92-.882-.92Z"/>
+  <path fill="url(#pi-app-jira-jira_gradient_0)" d="M17.033 6.085H6.863c0 2.64 2.054 4.778 4.587 4.78h1.874v1.89c.003 2.639 2.058 4.776 4.59 4.776V7.004c0-.507-.394-.919-.881-.919Z"/>
+  <path fill="url(#pi-app-jira-jira_gradient_1)" d="M11.997 11.36H1.827c0 2.642 2.056 4.783 4.591 4.783h1.88v1.884c.001 2.637 2.05 4.775 4.582 4.78V12.28c0-.508-.395-.92-.883-.92Z"/>
+  <defs>
+    <linearGradient id="pi-app-jira-jira_gradient_0" x1="5288.09" x2="3077.79" y1="10.935" y2="2476.16" gradientUnits="userSpaceOnUse">
+      <stop offset=".18" stop-color="#0052CC"/>
+      <stop offset="1" stop-color="#2684FF"/>
+    </linearGradient>
+    <linearGradient id="pi-app-jira-jira_gradient_1" x1="2842.61" x2="1516.45" y1="26.253" y2="1429.11" gradientUnits="userSpaceOnUse">
+      <stop offset=".18" stop-color="#0052CC"/>
+      <stop offset="1" stop-color="#2684FF"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-atlassian-jira-service-management-atlasian_jiraservice_param_0)" d="m13.842 9.778 5.33.031a.815.815 0 0 1 .436.13.85.85 0 0 1 .305.346.88.88 0 0 1-.08.896L11.965 22a5.702 5.702 0 0 1-1.462-1.67 5.873 5.873 0 0 1-.73-2.118 5.93 5.93 0 0 1 .113-2.246c.18-.734.5-1.424.939-2.03l3.017-4.158Z"/>
+  <path fill="#0082FF" d="m10.176 14.222-5.341-.034a.82.82 0 0 1-.44-.13.855.855 0 0 1-.307-.348.885.885 0 0 1 .078-.901L12.024 2a5.84 5.84 0 0 1 2.204 3.819 5.936 5.936 0 0 1-1.063 4.305l-2.99 4.098Z"/>
+  <defs>
+    <linearGradient id="pi-atlassian-jira-service-management-atlasian_jiraservice_param_0" x1="10.092" x2="14.12" y1="3.328" y2="14.563" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0050D3"/>
+      <stop offset="1" stop-color="#0082FF"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <g clip-path="url(#pi-app-tableau-tableau_path_0)">
+    <path fill="#E8762D" d="M11.537 15.864h1.22v-3.328h3.069v-1.183h-3.069V8.025h-1.22v3.328H8.505v1.183h3.032v3.328Z"/>
+    <path fill="#C72037" d="M5.88 20.67h1.036v-2.958h2.736v-.924H6.916v-2.995H5.88v2.995H3.144v.924H5.88v2.958Z"/>
+    <path fill="#5B879B" d="M17.379 9.985h1.035V7.027h2.773V6.14h-2.773V3.145h-1.035V6.14h-2.736v.887h2.736v2.958Z"/>
+    <path fill="#5C6692" d="M11.722 23h.887v-2.108h1.886v-.777h-1.886v-2.107h-.887v2.107H9.873v.777h1.849v2.107Z"/>
+    <path fill="#EB9129" d="M5.917 9.985h.962V6.99h2.773v-.85H6.879V3.145h-.962V6.14H3.144v.85h2.773v2.995Z"/>
+    <path fill="#5C6692" d="M20.521 14.422h.888v-2.07h1.885v-.814H21.41v-2.07h-.888v2.07h-1.848v.813h1.848v2.07Z"/>
+    <path fill="#1F457E" fill-rule="evenodd" d="M17.379 20.67h1.035v-2.958h2.773v-.924h-2.773v-2.995h-1.035v2.995h-2.736v.924h2.736v2.958Z" clip-rule="evenodd"/>
+    <path fill="#7199A6" d="M14.347 3.663v-.629h-1.849V1.001h-.665v2.033H9.984v.629h1.849v2.033h.665V3.663h1.849ZM2.849 14.274h.665v-2.033h1.849v-.629H3.514V9.616H2.85v1.996H1v.665l1.849-.036v2.033Z"/>
+  </g>
+  <defs>
+    <clipPath id="pi-app-tableau-tableau_path_0">
+      <path fill="#fff" d="M1 1h22.294v22H1z"/>
+    </clipPath>
+  </defs>
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <rect width="22" height="14.235" x="1" y="5" fill="url(#pi-app-extrahop-extrahop_0)" rx="7.118"/>
+  <path fill="#fff" d="M4.127 8.451h5.269v1.69H6.082v1.127H8.8v1.59H6.05v1.226h3.545v1.69H4.127V8.45Zm7.522 0h1.921v2.684h4.308V8.451H19.8v7.29h-1.922v-2.85H13.57v2.85h-1.92V8.45Z"/>
+  <defs>
+    <linearGradient id="pi-app-extrahop-extrahop_0" x1="1" x2="23" y1="12.074" y2="12.074" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#261F63"/>
+      <stop offset=".213" stop-color="#291F63"/>
+      <stop offset=".239" stop-color="#2D1F62"/>
+      <stop offset=".545" stop-color="#57245B"/>
+      <stop offset=".784" stop-color="#712756"/>
+      <stop offset=".927" stop-color="#7B2854"/>
+    </linearGradient>
+  </defs>
+</svg>

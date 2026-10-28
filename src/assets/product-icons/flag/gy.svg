@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" viewBox="0 0 50 50">
+  <g clip-path="url(#pi-flag-GY-a)">
+    <path fill="#2A936A" d="M0 9h50v32H0V9Z"/>
+    <mask id="pi-flag-GY-b" width="50" height="32" x="0" y="9" maskUnits="userSpaceOnUse" style="mask-type:luminance">
+      <path fill="#fff" d="m0 9 50 16L0 41V9Z"/>
+    </mask>
+    <g mask="url(#pi-flag-GY-b)">
+      <path fill="#FFC20E" d="m0 9 50 16L0 41"/>
+      <path stroke="#fff" stroke-width="40" d="m0 9 50 16L0 41"/>
+    </g>
+    <mask id="pi-flag-GY-c" width="25" height="32" x="0" y="9" maskUnits="userSpaceOnUse" style="mask-type:luminance">
+      <path fill="#fff" d="m0 9 25 16L0 41V9Z"/>
+    </mask>
+    <g mask="url(#pi-flag-GY-c)">
+      <path fill="#BE1E2D" d="m0 9 25 16L0 41"/>
+      <path stroke="#000" stroke-width="40" d="m0 9 25 16L0 41"/>
+    </g>
+  </g>
+  <defs>
+    <clipPath id="pi-flag-GY-a">
+      <path fill="#fff" d="M0 9h50v32H0z"/>
+    </clipPath>
+  </defs>
+</svg>

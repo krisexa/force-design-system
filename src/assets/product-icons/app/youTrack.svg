@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-app-youTrack-youtrack_gradient_0)" d="M1.449 18.615a.086.086 0 0 1-.026-.106l2.625-5.406L1.02 9.487a.086.086 0 0 1 .011-.12l8.83-7.36a4.353 4.353 0 0 1 5.46-.089 4.329 4.329 0 0 1 1.237 5.307l-.962 1.982c.375-.126.747-.24 1.114-.343l4.356-1.252a.086.086 0 0 1 .108.064l1.824 8.107c.011.05-.023.1-.074.106-.578.073-3.732.526-7.66 2.175-4.448 1.87-7.384 4.525-7.8 4.913a.085.085 0 0 1-.11.006l-5.905-4.368Z"/>
+  <path fill="#000" d="M18.875 5.125H5.125v13.75h13.75V5.125Z"/>
+  <path fill="#fff" d="M8.38 10.065 6.492 6.841h1.083l1.168 2.06.136.295.137-.299 1.138-2.056h1.065l-1.857 3.217v1.941h-.984v-1.934Zm3.964 6.06h-5.5v1.03h5.5v-1.03Zm3.206-9.284h-4.14v.906h1.57V12h1.006V7.747h1.562v-.906Z"/>
+  <defs>
+    <linearGradient id="pi-app-youTrack-youtrack_gradient_0" x1=".965" x2="23.018" y1="12" y2="12" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FB43FF"/>
+      <stop offset=".97" stop-color="#FB406D"/>
+    </linearGradient>
+  </defs>
+</svg>

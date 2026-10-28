@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-app-trello-trello_gradient_0)" d="M20.852 1H3.148A2.148 2.148 0 0 0 1 3.148v17.704C1 22.038 1.962 23 3.148 23h17.704A2.148 2.148 0 0 0 23 20.852V3.148A2.148 2.148 0 0 0 20.852 1Z"/>
+  <path fill="#fff" d="M19.109 3.86H14.46a1.03 1.03 0 0 0-1.031 1.031v7.563c0 .57.462 1.031 1.031 1.031h4.648a1.03 1.03 0 0 0 1.031-1.031V4.89c0-.57-.462-1.03-1.031-1.03Zm-9.57 0H4.89a1.03 1.03 0 0 0-1.031 1.031v13.063c0 .57.462 1.031 1.031 1.031h4.65a1.03 1.03 0 0 0 1.031-1.031V4.89c0-.57-.462-1.03-1.031-1.03Z"/>
+  <defs>
+    <linearGradient id="pi-app-trello-trello_gradient_0" x1="1101" x2="1101" y1="1" y2="2201" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0091E6"/>
+      <stop offset="1" stop-color="#0079BF"/>
+    </linearGradient>
+  </defs>
+</svg>

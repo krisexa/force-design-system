@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-app-microsoft-application-gridGradient01)" d="M8.986 15.97h6.001V22h-6v-6.03Zm-6.93-7.982h5.932V2H2.833A.832.832 0 0 0 2 2.832l.055 5.156ZM2.833 22h5.155v-6.03H2.001v5.157a.831.831 0 0 0 .832.873ZM2 15.07h5.987V8.985H2.001v6.085ZM15.985 22h5.156a.831.831 0 0 0 .831-.832v-5.197h-5.987V22Zm-6.93-6.93h5.932V8.985h-6l.068 6.085Zm7 0H22V8.985h-6.015l.07 6.085Zm0-12.973v5.89H22V2.833A.831.831 0 0 0 21.168 2l-5.114.097Zm-6.93 5.988h5.862V2h-6l.138 6.085Z"/>
+  <defs>
+    <linearGradient id="pi-app-microsoft-application-gridGradient01" x1="12.278" x2="12.278" y1="2.042" y2="22" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5EA0EF"/>
+      <stop offset=".18" stop-color="#589EED"/>
+      <stop offset=".41" stop-color="#4897E9"/>
+      <stop offset=".66" stop-color="#2E8CE1"/>
+      <stop offset=".94" stop-color="#0A7CD7"/>
+      <stop offset="1" stop-color="#0078D4"/>
+    </linearGradient>
+  </defs>
+</svg>

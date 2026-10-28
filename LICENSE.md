@@ -45,7 +45,7 @@ selling the fonts on their own.
 
 The Exaforce wordmark, mark, favicons, platform icons and email-signature
 images in `src/assets/logo/`, `src/assets/favicon/`, `src/assets/icons/platform/`
-and `src/assets/email/` are trademarks and copyrighted works of Exaforce, Inc.
+`src/assets/avatars/exabots/` and `src/assets/email/` are trademarks and copyrighted works of Exaforce, Inc.
 They are published here so that Exaforce's own web properties can share one
 source. No licence to use them is granted to anyone else; in particular they
 may not be used to imply endorsement by or affiliation with Exaforce.
@@ -53,6 +53,7 @@ may not be used to imply endorsement by or affiliation with Exaforce.
 ## Third-party marks — property of their owners
 
 The customer, investor and review-platform logos in `src/assets/logos/`, the
+third-party app and service logos in `src/assets/product-icons/`, the
 compliance marks in `src/assets/icons/trust/`, and the navigation and UI icons
 derived from Lucide (`src/assets/icons/chain/LUCIDE-LICENSE.txt`) belong to
 their respective owners. Customer and investor marks are included under the

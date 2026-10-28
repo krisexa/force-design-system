@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="#2684FF" d="M21.165 2h-9.631a4.348 4.348 0 0 0 4.347 4.348h1.774V8.06A4.348 4.348 0 0 0 22 12.405v-9.57A.836.836 0 0 0 21.165 2Z"/>
+  <path fill="url(#pi-app-atlassian-jira-atlasisan_gradient_0)" d="M16.4 6.799H6.767a4.348 4.348 0 0 0 4.345 4.345h1.774v1.718a4.348 4.348 0 0 0 4.348 4.342v-9.57a.836.836 0 0 0-.836-.835Z"/>
+  <path fill="url(#pi-app-atlassian-jira-atlasisan_gradient_1)" d="M11.631 11.595H2a4.348 4.348 0 0 0 4.348 4.347h1.78v1.713A4.347 4.347 0 0 0 12.465 22v-9.57a.836.836 0 0 0-.835-.835Z"/>
+  <defs>
+    <linearGradient id="pi-app-atlassian-jira-atlasisan_gradient_0" x1="5007.93" x2="3009.1" y1="11.208" y2="2333.46" gradientUnits="userSpaceOnUse">
+      <stop offset=".18" stop-color="#0052CC"/>
+      <stop offset="1" stop-color="#2684FF"/>
+    </linearGradient>
+    <linearGradient id="pi-app-atlassian-jira-atlasisan_gradient_1" x1="2692.13" x2="1490.29" y1="25.133" y2="1349.45" gradientUnits="userSpaceOnUse">
+      <stop offset=".18" stop-color="#0052CC"/>
+      <stop offset="1" stop-color="#2684FF"/>
+    </linearGradient>
+  </defs>
+</svg>

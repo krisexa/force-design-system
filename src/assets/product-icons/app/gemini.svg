@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <g clip-path="url(#pi-app-gemini-gemini_gradient_0)">
+    <path fill="url(#pi-app-gemini-gemini_gradient_1)" d="M12 23A13.112 13.112 0 0 0 1 12 13.112 13.112 0 0 0 12 1a13.113 13.113 0 0 0 11 11 13.113 13.113 0 0 0-11 11Z"/>
+  </g>
+  <defs>
+    <linearGradient id="pi-app-gemini-gemini_gradient_1" x1="1" x2="1513.06" y1="2201" y2="669.69" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1C7DFF"/>
+      <stop offset=".52" stop-color="#1C69FF"/>
+      <stop offset="1" stop-color="#F0DCD6"/>
+    </linearGradient>
+    <clipPath id="pi-app-gemini-gemini_gradient_0">
+      <path fill="#fff" d="M2 2h20v20H2z"/>
+    </clipPath>
+  </defs>
+</svg>

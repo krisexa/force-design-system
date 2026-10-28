@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" viewBox="0 0 50 50">
+  <g clip-path="url(#pi-flag-PN-a)">
+    <path fill="#012169" d="M50 9H0v32h50V9Z"/>
+    <path fill="#000" d="m0 9 25 16L0 9Zm25 0L0 25 25 9Z"/>
+    <path fill="#fff" fill-rule="evenodd" d="M9.705 17-.559 10.431.559 7.57 12.5 15.212l11.941-7.643 1.118 2.862-10.264 6.57 10.264 6.568-1.118 2.863-11.94-7.643L.558 26.431-.559 23.57 9.705 17Z" clip-rule="evenodd"/>
+    <mask id="pi-flag-PN-b" width="30" height="22" x="0" y="9" maskUnits="userSpaceOnUse" style="mask-type:luminance">
+      <path fill="#fff" d="M0 9v8h29.167v8H25L0 9Zm25 0H12.5v21.333H0V25L25 9Z"/>
+    </mask>
+    <g mask="url(#pi-flag-PN-b)">
+      <path fill="#000" d="m0 9 25 16L0 9Zm25 0L0 25 25 9Z"/>
+      <path fill="#C8102E" fill-rule="evenodd" d="M10.637 17-.373 9.954l.746-1.908L12.5 15.807l12.127-7.761.746 1.908L14.363 17l11.01 7.046-.746 1.908L12.5 18.192.373 25.954l-.746-1.908L10.637 17Z" clip-rule="evenodd"/>
+    </g>
+    <path fill="#000" d="M12.5 9v21.333V9ZM0 17h29.167H0Z"/>
+    <path fill="#fff" fill-rule="evenodd" d="M10.417 14.333V9h4.166v5.333h14.584v5.334H14.583v10.666h-4.166V19.667H0v-5.334h10.417Z" clip-rule="evenodd"/>
+    <path fill="#000" d="M12.5 9v21.333V9ZM0 17h29.167H0Z"/>
+    <path fill="#C8102E" fill-rule="evenodd" d="M11.25 15.4V9h2.5v6.4h15.417v3.2H13.75v11.733h-2.5V18.6H0v-3.2h11.25Z" clip-rule="evenodd"/>
+    <path fill="#012169" d="M25 9v16H0v16h50V9H25Z"/>
+    <path fill="#F0F0F0" d="M28 26.532h.056v-.056a7.524 7.524 0 0 0-.056.056Z"/>
+    <path fill="#ACABB1" d="m39.995 18.266-2.755.918-2.755-.918-.918-2.296.918-2.296h5.51l-.918 2.296.918 2.296Z"/>
+    <path fill="#338AF3" d="M30.811 18.266v10.102c0 4.92 6.429 6.428 6.429 6.428s6.428-1.508 6.428-6.428V18.266H30.811Z"/>
+    <path fill="#6DA544" d="M31.391 30.762c1.58 3.033 5.85 4.035 5.85 4.035s4.268-1.002 5.848-4.035l-5.849-9.74-5.849 9.74Z"/>
+    <path fill="#FFDA44" d="m43.669 28.267-6.429-10-6.428 10v.102c0 .91.22 1.704.58 2.393l5.848-9.099 5.85 9.099a5.11 5.11 0 0 0 .579-2.393v-.102Z"/>
+  </g>
+  <defs>
+    <clipPath id="pi-flag-PN-a">
+      <path fill="#fff" d="M0 9h50v32H0z"/>
+    </clipPath>
+  </defs>
+</svg>

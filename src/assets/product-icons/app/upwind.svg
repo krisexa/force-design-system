@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-app-upwind-upwind_gradient_0)" d="M19.169 1H4.83v3.708h14.34V1Z"/>
+  <path fill="#000" d="M12 23c-3.953 0-7.169-3.216-7.169-7.168V7.427h3.955v8.652A3.217 3.217 0 0 0 12 19.292a3.217 3.217 0 0 0 3.213-3.213V7.427h3.956v8.405C19.169 19.784 15.953 23 12 23Z"/>
+  <defs>
+    <linearGradient id="pi-app-upwind-upwind_gradient_0" x1="4.889" x2="19.111" y1=".801" y2="4.907" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F2583C"/>
+      <stop offset=".542" stop-color="#9214C4"/>
+      <stop offset="1" stop-color="#1E71ED"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <g clip-path="url(#pi-app-hex-hex_0)">
+    <path fill="#473982" fill-rule="evenodd" d="M4.795 8v2.992h-.759V8H1v9h3.036v-4.51h.759V17h3.037V8H4.795Zm3.791 0v9h6.832v-3.754h-3.037v2.236h-.759V12.49h3.796V8H8.586Zm3.036 2.992V9.5h.759v1.492h-.759Zm8.345 0V8h3.038v2.25l-1.518 1.501 1.518 1.502V17h-3.038v-4.51h-.758V17h-3.036v-3.747l1.519-1.502-1.52-1.501V8h3.037v2.992h.758Z" clip-rule="evenodd"/>
+  </g>
+  <defs>
+    <clipPath id="pi-app-hex-hex_0">
+      <path fill="#fff" d="M1 8h22v9H1z"/>
+    </clipPath>
+  </defs>
+</svg>

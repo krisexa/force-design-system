@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <g clip-path="url(#pi-google-gke-google_gke_param_0)">
+    <path fill="url(#pi-google-gke-google_gke_param_1)" d="M5.211 21.317.29 12.79a2.156 2.156 0 0 1 0-2.156l4.922-8.526A2.156 2.156 0 0 1 7.08 1.031h9.843c.77 0 1.482.411 1.868 1.078l4.922 8.526a2.157 2.157 0 0 1 0 2.156l-4.922 8.526a2.155 2.155 0 0 1-1.868 1.078H7.08a2.156 2.156 0 0 1-1.868-1.078Z"/>
+    <mask id="pi-google-gke-google_gke_param_2" width="25" height="22" x="0" y="1" maskUnits="userSpaceOnUse" style="mask-type:luminance">
+      <path fill="#fff" d="M5.211 21.317.29 12.79a2.156 2.156 0 0 1 0-2.156l4.922-8.526A2.156 2.156 0 0 1 7.08 1.031h9.843c.77 0 1.482.411 1.868 1.078l4.922 8.526a2.157 2.157 0 0 1 0 2.156l-4.922 8.526a2.155 2.155 0 0 1-1.868 1.078H7.08a2.156 2.156 0 0 1-1.868-1.078Z"/>
+    </mask>
+    <g mask="url(#pi-google-gke-google_gke_param_2)">
+      <path fill="#000" d="m23.26 15.25-6.454-6.455L12 6.65 7.408 9.146l-.193 5.501 7.978 7.976 3.122-.028 4.946-7.346Z" opacity=".07"/>
+    </g>
+    <path fill="#fff" d="m16.694 8.711-4.44-2.563a.506.506 0 0 0-.506 0L7.31 8.711a.506.506 0 0 0-.253.439v5.126c0 .18.097.348.253.438l4.44 2.563a.506.506 0 0 0 .505 0l4.44-2.563a.505.505 0 0 0 .253-.438V9.15a.506.506 0 0 0-.253-.439Zm-.61 5.074-1.548-.894v-2.355l-2.287 1.32v2.641l2.04-1.177 1.548.894-3.836 2.215-3.836-2.215 1.549-.894 2.04 1.177v-2.642l-2.287-1.32v2.356l-1.549.894v-4.43l3.836-2.214v1.788l-2.04 1.178 2.287 1.32 2.288-1.32-2.04-1.178V7.141l3.836 2.215v4.43Z"/>
+  </g>
+  <defs>
+    <linearGradient id="pi-google-gke-google_gke_param_1" x1="0" x2="0" y1="1.031" y2="22.361" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4387FD"/>
+      <stop offset="1" stop-color="#4683EA"/>
+    </linearGradient>
+    <clipPath id="pi-google-gke-google_gke_param_0">
+      <path fill="#fff" d="M0 4a4 4 0 0 1 4-4h16a4 4 0 0 1 4 4v16a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V4Z"/>
+    </clipPath>
+  </defs>
+</svg>

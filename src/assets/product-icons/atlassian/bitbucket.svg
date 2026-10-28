@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="#2684FF" d="M3.578 3.79c-.36 0-.63.326-.57.652l2.428 14.696c.06.385.39.652.78.652h11.748c.27 0 .51-.207.57-.474L20.992 4.47c.06-.355-.21-.651-.57-.651L3.578 3.79Zm10.31 10.607h-3.746l-.99-5.244h5.665l-.929 5.244Z"/>
+  <path fill="url(#pi-atlassian-bitbucket-atlasian_bitbucket_param_0)" d="M20 8.79h-5.228l-.872 5.439h-3.63L6 19.605a.8.8 0 0 0 .494.184H17.88c.261 0 .494-.215.552-.492L20 8.79Z"/>
+  <defs>
+    <linearGradient id="pi-atlassian-bitbucket-atlasian_bitbucket_param_0" x1="21.223" x2="12.195" y1="10.322" y2="16.984" gradientUnits="userSpaceOnUse">
+      <stop offset=".176" stop-color="#0052CC"/>
+      <stop offset="1" stop-color="#2684FF"/>
+    </linearGradient>
+  </defs>
+</svg>

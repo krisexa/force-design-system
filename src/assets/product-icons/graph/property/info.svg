@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <g clip-path="url(#pi-graph-property-info-a)">
+    <rect width="24" height="24" fill="#D4D4D8" rx="12"/>
+    <path fill="#18181B" d="M12.526 7.273V16h-1.057V7.273h1.057Z"/>
+  </g>
+  <defs>
+    <clipPath id="pi-graph-property-info-a">
+      <path fill="#fff" d="M0 0h24v24H0z"/>
+    </clipPath>
+  </defs>
+</svg>

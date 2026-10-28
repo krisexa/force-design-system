@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-app-lacework-lacework_gradient_0)" d="M12.123 22S3 20.008 3 11.098V2l3.622 3.496v5.602c0 5.3 5.488 7.092 5.488 7.092V22h.013Z"/>
+  <path fill="url(#pi-app-lacework-lacework_gradient_1)" d="M12.123 22s9.123-1.993 9.123-10.902V2.012L17.624 5.51v5.601c0 5.301-5.489 7.093-5.489 7.093V22h-.012Z"/>
+  <path fill="url(#pi-app-lacework-lacework_gradient_2)" d="M17.624 5.496H6.634L3.013 2h18.233l-3.622 3.496Z"/>
+  <defs>
+    <linearGradient id="pi-app-lacework-lacework_gradient_0" x1=".621" x2="5.147" y1="2.517" y2="10.358" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#01023B"/>
+      <stop offset="1" stop-color="#FF646C"/>
+    </linearGradient>
+    <linearGradient id="pi-app-lacework-lacework_gradient_1" x1="22.604" x2="18.295" y1="4.305" y2="11.768" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#01023B"/>
+      <stop offset=".24" stop-color="#071573"/>
+      <stop offset=".49" stop-color="#0D27AA"/>
+      <stop offset=".72" stop-color="#1135D2"/>
+      <stop offset=".89" stop-color="#143DEA"/>
+      <stop offset="1" stop-color="#1540F3"/>
+    </linearGradient>
+    <linearGradient id="pi-app-lacework-lacework_gradient_2" x1="3.011" x2="21.245" y1="3.752" y2="3.752" gradientUnits="userSpaceOnUse">
+      <stop offset=".2" stop-color="#00F8F8"/>
+      <stop offset=".3" stop-color="#00F4F8"/>
+      <stop offset=".4" stop-color="#02E7F8"/>
+      <stop offset=".51" stop-color="#04D3F7"/>
+      <stop offset=".61" stop-color="#08B6F6"/>
+      <stop offset=".72" stop-color="#0C90F5"/>
+      <stop offset=".83" stop-color="#1163F4"/>
+      <stop offset=".9" stop-color="#1540F3"/>
+    </linearGradient>
+  </defs>
+</svg>

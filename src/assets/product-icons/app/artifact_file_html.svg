@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <g clip-path="url(#pi-app-artifact-file-html-filehtml_0)">
+    <path fill="#fff" stroke="#D4D4D8" d="M7 2.5h7.135L20.5 8.467V20a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 20V4A1.5 1.5 0 0 1 7 2.5Z"/>
+    <path fill="#D4D4D8" d="M13.5 7.5V3a.5.5 0 0 1 1 0v4.5a1 1 0 0 0 1 1H20a.5.5 0 0 1 0 1h-4.5a2 2 0 0 1-2-2Z"/>
+  </g>
+  <rect width="20" height="9" x="2" y="10" fill="#F97316" rx="1"/>
+  <path fill="#fff" d="M3.87 17v-4.364h.922v1.8h1.873v-1.8h.92V17h-.92v-1.803H4.792V17H3.87Zm4.19-3.603v-.76h3.584v.76h-1.336V17h-.912v-3.603H8.06Zm4.054-.76h1.138l1.202 2.931h.05l1.203-2.932h1.137V17h-.895v-2.84h-.036l-1.13 2.819h-.608l-1.13-2.83h-.036V17h-.895v-4.364ZM17.484 17v-4.364h.923v3.603h1.87V17h-2.793Z"/>
+  <defs>
+    <clipPath id="pi-app-artifact-file-html-filehtml_0">
+      <path fill="#fff" d="M5 2h16v20H5z"/>
+    </clipPath>
+  </defs>
+</svg>

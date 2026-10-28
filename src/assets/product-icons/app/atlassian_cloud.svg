@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-app-atlassian-cloud-atlassian_cloud_0)" d="M7.761 11.076a.571.571 0 0 0-.798-.107.592.592 0 0 0-.167.208l-4.903 9.807a.586.586 0 0 0 .524.848h6.83a.562.562 0 0 0 .525-.324c1.474-3.044.58-7.674-2.011-10.432Z"/>
+  <path fill="#2684FF" d="M11.364 2.151a12.938 12.938 0 0 0-.755 12.771l3.293 6.586a.586.586 0 0 0 .524.325h6.829a.584.584 0 0 0 .525-.849L12.361 2.148a.551.551 0 0 0-.997 0v.003Z"/>
+  <defs>
+    <linearGradient id="pi-app-atlassian-cloud-atlassian_cloud_0" x1="10.46" x2="5.283" y1="12.575" y2="21.541" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0052CC"/>
+      <stop offset=".92" stop-color="#2684FF"/>
+    </linearGradient>
+  </defs>
+</svg>

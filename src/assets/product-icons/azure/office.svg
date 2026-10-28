@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-azure-office-azure_office_param_0)" d="M7.376 18.315c-.623 0-1.13.486-1.13 1.09 0 .41.235.76.586.948l4.37 2.348a2.305 2.305 0 0 0 1.891.17l1.493-.415V18.31c.006.005-7.204.005-7.21.005Z"/>
+  <path fill="url(#pi-azure-office-azure_office_param_1)" d="M7.376 18.315c-.623 0-1.13.486-1.13 1.09 0 .41.235.76.586.948l4.37 2.348a2.305 2.305 0 0 0 1.891.17l1.493-.415V18.31c.006.005-7.204.005-7.21.005Z"/>
+  <path fill="url(#pi-azure-office-azure_office_param_2)" d="M12.998 1.088A2.273 2.273 0 0 0 12.363 1c-.357 0-.713.07-1.034.234-.066.03-7.108 3.865-7.108 3.865a2.07 2.07 0 0 0-.272.164c-.012.006-.018.012-.03.018-.055.04-.103.081-.157.122-.025.018-.049.042-.067.06a4.635 4.635 0 0 0-.314.363A2.1 2.1 0 0 0 3 7.036v10.19c0 .602.508 1.089 1.13 1.089.157 0 .303-.03.436-.088l2.012-1.095a1.633 1.633 0 0 0 .889-1.107.338.338 0 0 0 .012-.076c0-.012.006-.03.006-.041a.915.915 0 0 0 .012-.129c0-.035.006-.064.006-.1V8.565c0-.474.212-.901.544-1.2a1.75 1.75 0 0 1 .605-.345c.241-.088 5.96-2.09 5.96-2.09V1.55l-1.614-.462Z"/>
+  <path fill="url(#pi-azure-office-azure_office_param_3)" d="M12.998 1.088A2.273 2.273 0 0 0 12.363 1c-.357 0-.713.07-1.034.234-.066.03-7.108 3.865-7.108 3.865a2.07 2.07 0 0 0-.272.164c-.012.006-.018.012-.03.018-.055.04-.103.081-.157.122-.025.018-.049.042-.067.06a4.635 4.635 0 0 0-.314.363A2.1 2.1 0 0 0 3 7.036v10.19c0 .602.508 1.089 1.13 1.089.157 0 .303-.03.436-.088l2.012-1.095a1.633 1.633 0 0 0 .889-1.107.338.338 0 0 0 .012-.076c0-.012.006-.03.006-.041a.915.915 0 0 0 .012-.129c0-.035.006-.064.006-.1V8.565c0-.474.212-.901.544-1.2a1.75 1.75 0 0 1 .605-.345c.241-.088 5.96-2.09 5.96-2.09V1.55l-1.614-.462Z"/>
+  <path fill="url(#pi-azure-office-azure_office_param_4)" d="m19.435 2.914-6.34-1.798c.918.346 1.492 1.124 1.492 2.073 0 0-.006 17.234 0 17.65.006.936-.61 1.738-1.492 2.037l6.34-1.768c.913-.281 1.572-1.101 1.572-2.079V4.992c.005-.972-.66-1.797-1.572-2.078Z"/>
+  <defs>
+    <linearGradient id="pi-azure-office-azure_office_param_0" x1="6.873" x2="22.584" y1="20.103" y2="21.522" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F32B44"/>
+      <stop offset=".6" stop-color="#A4070A"/>
+    </linearGradient>
+    <linearGradient id="pi-azure-office-azure_office_param_1" x1="17.519" x2="10.544" y1="21.006" y2="20.376" gradientUnits="userSpaceOnUse">
+      <stop stop-opacity=".4"/>
+      <stop offset="1" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="pi-azure-office-azure_office_param_2" x1="13.227" x2="1.611" y1=".241" y2="17.364" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#800600"/>
+      <stop offset=".6" stop-color="#C72127"/>
+      <stop offset=".728" stop-color="#C13959"/>
+      <stop offset=".847" stop-color="#BC4B81"/>
+      <stop offset=".942" stop-color="#B95799"/>
+      <stop offset="1" stop-color="#B85BA2"/>
+    </linearGradient>
+    <linearGradient id="pi-azure-office-azure_office_param_3" x1="13.475" x2="11.015" y1="-.102" y2="3.524" gradientUnits="userSpaceOnUse">
+      <stop stop-opacity=".4"/>
+      <stop offset="1" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="pi-azure-office-azure_office_param_4" x1="17.055" x2="17.055" y1="-.12" y2="21.346" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB900"/>
+      <stop offset=".166" stop-color="#EF8400"/>
+      <stop offset=".313" stop-color="#E25C01"/>
+      <stop offset=".429" stop-color="#DB4401"/>
+      <stop offset=".5" stop-color="#D83B01"/>
+    </linearGradient>
+  </defs>
+</svg>

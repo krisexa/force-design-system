@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="#7A7A7A" d="M11.085 3.936h1.37v8.643h-1.37V3.936Z"/>
+  <path fill="#1490DF" d="M13.781 3.666a2.012 2.012 0 1 1-4.023-.007 2.012 2.012 0 0 1 4.024.007Z"/>
+  <path fill="url(#pi-azure-privateLinks-azure_privatelinks_param_0)" d="M11.495 12.122h-2.2a2.745 2.745 0 0 0-.424 5.451 2.962 2.962 0 0 1 .026-1.02 1.733 1.733 0 0 1 .399-3.421h2.2a1.737 1.737 0 1 1 0 3.475h-.604c-.08.172-.122.36-.122.55 0 .156.029.311.086.457h.644a2.744 2.744 0 1 0 0-5.488l-.005-.004Z"/>
+  <path fill="url(#pi-azure-privateLinks-azure_privatelinks_param_1)" d="M14.665 14.445a2.832 2.832 0 0 1-.028 1.02 1.733 1.733 0 0 1-.397 3.422h-2.2a1.739 1.739 0 0 1 0-3.476h.604a1.274 1.274 0 0 0 .035-1.006h-.635a2.744 2.744 0 0 0 0 5.488h2.2a2.745 2.745 0 0 0 .425-5.452l-.004.004Z"/>
+  <path fill="#50E6FF" d="m7.82 21.049-.504.507a.343.343 0 0 1-.489 0l-5.63-5.621a.692.692 0 0 1 0-.978l.509-.503 6.11 6.1a.337.337 0 0 1 0 .478l.003.017Z"/>
+  <path fill="#1490DF" d="m7.211 9.434.562.562a.344.344 0 0 1 0 .489l-6.008 6.023-.563-.559a.692.692 0 0 1 0-.977l5.524-5.538a.342.342 0 0 1 .485 0Z"/>
+  <path fill="#50E6FF" d="M16.174 21.447a.339.339 0 0 1-.007-.48h.007l6.11-6.095.508.508a.692.692 0 0 1 0 .978l-5.634 5.606a.338.338 0 0 1-.478.007l-.007-.006-.499-.518Z"/>
+  <path fill="#1490DF" d="m17.267 9.836 5.529 5.543a.688.688 0 0 1 0 .969l-.563.562-6.014-6.027a.353.353 0 0 1 0-.489l.562-.557a.345.345 0 0 1 .486-.001Z"/>
+  <defs>
+    <linearGradient id="pi-azure-privateLinks-azure_privatelinks_param_0" x1="10.409" x2="10.409" y1="12.122" y2="17.61" gradientUnits="userSpaceOnUse">
+      <stop offset=".23" stop-color="#5EA0EF"/>
+      <stop offset=".32" stop-color="#5B9FEE"/>
+      <stop offset=".48" stop-color="#509AEB"/>
+      <stop offset=".57" stop-color="#3F92E6"/>
+      <stop offset=".75" stop-color="#2688DF"/>
+      <stop offset=".93" stop-color="#127FD9"/>
+    </linearGradient>
+    <linearGradient id="pi-azure-privateLinks-azure_privatelinks_param_1" x1="13.131" x2="13.131" y1="14.409" y2="19.896" gradientUnits="userSpaceOnUse">
+      <stop offset=".02" stop-color="#5EA0EF"/>
+      <stop offset=".14" stop-color="#5B9FEE"/>
+      <stop offset=".23" stop-color="#5B9FEE"/>
+      <stop offset=".34" stop-color="#509AEB"/>
+      <stop offset=".44" stop-color="#3F92E6"/>
+      <stop offset=".63" stop-color="#2688DF"/>
+      <stop offset=".93" stop-color="#127FD9"/>
+    </linearGradient>
+  </defs>
+</svg>

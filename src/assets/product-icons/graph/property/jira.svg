@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="#0082FF" d="M20.282 3H12c0 2.075 1.675 3.764 3.734 3.764h1.532v1.472C17.266 10.31 18.942 12 21 12V3.724A.723.723 0 0 0 20.282 3Z"/>
+  <path fill="url(#pi-graph-property-jira-a)" d="M16.202 7H7c0 2.3 1.862 4.171 4.149 4.171h1.702v1.658c0 2.3 1.862 4.171 4.149 4.171V7.829c0-.455-.372-.829-.798-.829Z"/>
+  <path fill="url(#pi-graph-property-jira-b)" d="M11.303 12H3c0 2.075 1.68 3.764 3.744 3.764h1.511v1.472C8.255 19.31 9.935 21 12 21v-8.3c.024-.362-.312-.7-.696-.7Z"/>
+  <defs>
+    <linearGradient id="pi-graph-property-jira-a" x1="20.633" x2="13.552" y1="3.035" y2="10.298" gradientUnits="userSpaceOnUse">
+      <stop offset=".18" stop-color="#0050D3"/>
+      <stop offset="1" stop-color="#0082FF"/>
+    </linearGradient>
+    <linearGradient id="pi-graph-property-jira-b" x1="12.07" x2="7.967" y1="12.048" y2="16.018" gradientUnits="userSpaceOnUse">
+      <stop offset=".18" stop-color="#0050D3"/>
+      <stop offset="1" stop-color="#0082FF"/>
+    </linearGradient>
+  </defs>
+</svg>

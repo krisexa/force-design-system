@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <g clip-path="url(#pi-app-juniper-juniper_0)">
+    <path fill="#000" d="M10.36 15H9.102V9h4.189c1.309 0 2.373 1.017 2.373 2.267s-1.064 2.266-2.373 2.266h-2.933V15Zm0-2.667h2.932c.614 0 1.117-.48 1.117-1.066 0-.587-.503-1.067-1.117-1.067h-2.933v2.133ZM7.636 15H6.38v-2.433H2.261V15H1.004V9h1.257v2.367H6.38V9h1.257v6Zm10.472-4.3h-1.257V9h6.144v1.2h-4.887v.5Z"/>
+    <path fill="#03A883" d="M22.996 15h-6.144v-3.733h6.144v1.2h-4.887V13.8h4.887V15Z"/>
+  </g>
+  <defs>
+    <clipPath id="pi-app-juniper-juniper_0">
+      <path fill="#fff" d="M1 9h22v6H1z"/>
+    </clipPath>
+  </defs>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" viewBox="0 0 50 50">
+  <g clip-path="url(#pi-flag-NU-a)">
+    <path fill="#012169" d="M50 9H0v32h50V9Z"/>
+    <path fill="#000" d="m0 9 25 16L0 9Zm25 0L0 25 25 9Z"/>
+    <path fill="#fff" fill-rule="evenodd" d="M9.705 17-.559 10.431.559 7.57 12.5 15.212l11.941-7.643 1.118 2.862-10.264 6.57 10.264 6.568-1.118 2.863-11.94-7.643L.558 26.431-.559 23.57 9.705 17Z" clip-rule="evenodd"/>
+    <mask id="pi-flag-NU-b" width="30" height="22" x="0" y="9" maskUnits="userSpaceOnUse" style="mask-type:luminance">
+      <path fill="#fff" d="M0 9v8h29.167v8H25L0 9Zm0 16v5.333h12.5V9H25L0 25Z"/>
+    </mask>
+    <g mask="url(#pi-flag-NU-b)">
+      <path fill="#000" d="m0 9 25 16L0 9Zm25 0L0 25 25 9Z"/>
+      <path fill="#C8102E" fill-rule="evenodd" d="M10.637 17-.373 9.954l.746-1.908L12.5 15.807l12.127-7.761.746 1.908L14.363 17l11.01 7.046-.746 1.908L12.5 18.192.373 25.954l-.746-1.908L10.637 17Z" clip-rule="evenodd"/>
+    </g>
+    <path fill="#000" d="M12.5 9v21.333V9ZM0 17h29.167H0Z"/>
+    <path fill="#fff" fill-rule="evenodd" d="M10.417 14.333V9h4.166v5.333h14.584v5.334H14.583v10.666h-4.166V19.667H0v-5.334h10.417Z" clip-rule="evenodd"/>
+    <path fill="#000" d="M12.5 9v21.333V9ZM0 17h29.167H0Z"/>
+    <path fill="#C8102E" fill-rule="evenodd" d="M11.25 15.4V9h2.5v6.4h15.417v3.2H13.75v11.733h-2.5V18.6H0v-3.2h11.25Z" clip-rule="evenodd"/>
+    <path fill="#FEDD00" d="M25 9h25v32H0V25h25V9Z"/>
+    <path fill="#012169" d="M12.5 19.723c1.175 0 2.127-1.22 2.127-2.723s-.953-2.722-2.127-2.722c-1.175 0-2.127 1.219-2.127 2.722 0 1.504.953 2.723 2.127 2.723Z"/>
+    <path fill="#FEDD00" d="m12.5 14.278 1.25 4.925-3.273-3.044h4.046l-3.273 3.044m-6.042-3.648.735 2.894L4.02 16.66h2.377l-1.923 1.79m15.318-2.895.734 2.894-1.923-1.789h2.377l-1.923 1.79M12.5 20.889l.735 2.894-1.924-1.789h2.378l-1.924 1.79m.735-13.562.735 2.894-1.924-1.789h2.378l-1.924 1.79"/>
+  </g>
+  <defs>
+    <clipPath id="pi-flag-NU-a">
+      <path fill="#fff" d="M0 9h50v32H0z"/>
+    </clipPath>
+  </defs>
+</svg>

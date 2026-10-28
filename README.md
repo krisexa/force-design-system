@@ -1,7 +1,7 @@
 # Exaforce Design System
 
 The one place brand-level web assets live: design tokens, the three self-hosted
-typefaces, the logo and icon sets, customer and investor logos, favicons, the
+typefaces, the logo and icon sets, the product icon library, customer and investor logos, favicons, the
 ribbon shader presets, and the theme script. Every Exaforce web property takes
 them from here. Nothing brand-level is copied into a site by hand again.
 
@@ -38,6 +38,8 @@ src/
   tokens.css              tokens only, for bundlers
   assets/logo/            wordmark and mark: black, white, currentColor, auto (OS dark mode)
   assets/icons/           platform (15, first-party marks), nav (47), trust (8), chain (3), ui (3)
+  assets/product-icons/   the product's own icons (UI, entities, apps, services, flags, graph nodes) + index.json; generated, see *Product icons*
+  assets/avatars/exabots/ eight full-spectrum Exabot avatars + index.json and usage guide
   assets/favicon/         favicon.svg/.ico, apple-touch-icon, PWA icons, site.webmanifest
   assets/logos/customers/ 25 customers × -color / -black / -white (fixed ink, never recolour)
   assets/logos/investors/ 9 investor marks, currentColor
@@ -51,6 +53,7 @@ src/
   site/404.html           served for any missing path; names the published channels
 scripts/
   logo-variants.mjs       regenerates the white/current/auto logo files from the black sources
+  product-icons.mjs       regenerates assets/product-icons/ from the product icon sheet exports
   check.mjs               invariants (no literals in semantic, every var() resolves, dark parity, font files)
   build.mjs               produces dist/; with --releases, also every tagged release (the Pages build)
 ```
@@ -298,6 +301,65 @@ The black files are the sources; `npm run logos` regenerates the other three
 from them. Three slightly different wordmark SVGs were in circulation; this is
 the canonical one. The mark is normalised from pure black to the wordmark's
 `#231f20` so the two match side by side.
+
+## Exabot avatars
+
+Eight full-spectrum Exabot avatars live in `assets/avatars/exabots/`:
+Force, Lightning bolt, Long pill, Magnifying glass, Shield, Spark, Square and
+Triangle. `index.json` lists their labels, relative file paths and dimensions.
+See [avatar usage](src/assets/avatars/exabots/README.md) for sizing and brand rules.
+The supplied SVGs are preserved unchanged, with their gradients and opaque faces.
+
+After the next release, hosted usage is:
+
+```html
+<img
+  src="https://exaforce-design-system.pages.dev/v1/assets/avatars/exabots/full-spectrum/exabot-force-full-spectrum.svg"
+  width="64" height="64" alt="Force Exabot"
+>
+```
+
+Bundler usage (use the imported URL as an image source):
+
+```js
+import forceAvatar from '@exaforce/design-system/assets/avatars/exabots/full-spectrum/exabot-force-full-spectrum.svg?url';
+```
+
+Use `alt=""` when an adjacent label already conveys the same information.
+These paths become available on the host only after an authorized release.
+
+## Product icons
+
+`assets/product-icons/` is the Exaforce product's own icon library, so
+marketing can rebuild any product screen or graph faithfully: 1,944 SVGs from
+the two product icon sheets ("Exaforce Icons" and "Exaforce Graph Node Types
+and Icons"). Each file is named by the product's icon name:
+
+| Path | Set |
+|---|---|
+| `exf/…` | product UI (549) |
+| `severity/…` | severity badges |
+| `entity/<category>/…` | entity types, with category background and icon colours |
+| `app/…` | SaaS apps (415) |
+| `aws/`, `azure/`, `google/`, `github/`, `oracle/`, `atlassian/`, `box/`, `okta/`, `idp/` | cloud and identity services |
+| `flag/<iso code>.svg` | country flags (lower-case code; `flag/unknown.svg`) |
+| `graph/<Category>/…` | graph node categories and sub-categories (fill, border, icon colours) |
+| `graph/property/…`, `graph/operation/…` | graph node enrichments and edge operations |
+
+`index.json` lists every icon with its set, `label`, search `aliases`,
+`colors` and `flags` (`noDarkMode`, `allowBackground`, …) exactly as the
+product uses them. Colours are hex, or `var(--exf-color-<hue>-<step>)`: the
+same Tailwind palette step as this system's `--<hue>-<step>`. `themeable: true`
+means the drawing is `currentColor` only, so it takes the text colour when
+inlined; the rest carry fixed brand colours. The sheet-to-node-type mappings
+are deliberately not included.
+
+The sheets are the source; never edit the output. To refresh, export every tab
+the script lists (File → Download → CSV per tab, or Sheets API JSON) and run
+`npm run product-icons -- <exports…>`. It deletes and rewrites the folder,
+refuses a partial export, rejects SVGs with scripts or external references,
+and warns about rows it skipped or names the sheets reuse for different
+drawings.
 
 ## Migrating a site
 

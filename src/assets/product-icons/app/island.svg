@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="#fff" d="M12 23c6.075 0 11-4.925 11-11S18.075 1 12 1 1 5.925 1 12s4.925 11 11 11Z"/>
+  <path fill="url(#pi-app-island-island_a)" d="M3.442 13.123c.026-.42.205-.849.553-1.105.414-.304.976-.319 1.497-.322 2.17-.011 4.338-.016 6.507-.015 2.17.001 4.339.006 6.509.015.52 0 1.082.018 1.496.322.35.256.527.684.554 1.105a2.94 2.94 0 0 1-.172 1.077 8.111 8.111 0 0 0 .3-3.918 8.261 8.261 0 0 0-1.583-3.623 8.715 8.715 0 0 0-3.12-2.545A9.106 9.106 0 0 0 12 3.2a9.106 9.106 0 0 0-3.983.914 8.715 8.715 0 0 0-3.12 2.545 8.261 8.261 0 0 0-1.582 3.623 8.112 8.112 0 0 0 .3 3.918 2.924 2.924 0 0 1-.173-1.077Z"/>
+  <path fill="url(#pi-app-island-island_b)" d="M20.796 13.51c-.027-.44-.21-.889-.57-1.157-.424-.318-1.002-.334-1.537-.337-2.231-.012-4.46-.017-6.69-.016-2.228.002-4.458.007-6.688.016-.536 0-1.113.019-1.539.337-.358.268-.542.717-.568 1.157-.027.44.087.877.233 1.292A8.795 8.795 0 0 0 5.33 17.93a9.041 9.041 0 0 0 3.022 2.119 9.222 9.222 0 0 0 7.281.005 9.162 9.162 0 0 0 3.023-2.127 8.917 8.917 0 0 0 1.906-3.126c.145-.415.26-.852.233-1.292Z"/>
+  <defs>
+    <radialGradient id="pi-app-island-island_b" cx="0" cy="0" r="1" gradientTransform="matrix(-16.149 -.05509 .03833 -10.7309 5.422 11.9)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#57B98E"/>
+      <stop offset="1" stop-color="#136342"/>
+    </radialGradient>
+    <linearGradient id="pi-app-island-island_a" x1="11.999" x2="11.999" y1="2.788" y2="12.019" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#136342"/>
+      <stop offset=".17" stop-color="#176846" stop-opacity=".94"/>
+      <stop offset=".39" stop-color="#227653" stop-opacity=".78"/>
+      <stop offset=".65" stop-color="#358E68" stop-opacity=".5"/>
+      <stop offset=".92" stop-color="#4FAE85" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#57B98E" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>

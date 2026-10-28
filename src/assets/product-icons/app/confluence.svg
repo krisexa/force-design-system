@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-app-confluence-confluence_gradient_0)" d="M1.78 17.133c-.228.37-.485.803-.687 1.146a.694.694 0 0 0 .23.935l4.557 2.81a.693.693 0 0 0 .535.085.71.71 0 0 0 .435-.322c.184-.306.417-.702.667-1.125 1.807-2.963 3.638-2.6 6.909-1.045l4.521 2.144a.699.699 0 0 0 .943-.35l2.17-4.894a.686.686 0 0 0 .018-.525.712.712 0 0 0-.351-.391c-.953-.449-2.85-1.332-4.55-2.164-6.185-2.983-11.404-2.786-15.398 3.696Z"/>
+  <path fill="url(#pi-app-confluence-confluence_gradient_1)" d="M22.218 6.009c.23-.37.486-.802.686-1.145a.705.705 0 0 0 .075-.525.702.702 0 0 0-.318-.424l-4.551-2.81a.699.699 0 0 0-.97.236c-.18.306-.418.703-.668 1.125-1.813 2.977-3.627 2.614-6.901 1.06L5.054 1.38a.712.712 0 0 0-.543-.031.695.695 0 0 0-.401.364L1.94 6.622a.704.704 0 0 0 .333.919c.957.45 2.854 1.331 4.55 2.164 6.169 2.983 11.404 2.787 15.395-3.696Z"/>
+  <defs>
+    <linearGradient id="pi-app-confluence-confluence_gradient_0" x1="21.914" x2="8.144" y1="23.479" y2="15.565" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0052CC"/>
+      <stop offset=".92" stop-color="#2380FB"/>
+      <stop offset="1" stop-color="#2684FF"/>
+    </linearGradient>
+    <linearGradient id="pi-app-confluence-confluence_gradient_1" x1="2.082" x2="15.856" y1="-.34" y2="7.574" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0052CC"/>
+      <stop offset=".92" stop-color="#2380FB"/>
+      <stop offset="1" stop-color="#2684FF"/>
+    </linearGradient>
+  </defs>
+</svg>

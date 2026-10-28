@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-azure-virtual-machines-azure_virtualmachine_param_0)" d="M22.147 2.21H1.613a.733.733 0 0 0-.733.733v13.2c0 .405.328.734.733.734h20.534a.733.733 0 0 0 .733-.734v-13.2a.733.733 0 0 0-.733-.733Z"/>
+  <path fill="#50E6FF" d="M15.546 7.404v4.266l-3.666 2.151V9.543l3.666-2.139Z"/>
+  <path fill="#C3F1FF" d="M15.546 7.404 11.88 9.556 8.213 7.404l3.667-2.138 3.666 2.138Z"/>
+  <path fill="#9CEBFF" d="M11.88 9.556v4.265L8.213 11.67V7.404l3.667 2.152Z"/>
+  <path fill="#C3F1FF" d="m8.213 11.67 3.667-2.127v4.278L8.213 11.67Z"/>
+  <path fill="#9CEBFF" d="M15.546 11.67 11.88 9.543v4.278l3.666-2.151Z"/>
+  <path fill="url(#pi-azure-virtual-machines-azure_virtualmachine_param_1)" d="M16.292 21.313c-2.175-.342-2.261-1.906-2.261-4.436H9.717c0 2.53-.074 4.094-2.25 4.436a1.222 1.222 0 0 0-1.087 1.223h11a1.222 1.222 0 0 0-1.088-1.223Z"/>
+  <defs>
+    <linearGradient id="pi-azure-virtual-machines-azure_virtualmachine_param_0" x1="11.88" x2="11.88" y1="16.877" y2="2.21" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0078D4"/>
+      <stop offset=".82" stop-color="#5EA0EF"/>
+    </linearGradient>
+    <linearGradient id="pi-azure-virtual-machines-azure_virtualmachine_param_1" x1="11.88" x2="11.88" y1="22.536" y2="16.877" gradientUnits="userSpaceOnUse">
+      <stop offset=".15" stop-color="#CCC"/>
+      <stop offset="1" stop-color="#707070"/>
+    </linearGradient>
+  </defs>
+</svg>

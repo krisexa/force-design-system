@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <g clip-path="url(#pi-app-azugua-azugua_path_0)">
+    <circle cx="12" cy="12" r="12" fill="#00ACED"/>
+    <path fill="#fff" fill-rule="evenodd" d="M16.286 16.2V18H18v-6a6 6 0 1 0-1.714 4.2Zm0-4.2a4.286 4.286 0 1 1-8.572 0 4.286 4.286 0 0 1 8.572 0Z" clip-rule="evenodd"/>
+  </g>
+  <defs>
+    <clipPath id="pi-app-azugua-azugua_path_0">
+      <path fill="#fff" d="M0 0h24v24H0z"/>
+    </clipPath>
+  </defs>
+</svg>

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-azure-ai-services-azure_ai_gradient_0)" d="M8.068 16.537s-2.029-.697.31-2.517a14.69 14.69 0 0 1 7.076-2.438l2.158-4.222a20.93 20.93 0 0 0-9.3.79c-4.76 1.656-9.516 6.845-6.215 9.547a5.368 5.368 0 0 0 5.971-1.16Z"/>
+  <path fill="url(#pi-azure-ai-services-azure_ai_gradient_1)" d="M11.265 12.517V9.575a.58.58 0 0 1 .58-.58h.387a1.054 1.054 0 1 0 0-.455h-.393a1.037 1.037 0 0 0-1.035 1.035v1.845h-.733a1.054 1.054 0 1 0 0 .455h.733v.808c.15-.058.3-.113.46-.166Zm1.995-4.35a.6.6 0 1 1-.006 0h.006Zm-4.217 4.08a.6.6 0 1 1 0-1.201.6.6 0 0 1 0 1.2Z"/>
+  <path fill="url(#pi-azure-ai-services-azure_ai_gradient_2)" d="M5.06 13.018H1.845a6.777 6.777 0 0 0-.268.454H5.06a1.036 1.036 0 0 0 1.035-1.035v-.253a1.055 1.055 0 1 0-.455 0v.252a.581.581 0 0 1-.58.582Zm.208-1.86a.6.6 0 1 1 .175.423.602.602 0 0 1-.175-.425v.001Z"/>
+  <path fill="url(#pi-azure-ai-services-azure_ai_gradient_3)" d="M7.254 15.537H6.26a1.055 1.055 0 1 0 0 .455h1.1a.785.785 0 0 1-.107-.455Zm-2.022.828a.6.6 0 1 1 0-1.202.6.6 0 0 1 0 1.202Z"/>
+  <path fill="url(#pi-azure-ai-services-azure_ai_gradient_4)" d="M2.097 17.697c7.66 4.657 15.093 3.134 20.77-9.799.089-.205.134-.426.133-.65V3.405A.405.405 0 0 0 22.596 3h-3.683a.866.866 0 0 0-.759.532C14.328 14.342 5.138 19.04 2.097 17.697Z"/>
+  <defs>
+    <radialGradient id="pi-azure-ai-services-azure_ai_gradient_0" cx="0" cy="0" r="1" gradientTransform="rotate(59.822 -3.02 7.306) scale(11.8867 16.736)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9CEBFF"/>
+      <stop offset=".667" stop-color="#50E6FF"/>
+      <stop offset="1" stop-color="#32BEDD"/>
+    </radialGradient>
+    <radialGradient id="pi-azure-ai-services-azure_ai_gradient_1" cx="0" cy="0" r="1" gradientTransform="translate(3.297 5.566) scale(22.5009)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E7F9FF"/>
+      <stop offset=".277" stop-color="#C3F1FF"/>
+      <stop offset=".408" stop-color="#C1F1FF"/>
+      <stop offset="1" stop-color="#9CEBFF"/>
+    </radialGradient>
+    <radialGradient id="pi-azure-ai-services-azure_ai_gradient_2" cx="0" cy="0" r="1" gradientTransform="translate(3.297 5.566) scale(22.5009)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E7F9FF"/>
+      <stop offset=".277" stop-color="#C3F1FF"/>
+      <stop offset=".408" stop-color="#C1F1FF"/>
+      <stop offset="1" stop-color="#9CEBFF"/>
+    </radialGradient>
+    <radialGradient id="pi-azure-ai-services-azure_ai_gradient_3" cx="0" cy="0" r="1" gradientTransform="translate(3.297 5.566) scale(22.5009)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E7F9FF"/>
+      <stop offset=".277" stop-color="#C3F1FF"/>
+      <stop offset=".408" stop-color="#C1F1FF"/>
+      <stop offset="1" stop-color="#9CEBFF"/>
+    </radialGradient>
+    <linearGradient id="pi-azure-ai-services-azure_ai_gradient_4" x1="19.516" x2="5.605" y1="6.175" y2="21.771" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0078D4"/>
+      <stop offset=".712" stop-color="#005BA1"/>
+      <stop offset="1" stop-color="#003067"/>
+    </linearGradient>
+  </defs>
+</svg>

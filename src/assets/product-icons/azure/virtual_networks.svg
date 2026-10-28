@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="url(#pi-azure-virtual-networks-azure_virtualnetwork_param_0)" d="M16.196 13.41a1.38 1.38 0 1 0 0-2.758 1.38 1.38 0 0 0 0 2.758Z"/>
+  <path fill="url(#pi-azure-virtual-networks-azure_virtualnetwork_param_1)" d="M11.796 13.422a1.38 1.38 0 1 0 0-2.758 1.38 1.38 0 0 0 0 2.758Z"/>
+  <path fill="url(#pi-azure-virtual-networks-azure_virtualnetwork_param_2)" d="M7.397 13.422a1.38 1.38 0 1 0 0-2.758 1.38 1.38 0 0 0 0 2.758Z"/>
+  <path fill="#50E6FF" d="m8.398 17.557-.789.791a.357.357 0 0 1-.504 0l-5.843-5.826a.713.713 0 0 1-.002-1.009l.79-.791 6.348 6.33a.357.357 0 0 1 0 .505Z"/>
+  <path fill="#1490DF" d="m7.49 5.75.791.79a.357.357 0 0 1 0 .504L2.045 13.3l-.792-.79a.714.714 0 0 1-.001-1.008l5.734-5.75a.357.357 0 0 1 .505-.001Z"/>
+  <path fill="#50E6FF" d="m21.447 10.711.79.791a.714.714 0 0 1-.002 1.01l-5.843 5.826a.357.357 0 0 1-.505 0l-.789-.792a.357.357 0 0 1 0-.505l6.349-6.33Z"/>
+  <path fill="#1490DF" d="m22.234 12.503-.792.79-6.238-6.256a.356.356 0 0 1 .001-.505l.8-.797a.357.357 0 0 1 .504 0l5.735 5.75a.713.713 0 0 1-.002 1.01l-.008.008Z"/>
+  <defs>
+    <linearGradient id="pi-azure-virtual-networks-azure_virtualnetwork_param_0" x1="15.223" x2="17.176" y1="11.063" y2="13.011" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#86D633"/>
+      <stop offset="1" stop-color="#5E9624"/>
+    </linearGradient>
+    <linearGradient id="pi-azure-virtual-networks-azure_virtualnetwork_param_1" x1="8.396" x2="10.334" y1="11.555" y2="13.505" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#86D633"/>
+      <stop offset="1" stop-color="#5E9624"/>
+    </linearGradient>
+    <linearGradient id="pi-azure-virtual-networks-azure_virtualnetwork_param_2" x1="3.996" x2="5.934" y1="11.555" y2="13.505" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#86D633"/>
+      <stop offset="1" stop-color="#5E9624"/>
+    </linearGradient>
+  </defs>
+</svg>

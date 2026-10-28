@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill="#2684FF" d="M1.791 2.132a.7.7 0 0 0-.7.812l2.97 18.028a.951.951 0 0 0 .93.794H19.24a.7.7 0 0 0 .7-.587l2.97-18.232a.7.7 0 0 0-.7-.811L1.79 2.132Zm12.505 13.03H9.75L8.518 8.729h6.88l-1.102 6.433Z"/>
+  <path fill="url(#pi-app-bitbucket-bitbucket_gradient_0)" d="M21.946 8.72h-6.56l-1.101 6.428H9.74l-5.365 6.368c.17.147.387.229.611.23h14.24a.699.699 0 0 0 .699-.586l2.02-12.44Z"/>
+  <defs>
+    <linearGradient id="pi-app-bitbucket-bitbucket_gradient_0" x1="4927.6" x2="2908.79" y1="424.225" y2="2989.52" gradientUnits="userSpaceOnUse">
+      <stop offset=".18" stop-color="#0052CC"/>
+      <stop offset="1" stop-color="#2684FF"/>
+    </linearGradient>
+  </defs>
+</svg>
