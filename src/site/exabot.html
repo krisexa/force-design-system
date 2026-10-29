@@ -28,7 +28,13 @@ body { margin: 0; background: var(--color-surface); color: var(--color-text-prim
 .stage { position: relative; border: 1px solid var(--color-border); border-radius: var(--radius-surface-lg); min-height: 36rem; display: grid; place-items: center; overflow: hidden; background: radial-gradient(circle at 50% 45%, var(--color-accent-subtle) 0, transparent 55%), var(--color-surface-raised); }
 @media (min-width: 881px) { .stage { position: sticky; top: calc(var(--header-height) + var(--space-md)); height: min(47rem, calc(100vh - var(--header-height) - 2 * var(--space-md))); } }
 @media (max-width: 880px) { .stage { min-height: 24rem; } }
-.hint { position: absolute; left: var(--space-sm); top: var(--space-sm); right: var(--space-sm); font-size: var(--type-small-size); color: var(--color-text-muted); }
+.stage-bar { position: absolute; left: var(--space-sm); right: var(--space-sm); top: var(--space-sm); display: flex; justify-content: space-between; align-items: center; gap: var(--space-xs); flex-wrap: wrap; z-index: 1; }
+.hint { margin: 0; font-size: var(--type-small-size); color: var(--color-text-muted); }
+/* Placement preview: the bot moves to either edge of the stage so auto
+   bubble placement and the mirrored poses can be checked. */
+.stage exa-bot { margin-inline: var(--space-xl); }
+.stage[data-pos='left'] exa-bot { justify-self: start; }
+.stage[data-pos='right'] exa-bot { justify-self: end; }
 .log { position: absolute; left: 0; right: 0; bottom: 3.5rem; text-align: center; font: var(--type-small-size)/1.4 var(--font-family-mono); color: var(--color-text-muted); pointer-events: none; min-height: 1.4em; }
 .acts { position: absolute; left: var(--space-sm); right: var(--space-sm); bottom: var(--space-sm); display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2xs); }
 
@@ -71,7 +77,7 @@ input[type=text], input[type=password] { width: 100%; }
 details { margin-top: var(--space-xs); font-size: var(--type-small-size); color: var(--color-text-secondary); }
 details summary { cursor: pointer; color: var(--color-text-primary); font-weight: var(--font-weight-medium); }
 details pre, .code { font: var(--type-small-size)/1.55 var(--font-family-mono); background: var(--color-surface-subtle); color: var(--color-text-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-control); padding: var(--space-xs); margin: var(--space-xs) 0 0; white-space: pre; overflow-x: auto; }
-.code { width: 100%; height: 11rem; resize: vertical; }
+.code { width: 100%; height: 11rem; resize: vertical; white-space: pre-wrap; overflow-wrap: anywhere; }
 .note { font-size: var(--type-small-size); color: var(--color-text-muted); margin: var(--space-xs) 0 0; }
 .note code { font-family: var(--font-family-mono); }
 .head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); margin-bottom: var(--space-xs); }
@@ -97,8 +103,11 @@ __SITE_HEADER__
   </div>
 
   <div class="grid">
-    <section class="stage" aria-label="Preview">
-      <p class="hint">Click to poke, drag to fling, hold to pet.</p>
+    <section class="stage" id="stage" data-pos="center" aria-label="Preview">
+      <div class="stage-bar">
+        <p class="hint">Click to poke, drag to fling, hold to pet.</p>
+        <div class="seg" role="group" aria-label="Preview position" id="pos"><button type="button" data-v="left" aria-pressed="false">Left</button><button type="button" data-v="center" aria-pressed="true">Centre</button><button type="button" data-v="right" aria-pressed="false">Right</button></div>
+      </div>
       <exa-bot id="bot" size="180"></exa-bot>
       <div class="log" id="log" aria-live="polite"></div>
       <div class="acts" role="group" aria-label="Try a reaction">
@@ -124,7 +133,8 @@ __SITE_HEADER__
           <div class="row"><label for="size">Size</label><input type="range" id="size" min="64" max="260" step="4" value="180"><output id="sizeO" for="size">180px</output></div>
           <div class="row"><label for="dz">Spins after</label><input type="range" id="dz" min="3" max="8" value="5"><output id="dzO" for="dz">5 taps</output></div>
           <div class="row"><label for="sl">Falls asleep after</label><select id="sl"><option value="0" selected>Never</option><option value="20">20 seconds</option><option value="45">45 seconds</option><option value="120">2 minutes</option></select></div>
-          <div class="row"><span class="lbl" id="bubL">Speech bubble</span><div class="seg" role="group" aria-labelledby="bubL" id="bub"><button type="button" data-v="right" aria-pressed="true">Right</button><button type="button" data-v="top" aria-pressed="false">Top</button></div></div>
+          <div class="row"><span class="lbl" id="bubL">Speech bubble</span><div class="seg" role="group" aria-labelledby="bubL" id="bub"><button type="button" data-v="auto" aria-pressed="true">Auto</button><button type="button" data-v="right" aria-pressed="false">Right</button><button type="button" data-v="left" aria-pressed="false">Left</button><button type="button" data-v="top" aria-pressed="false">Top</button></div></div>
+          <p class="note">Auto puts the bubble wherever it fits (right, then left, then top) and turns its poses toward that side. Try it with the preview position.</p>
         </div>
         <div class="sec">
           <h2>What it says <small>one line per tap</small></h2>
@@ -241,14 +251,16 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
   const ON_BY_DEFAULT = ['drag', 'pet'], OPT_IN = ['peek', 'scroll'];
   const $ = s => document.querySelector(s);
   const bot = $('#bot');
-  let S = { ex: { pose: 'happy', px: 512, bg: 'clear', bubble: true, text: '' }, size: 180, dz: 5, sl: 0, bub: 'right', fmt: 'html', lines: DEF_LINES.join('\n'), ln: {}, on: ON_BY_DEFAULT.slice() };
+  let S = { ex: { pose: 'happy', px: 512, bg: 'clear', bubble: true, text: '' }, size: 180, dz: 5, sl: 0, bub: 'auto', pos: 'center', fmt: 'html', lines: DEF_LINES.join('\n'), ln: {}, on: ON_BY_DEFAULT.slice() };
   Object.keys(DEF_LN).forEach(k => S.ln[k] = DEF_LN[k][1]);
   const KEY = 'exabot-playground-3';
   try {
     const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+    /* 1.4 saved "right" as the default; auto replaced it in 1.5. */
+    if (saved && !saved.v && saved.bub === 'right') saved.bub = 'auto';
     if (saved) { S = Object.assign(S, saved, { ex: Object.assign({}, S.ex, saved.ex || {}), ln: Object.assign({}, S.ln, saved.ln || {}) }); }
   } catch (e) {}
-  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(Object.assign({ v: 2 }, S))); } catch (e) {} };
   $('#lns').innerHTML = Object.keys(DEF_LN).map(k => `<label for="ln-${k}">${DEF_LN[k][0]}</label><input type="text" id="ln-${k}" data-ln="${k}">`).join('');
 
   const pressed = (group, v) => group.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === v)));
@@ -269,6 +281,8 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
     document.querySelectorAll('#checks input').forEach(c => c.checked = S.on.includes(c.dataset.k));
     document.querySelectorAll('[data-ln]').forEach(i => { if (document.activeElement !== i) i.value = S.ln[i.dataset.ln]; });
     pressed($('#bub'), S.bub);
+    pressed($('#pos'), S.pos);
+    $('#stage').dataset.pos = S.pos;
     pressed($('#fmt'), S.fmt);
     $('#size').value = S.size; $('#sizeO').textContent = S.size + 'px';
     $('#dz').value = S.dz; $('#dzO').textContent = S.dz + ' taps';
@@ -287,7 +301,7 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
     if (enabled().length) attrs.push(`enable="${enabled().join(' ')}"`);
     if (S.dz !== 5) attrs.push(`dizzy-after="${S.dz}"`);
     if (S.sl) attrs.push(`sleep="${S.sl}"`);
-    if (S.bub !== 'right') attrs.push('bubble="top"');
+    if (S.bub !== 'auto') attrs.push(`bubble="${S.bub}"`);
     let code;
     if (S.fmt === 'astro') {
       code = `---\nimport exabotSvg from '${SVG_IMPORT}';\n---\n<exa-bot src={exabotSvg} ${attrs.join(' ')}></exa-bot>\n<script>\n  import '@exaforce/design-system/exabot.js';\n<\/script>`;
@@ -301,6 +315,7 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
   }
 
   $('#bub').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.bub = b.dataset.v; apply(); } });
+  $('#pos').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.pos = b.dataset.v; apply(); } });
   $('#fmt').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.fmt = b.dataset.v; apply(); } });
   $('#size').addEventListener('input', e => { S.size = +e.target.value; apply(); });
   $('#dz').addEventListener('input', e => { S.dz = +e.target.value; apply(); });
@@ -354,7 +369,9 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
   const xesc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const measure = (() => { const c = document.createElement('canvas').getContext('2d'); return (txt, size) => { c.font = `500 ${size}px ${FONT}`; return c.measureText(txt).width; }; })();
   let RAW = '', pn = 0;
-  function botSVG(pose, pal) {
+  /* dir -1 mirrors the pose and its marks for a bubble on the left, the way
+     the live component does; the artwork itself is never flipped. */
+  function botSVG(pose, pal, dir) {
     const P = POSES[pose], id = 'xp' + (++pn);
     const doc = new DOMParser().parseFromString(RAW.replace(/exabot-/g, id + '-'), 'image/svg+xml');
     const svg = doc.documentElement, NS = 'http://www.w3.org/2000/svg';
@@ -369,21 +386,24 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
       const cx = els.reduce((a, e) => a + +e.getAttribute('cx'), 0) / els.length;
       const h = 2 * Math.max(...els.map(e => +e.getAttribute('ry')));
       const [lx, ly] = P.look || [0, 0], E = P.eyes || {};
-      eyes.setAttribute('transform', `translate(${lx} ${ly + (E.dy || 0) * h}) translate(${cx} ${cy}) scale(${E.sx || 1} ${E.sy || 1}) translate(${-cx} ${-cy})`);
-      [P.e1, P.e2].forEach((t, i) => {
+      eyes.setAttribute('transform', `translate(${lx * dir} ${ly + (E.dy || 0) * h}) translate(${cx} ${cy}) scale(${E.sx || 1} ${E.sy || 1}) translate(${-cx} ${-cy})`);
+      (dir < 0 ? [P.e2, P.e1] : [P.e1, P.e2]).forEach((t, i) => {
         const e = els[i]; if (!t || !e) return;
         const ex = +e.getAttribute('cx'), ey = +e.getAttribute('cy');
         e.setAttribute('transform', `translate(${ex} ${ey}) scale(${t.sx} ${t.sy}) translate(${-ex} ${-ey}) ` + (e.getAttribute('transform') || ''));
       });
     }
     const body = doc.createElementNS(NS, 'g');
-    if (P.rot) body.setAttribute('transform', `rotate(${P.rot} 256 256)`);
+    if (P.rot) body.setAttribute('transform', `rotate(${P.rot * dir} 256 256)`);
     [...svg.childNodes].filter(n => n.nodeName !== 'defs' && n.nodeName !== 'title').forEach(n => body.appendChild(n));
     svg.appendChild(body);
     let extra = '';
-    if (P.mark === 'q') extra = `<text x="448" y="96" font-family="${xesc(FONT)}" font-weight="700" font-size="112" fill="${pal.accent}">?</text>`;
-    if (P.mark === 'zzz') extra = `<g font-family="${xesc(FONT)}" font-weight="700" fill="${pal.accent}"><text x="420" y="104" font-size="70">z</text><text x="462" y="62" font-size="56" opacity=".8">z</text><text x="496" y="28" font-size="44" opacity=".6">z</text></g>`;
-    if (P.mark === 'hearts') extra = `<g fill="${HEART_FILL}"><path d="${HEART}" transform="translate(96 20) scale(2.6)"/><path d="${HEART}" transform="translate(372 4) scale(2)" opacity=".75"/><path d="${HEART}" transform="translate(430 96) scale(1.5)" opacity=".55"/></g>`;
+    /* Marks are drawn for the right-hand corner; mirrored, each glyph keeps
+       its reading direction and only its position flips. */
+    const X = (x, w) => dir < 0 ? 512 - x - w : x;
+    if (P.mark === 'q') extra = `<text x="${X(448, 60)}" y="96" font-family="${xesc(FONT)}" font-weight="700" font-size="112" fill="${pal.accent}">?</text>`;
+    if (P.mark === 'zzz') extra = `<g font-family="${xesc(FONT)}" font-weight="700" fill="${pal.accent}"><text x="${X(420, 40)}" y="104" font-size="70">z</text><text x="${X(462, 32)}" y="62" font-size="56" opacity=".8">z</text><text x="${X(496, 26)}" y="28" font-size="44" opacity=".6">z</text></g>`;
+    if (P.mark === 'hearts') extra = `<g fill="${HEART_FILL}"><path d="${HEART}" transform="translate(${X(96, 62)} 20) scale(2.6)"/><path d="${HEART}" transform="translate(${X(372, 48)} 4) scale(2)" opacity=".75"/><path d="${HEART}" transform="translate(${X(430, 36)} 96) scale(1.5)" opacity=".55"/></g>`;
     svg.removeAttribute('role');
     const inner = new XMLSerializer().serializeToString(svg).replace(/^<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
     return inner + extra;
@@ -393,18 +413,21 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
     const pad = 48, BOT = 512, fs = 34, px = 22, bh = Math.round(fs * 1.4 + 24);
     const text = (o.text || '').trim(), bubble = o.bubble && text;
     const bw = bubble ? Math.ceil(measure(text, fs)) + px * 2 : 0;
-    const top = bubble && S.bub === 'top';
+    /* Auto has no page to measure against in a file, so it exports as right. */
+    const top = bubble && S.bub === 'top', left = bubble && S.bub === 'left', dir = left ? -1 : 1;
     const cw = bubble && !top ? BOT - 24 + bw : Math.max(BOT, bw);
     const W = cw + pad * 2, H = BOT + pad * 2 + (top ? bh + 16 : 0);
-    const bx = top ? (W - BOT) / 2 : pad, by = pad + (top ? bh + 16 : 0);
+    const bx = top ? (W - BOT) / 2 : left ? pad + bw - 24 : pad, by = pad + (top ? bh + 16 : 0);
     let out = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">`;
     out += `<defs><filter id="xsh" x="-20%" y="-30%" width="140%" height="180%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#18181b" flood-opacity=".14"/></filter></defs>`;
     if (o.bg !== 'clear') out += `<rect width="${W}" height="${H}" fill="${pal.page}"/>`;
-    out += `<svg x="${bx}" y="${by}" width="${BOT}" height="${BOT}" viewBox="0 0 512 512" overflow="visible">${botSVG(pose, pal)}</svg>`;
+    out += `<svg x="${bx}" y="${by}" width="${BOT}" height="${BOT}" viewBox="0 0 512 512" overflow="visible">${botSVG(pose, pal, dir)}</svg>`;
     if (bubble) {
-      const x = top ? (W - bw) / 2 : bx + BOT - 24, y = top ? pad : by + (POSES[pose].mark ? 150 : 20);
-      const r = 24, bl = top ? 24 : 8;
-      const d = `M${x + r} ${y}H${x + bw - r}A${r} ${r} 0 0 1 ${x + bw} ${y + r}V${y + bh - r}A${r} ${r} 0 0 1 ${x + bw - r} ${y + bh}H${x + bl}A${bl} ${bl} 0 0 1 ${x} ${y + bh - bl}V${y + r}A${r} ${r} 0 0 1 ${x + r} ${y}Z`;
+      const x = top ? (W - bw) / 2 : left ? pad : bx + BOT - 24, y = top ? pad : by + (POSES[pose].mark ? 150 : 20);
+      /* The small corner is the one nearest the bot: bottom-left for a
+         bubble on the right, bottom-right for one on the left. */
+      const r = 24, bl = top || left ? r : 8, br = left ? 8 : r;
+      const d = `M${x + r} ${y}H${x + bw - r}A${r} ${r} 0 0 1 ${x + bw} ${y + r}V${y + bh - br}A${br} ${br} 0 0 1 ${x + bw - br} ${y + bh}H${x + bl}A${bl} ${bl} 0 0 1 ${x} ${y + bh - bl}V${y + r}A${r} ${r} 0 0 1 ${x + r} ${y}Z`;
       out += `<path d="${d}" fill="${pal.bubble}" stroke="${pal.edge}" stroke-width="2" filter="url(#xsh)"/>`;
       out += `<text x="${x + px}" y="${y + bh / 2}" dominant-baseline="central" font-family="${xesc(FONT)}" font-weight="500" font-size="${fs}" fill="${pal.text}">${xesc(text)}</text>`;
     }

@@ -27,7 +27,12 @@
  *                   pet-line, fling-line, scroll-line.
  *   dizzy-after     taps within 1.5 s that make it spin. Default 5.
  *   sleep           idle seconds before it naps. Default 0 = never.
- *   bubble          "right" (default) | "top".
+ *   bubble          "auto" (default) | "right" | "left" | "top". Auto picks,
+ *                   each time it speaks, the first of right, left, top that
+ *                   fits inside the viewport and any clipping (overflow)
+ *                   ancestor, so a bot on either side of a layout works.
+ *                   Directional poses (peek, confused, the "?" and "zzz")
+ *                   mirror to face the same way, toward the room.
  *   disable         any of "drag pet" (both on by default).
  *   enable          any of "peek scroll" (both off by default): shut its eyes
  *                   while a password field has focus; react to page scroll.
@@ -64,6 +69,7 @@ if (typeof customElements !== 'undefined' && !customElements.get('exa-bot')) {
   /* Sparks: the theme accent plus three hues taken from the artwork itself. */
   const SPARK = ['var(--_accent)', '#F97BFF', '#FDB03F', '#22D6FF'];
   const OPT_IN = ['peek', 'scroll'];
+  const SIDES = ['right', 'left', 'top'];
   const RM = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
   const all = new Set();
   const svgs = new Map();
@@ -107,7 +113,7 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
 .asleep .eyes{transform:scaleY(.14);transition:transform .5s}
 .asleep .bot{animation-duration:7s}
 .hop svg{animation:hop .72s cubic-bezier(.3,1.3,.5,1)}
-@keyframes hop{0%{transform:translateY(0) rotate(0)}35%{transform:translateY(-20%) rotate(-8deg)}70%{transform:translateY(0) rotate(4deg)}100%{transform:none}}
+@keyframes hop{0%{transform:translateY(0) rotate(0)}35%{transform:translateY(-20%) rotate(calc(-8deg*var(--dir,1)))}70%{transform:translateY(0) rotate(calc(4deg*var(--dir,1)))}100%{transform:none}}
 .dizzy svg{animation:dizzy 1.25s ease-in-out;transform-origin:50% 50%}
 @keyframes dizzy{0%{transform:rotate(0)}20%{transform:rotate(360deg)}40%{transform:rotate(340deg)}55%{transform:rotate(375deg)}70%{transform:rotate(352deg)}100%{transform:rotate(360deg)}}
 .stretch .body{animation:stretch 1.1s ease-in-out}
@@ -117,10 +123,10 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
 .celebrate svg{animation:celebrate 1.1s cubic-bezier(.3,1.2,.5,1)}
 @keyframes celebrate{0%{transform:none}18%{transform:translateY(-24%) scale(1.06) rotate(-7deg)}36%{transform:translateY(0) scale(1.1,.9)}56%{transform:translateY(-14%) rotate(7deg)}76%{transform:translateY(0) scale(1.05,.95)}100%{transform:none}}
 .celebrate .eyes,.pet .eyes{transform:translateY(-8%) scaleY(.34)}
-.confused .bot{rotate:16deg}
-.confused .eye-1{transform:scaleY(.55)}
-.confused .eye-2{transform:scale(1.12)}
-.peek .bot{rotate:-14deg}
+.confused .bot{rotate:calc(16deg*var(--dir,1))}
+.confused .eye-1,.mirror.confused .eye-2{transform:scaleY(.55)}
+.confused .eye-2,.mirror.confused .eye-1{transform:scale(1.12)}
+.peek .bot{rotate:calc(-14deg*var(--dir,1))}
 .peek .eyes{transform:scaleY(.1)}
 .dragging .eyes{scale:1.14}
 .pet .bot{animation:sway .9s ease-in-out infinite}
@@ -130,15 +136,18 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
 .zzz span{display:inline-block;animation:zz 2.4s infinite;opacity:0}
 .zzz span:nth-child(2){animation-delay:.8s;font-size:.8em}
 .zzz span:nth-child(3){animation-delay:1.6s;font-size:.62em}
-@keyframes zz{0%{opacity:0;transform:translate(0,4px)}30%{opacity:1}100%{opacity:0;transform:translate(6px,-10px)}}
+@keyframes zz{0%{opacity:0;transform:translate(0,4px)}30%{opacity:1}100%{opacity:0;transform:translate(calc(6px*var(--dir,1)),-10px)}}
 .q{font-size:calc(var(--s)*.2);right:2%;top:-8%}
+.mirror .zzz{right:auto;left:-4%}
+.mirror .q{right:auto;left:2%}
 .confused .q{animation:q 1.6s ease-out}
 @keyframes q{0%{opacity:0;transform:translateY(6px) scale(.6)}15%{opacity:1;transform:translateY(0) scale(1.1)}25%{transform:scale(1)}80%{opacity:1}100%{opacity:0;transform:translateY(-4px)}}
 .say{position:absolute;z-index:2;white-space:nowrap;background:var(--_bubble-bg);color:var(--_bubble-fg);border:1px solid var(--_bubble-border);box-shadow:var(--_bubble-shadow);padding:5px 10px;font:500 max(12px,calc(var(--s)*.095))/1.4 var(--_font);letter-spacing:-.005em;opacity:0;pointer-events:none;transition:opacity .18s,transform .25s cubic-bezier(.3,1.5,.5,1)}
-:host(:not([bubble="top"])) .say{left:calc(100% - 6px);top:4%;border-radius:12px 12px 12px 4px;transform:translateY(6px) scale(.9);transform-origin:left bottom}
-:host([bubble="top"]) .say{left:50%;bottom:calc(100% + 4px);border-radius:12px;transform:translate(-50%,6px) scale(.9);transform-origin:center bottom}
+[data-side="right"] .say{left:calc(100% - 6px);top:4%;border-radius:12px 12px 12px 4px;transform:translateY(6px) scale(.9);transform-origin:left bottom}
+[data-side="left"] .say{right:calc(100% - 6px);top:4%;border-radius:12px 12px 4px 12px;transform:translateY(6px) scale(.9);transform-origin:right bottom}
+[data-side="top"] .say{left:50%;bottom:calc(100% + 4px);border-radius:12px;transform:translate(-50%,6px) scale(.9);transform-origin:center bottom}
 .saying .say{opacity:1;transform:none}
-:host([bubble="top"]) .saying .say{transform:translate(-50%,0)}
+[data-side="top"].saying .say{transform:translate(-50%,0)}
 .spark{position:absolute;left:50%;top:44%;width:7px;height:7px;margin:-3.5px;border-radius:50%;background:var(--h);pointer-events:none;animation:spark .75s cubic-bezier(.2,.8,.3,1) forwards}
 @keyframes spark{0%{transform:translate(0,0) scale(.4);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1);opacity:0}}
 .heart{position:absolute;top:18%;left:var(--x);color:var(--_heart);font:400 calc(var(--s)*.13)/1 var(--_font);pointer-events:none;animation:heart 1.1s ease-out forwards}
@@ -147,14 +156,15 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
 `;
 
   class ExaBot extends HTMLElement {
-    static get observedAttributes() { return ['size', 'label', 'src']; }
-    constructor() { super(); this.attachShadow({ mode: 'open' }); this._clicks = []; this._line = 0; this._deep = false; }
+    static get observedAttributes() { return ['size', 'label', 'src', 'bubble']; }
+    constructor() { super(); this.attachShadow({ mode: 'open' }); this._clicks = []; this._line = 0; this._deep = false; this._dir = 1; }
     connectedCallback() { if (!this._btn) this._render(); all.add(this); listen(); }
     disconnectedCallback() { all.delete(this); if (!all.size) unlisten(); }
     attributeChangedCallback(n) {
       if (!this._btn) return;
       if (n === 'src') this._load();
       else if (n === 'label') this._btn.setAttribute('aria-label', this._label());
+      else if (n === 'bubble') this._orient();
       else this._applySize();
     }
     get lines() {
@@ -182,6 +192,7 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
       this._bot = this.shadowRoot.querySelector('.bot');
       this._bubble = this.shadowRoot.querySelector('.say');
       this._drag = this.shadowRoot.querySelector('.drag');
+      b.dataset.side = SIDES.includes(this.getAttribute('bubble')) ? this.getAttribute('bubble') : 'right';
       this._applySize();
       this._load();
 
@@ -295,9 +306,31 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
         this._btn.appendChild(sp); setTimeout(() => sp.remove(), 800);
       }
     }
+    /* Which side the bubble goes, and which way directional poses face. The
+       bubble is measured with its new text before it shows, against the
+       viewport narrowed to the nearest ancestor that clips overflow. */
+    _orient() {
+      if (!this._btn) return;
+      const mode = this.getAttribute('bubble');
+      const r = this.getBoundingClientRect();
+      let side = SIDES.includes(mode) ? mode : null;
+      if (!side) {
+        let lo = 0, hi = innerWidth;
+        for (let el = this.parentElement; el && el !== document.body && el !== document.documentElement; el = el.parentElement) {
+          if (getComputedStyle(el).overflowX === 'visible') continue;
+          const c = el.getBoundingClientRect(); lo = Math.max(lo, c.left); hi = Math.min(hi, c.right); break;
+        }
+        const bw = this._bubble.offsetWidth, m = 8;
+        side = r.right - 6 + bw <= hi - m ? 'right' : r.left + 6 - bw >= lo + m ? 'left' : 'top';
+      }
+      this._dir = side === 'left' || (side === 'top' && r.left + r.width / 2 > innerWidth / 2) ? -1 : 1;
+      this._btn.dataset.side = side;
+      this._btn.classList.toggle('mirror', this._dir < 0);
+      this._btn.style.setProperty('--dir', this._dir);
+    }
     say(t) {
       if (!this._btn) return;
-      this._bubble.textContent = t; this._btn.classList.add('saying');
+      this._bubble.textContent = t; this._orient(); this._btn.classList.add('saying');
       clearTimeout(this._sayT); this._sayT = setTimeout(() => this._btn.classList.remove('saying'), 1900);
     }
     wake() {
@@ -306,25 +339,27 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
       this._btn.classList.remove('asleep'); if (this._look) this._look.style.transform = '';
       this._btn.classList.add('wake'); setTimeout(() => this._btn.classList.remove('wake'), 700);
     }
-    sleep() { if (!this._btn) return; this._btn.classList.add('asleep'); if (this._look) this._look.style.transform = 'translate(0px,6px)'; }
+    sleep() { if (!this._btn) return; this._orient(); this._btn.classList.add('asleep'); if (this._look) this._look.style.transform = 'translate(0px,6px)'; }
     hop() { if (!this._btn) return; this.wake(); this._flash('hop', 750); this._sparks(); }
     stretch() { if (!this._btn) return; this._flash('stretch', 1200); }
     dizzy() { if (!this._btn) return; this.wake(); this._flash('dizzy', 1300); this._sparks(); this.say(this._ln('dizzy')); this._emit('dizzy'); }
     celebrate(t) { if (!this._btn) return; this.wake(); this._flash('celebrate', 1150); this._sparks(14, 1.25); this.say(t || this._ln('celebrate')); this._emit('celebrate'); }
     confused(t) {
       if (!this._btn) return;
-      this.wake(); const b = this._btn; b.classList.remove('confused'); void b.offsetWidth; b.classList.add('confused');
-      if (this._look) this._look.style.transform = 'translate(6px,-8px)';
+      this.wake(); this.say(t || this._ln('confused'));
+      const b = this._btn; b.classList.remove('confused'); void b.offsetWidth; b.classList.add('confused');
+      if (this._look) this._look.style.transform = `translate(${6 * this._dir}px,-8px)`;
       clearTimeout(this._cT); this._cT = setTimeout(() => b.classList.remove('confused'), 1600);
-      this.say(t || this._ln('confused')); this._emit('confused');
+      this._emit('confused');
     }
     /* Called directly, peek() always works; only the automatic password-field
        trigger is opt-in (enable="peek"). */
     peek(on = true) {
       if (!this._btn) return;
-      this.wake(); this._btn.classList.toggle('peek', !!on);
-      if (this._look) this._look.style.transform = on ? 'translate(-14px,10px)' : '';
+      this.wake();
       if (on) this.say(this._ln('peek')); else this._btn.classList.remove('saying');
+      this._btn.classList.toggle('peek', !!on);
+      if (this._look) this._look.style.transform = on ? `translate(${-14 * this._dir}px,10px)` : '';
       this._emit('peek', { on: !!on });
     }
     poke() {

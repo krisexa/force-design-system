@@ -4,6 +4,29 @@ Audit date: 2026-10-19. Shared rules: [AGENTS.md](AGENTS.md).
 
 ## Current handoff
 
+- Task (2026-10-29): 1.5.0, support the Exabot on the right of a layout. User
+  approved. Owner: Claude Code; released for handoff when this turn completes.
+- Branch / base: `main`, `acb1f9b` (1.4.0, tagged and deployed; CI passed,
+  `/v1/exabot.js` and `/exabot` verified live).
+- Changes: `src/exabot.js` adds `bubble="left"` and `bubble="auto"` (new
+  default: right, else left, else top, measured against the viewport and the
+  nearest overflow-clipping ancestor each time it speaks); peek/confused/hop
+  poses, look offsets and "?"/"zzz" mirror with the bubble side; artwork never
+  flipped. Playground: Auto/Right/Left/Top, Left/Centre/Right stage preview,
+  wrapped embed code, mirrored left-bubble export, saved 1.4 "right" default
+  migrated to auto. README, package `1.5.0`.
+- Validation (Node 25.9.0): `npm run build`, `npm test` (2 pass),
+  `git diff --check`, `npm run build:pages` with remote tag fetch (all channels
+  1.1.0–1.4.0) PASS. Headless Chrome: auto picks right/left/top correctly for
+  left edge, right edge and a clipping container; fixed sides honoured; mirror
+  class, look offsets and "?" side follow; screenshots of both sides, playground
+  right placement, left-bubble export. Not run: touch devices, manual keyboard
+  and reduced-motion pass, Astro build.
+- User authorized commit and push. Next step: check CI/tag v1.5.0 and hosted
+  `/v1/exabot.js` version.
+
+## Previous 1.4.0 handoff
+
 - Task (2026-10-29): bring the interactive Exabot from the playground artifact
   into the design system. User approved the recommended changes: hosted/bundled
   component instead of pasted snippets, full-spectrum Force only (other forms
