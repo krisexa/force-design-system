@@ -4,6 +4,40 @@ Audit date: 2026-10-19. Shared rules: [AGENTS.md](AGENTS.md).
 
 ## Current handoff
 
+- Task (2026-10-29): bring the interactive Exabot from the playground artifact
+  into the design system. User approved the recommended changes: hosted/bundled
+  component instead of pasted snippets, full-spectrum Force only (other forms
+  stay static SVGs), colours from tokens so light/dark/system work, safer
+  defaults, playground in the styleguide. Consumers: primary site and Astro sites.
+- Owner: Claude Code; released for handoff when this turn completes.
+- Branch / base: `main`, `8830da2` (1.3.0). Working tree was clean on entry.
+- Changes: new `src/exabot.js` (`<exa-bot>` ES module; fetches the existing
+  full-spectrum Force SVG relative to itself or from a `src` attribute;
+  `--exabot-*` custom properties fall back to semantic tokens then light
+  literals; drag/pet on, peek/scroll opt-in via `enable`, sleep off by default;
+  page listeners/timers only while a bot exists, pointer tracking per frame).
+  New `src/site/exabot.html` playground (Customize / Export PNG, SVG, emoji
+  zip / Embed for HTML and Astro). `scripts/build.mjs` publishes
+  `<channel>/exabot.js` and `/exabot.html` (+ cache header); header nav link;
+  package export `./exabot.js`, version `1.4.0`; root and avatar READMEs.
+- Validation (Node 25.9.0, not 22): `npm run build` (incl. check), `npm test`
+  (2 pass), `git diff --check` PASS. Headless Chrome: artwork mounts, unique
+  IDs per instance, double import harmless, bubble/accent follow tokens in
+  light and `data-theme=dark`, `--exabot-accent` override, literal fallback
+  without tokens, events/methods, peek only when enabled, no console errors;
+  playground light/dark/system screenshots, no overflow at 390 px, embed
+  snippets, PNG/SVG/emoji-zip export. Fixed export breaking on the SVG's
+  `inkscape:` attributes. exabot.js is 25 KB raw, ~8 KB gzip.
+- Not run: real touch devices, manual keyboard/screen-reader pass, reduced
+  motion in a browser (CSS rules reviewed only), Astro/Vite integration build,
+  Existing dist/ was backed up to the session scratchpad.
+- User authorized commit and push on 2026-10-29. Remote main matched the base
+  and v1.4.0 was absent; `npm run build:pages` PASS with remote tag fetch and
+  all historical channels 1.1.0–1.3.0. Next step: check CI/tag v1.4.0, verify
+  `/v1/exabot.js` and `/exabot.html` on the host, then wire the primary site.
+
+## Previous 1.3.0 handoff
+
 - Task (2026-10-28): add the 24 supplied cool, soft-pastel and dark-spectrum
   Exabot SVGs. Owner: Codex; released for handoff. User authorized asset additions.
 - Branch / base: `main`, `2a39f5926f16bb1ff6aabd5d5a57e561d468da3e`.

@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Exabot playground · Exaforce Design System</title>
+<meta name="description" content="Tune the interactive Exabot, try its reactions, export images and copy the embed code.">
+<link rel="icon" href="__MAJOR__/assets/favicon/favicon.svg" type="image/svg+xml">
+<!-- Consumes the built system the way a site would: theme first, then the
+     stylesheet, then the component module from the same channel. -->
+<script src="__MAJOR__/theme.js"></script>
+<link rel="stylesheet" href="__MAJOR__/exaforce.css">
+<script type="module" src="__MAJOR__/exabot.js"></script>
+<style>
+/* Semantic tokens only, so the bot is previewed against the same light and
+   dark values a site gives it. Export colours are the one exception: an image
+   file has no theme, so they are fixed in the script below. */
+__SITE_HEADER_CSS__
+body { margin: 0; background: var(--color-surface); color: var(--color-text-primary); }
+.wrap { max-width: var(--measure-wide); margin-inline: auto; padding: var(--space-lg) var(--space-gutter) var(--space-2xl); }
+.masthead { margin-bottom: var(--space-md); }
+.masthead h1 { margin: 0; }
+.masthead p { margin: var(--space-2xs) 0 0; color: var(--color-text-secondary); max-width: var(--measure-prose); }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) 22rem; gap: var(--space-md); align-items: start; }
+@media (max-width: 880px) { .grid { grid-template-columns: 1fr; } }
+
+.stage { position: relative; border: 1px solid var(--color-border); border-radius: var(--radius-surface-lg); min-height: 36rem; display: grid; place-items: center; overflow: hidden; background: radial-gradient(circle at 50% 45%, var(--color-accent-subtle) 0, transparent 55%), var(--color-surface-raised); }
+@media (min-width: 881px) { .stage { position: sticky; top: calc(var(--header-height) + var(--space-md)); height: min(47rem, calc(100vh - var(--header-height) - 2 * var(--space-md))); } }
+@media (max-width: 880px) { .stage { min-height: 24rem; } }
+.hint { position: absolute; left: var(--space-sm); top: var(--space-sm); right: var(--space-sm); font-size: var(--type-small-size); color: var(--color-text-muted); }
+.log { position: absolute; left: 0; right: 0; bottom: 3.5rem; text-align: center; font: var(--type-small-size)/1.4 var(--font-family-mono); color: var(--color-text-muted); pointer-events: none; min-height: 1.4em; }
+.acts { position: absolute; left: var(--space-sm); right: var(--space-sm); bottom: var(--space-sm); display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2xs); }
+
+.btn { border: 1px solid var(--color-border-strong); background: var(--color-control-secondary); color: var(--color-text-primary); border-radius: var(--radius-button); padding: var(--space-3xs) var(--space-sm); font: inherit; font-size: var(--type-small-size); font-weight: var(--font-weight-medium); cursor: pointer; transition: background-color var(--motion-fast); }
+.btn:hover { background: var(--color-control-secondary-hover); }
+.btn.primary { background: var(--color-control); border-color: var(--color-control); color: var(--color-control-text); }
+.btn.primary:hover { background: var(--color-control-hover); }
+.seg { display: inline-flex; padding: var(--space-3xs); border-radius: var(--radius-pill); background: var(--color-surface-sunken); border: 1px solid var(--color-border); gap: var(--space-3xs); }
+.seg button { border: 0; background: none; padding: var(--space-3xs) var(--space-xs); border-radius: var(--radius-pill); font: inherit; font-size: var(--type-small-size); color: var(--color-text-secondary); cursor: pointer; }
+.seg button[aria-pressed='true'] { background: var(--color-control-selected); color: var(--color-text-primary); }
+
+.panel { border: 1px solid var(--color-border); border-radius: var(--radius-surface-lg); background: var(--color-surface-raised); display: flex; flex-direction: column; overflow: hidden; }
+@media (min-width: 881px) { .panel { position: sticky; top: calc(var(--header-height) + var(--space-md)); max-height: min(47rem, calc(100vh - var(--header-height) - 2 * var(--space-md))); } }
+.tabs { display: flex; gap: var(--space-3xs); padding: var(--space-2xs); border-bottom: 1px solid var(--color-border); background: var(--color-surface-subtle); flex: none; }
+.tabs button { flex: 1; border: 0; background: none; padding: var(--space-2xs); border-radius: var(--radius-control); font: inherit; font-size: var(--type-small-size); font-weight: var(--font-weight-medium); color: var(--color-text-secondary); cursor: pointer; }
+.tabs button:hover { color: var(--color-text-primary); }
+.tabs button[aria-selected='true'] { background: var(--color-surface-raised); color: var(--color-text-primary); box-shadow: var(--elevation-sm); }
+.tabpanel { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.tabpanel[hidden] { display: none; }
+.sec { padding: var(--space-sm) var(--space-md); border-top: 1px solid var(--color-border); }
+.sec:first-child { border-top: 0; }
+.sec h2 { font-family: var(--font-family-heading); font-size: var(--type-body-size); font-weight: var(--font-weight-semibold); margin: 0 0 var(--space-xs); }
+.sec h2 small { font-family: var(--font-family-base); font-weight: var(--font-weight-regular); font-size: var(--type-small-size); color: var(--color-text-muted); margin-left: var(--space-2xs); }
+.row { display: flex; align-items: center; gap: var(--space-xs); margin-top: var(--space-xs); }
+.row:first-of-type { margin-top: 0; }
+.row > label, .row > .lbl { flex: 1; font-size: var(--type-small-size); color: var(--color-text-secondary); }
+.row output { font: var(--type-small-size) var(--font-family-mono); color: var(--color-text-muted); min-width: 4.5em; text-align: right; }
+input[type=range] { flex: 1.4; accent-color: var(--color-accent); }
+select, input[type=text], input[type=password], textarea { background: var(--color-field-surface); color: var(--color-field-text); border: 1px solid var(--color-field-border); border-radius: var(--radius-control); padding: var(--space-3xs) var(--space-xs); font: inherit; font-size: var(--type-small-size); }
+select { flex: 1.4; }
+textarea { width: 100%; resize: vertical; line-height: 1.55; }
+input[type=text], input[type=password] { width: 100%; }
+.checks { display: grid; gap: var(--space-2xs); }
+.checks label { display: flex; align-items: center; gap: var(--space-xs); font-size: var(--type-small-size); color: var(--color-text-secondary); }
+.checks input { accent-color: var(--color-accent); margin: 0; }
+.field { display: block; margin-top: var(--space-sm); }
+.field > span { display: block; font-size: var(--type-small-size); color: var(--color-text-secondary); margin-bottom: var(--space-3xs); }
+.lns { display: grid; grid-template-columns: auto 1fr; gap: var(--space-2xs) var(--space-xs); align-items: center; margin-top: var(--space-xs); }
+.lns label { font-size: var(--type-small-size); color: var(--color-text-secondary); }
+details { margin-top: var(--space-xs); font-size: var(--type-small-size); color: var(--color-text-secondary); }
+details summary { cursor: pointer; color: var(--color-text-primary); font-weight: var(--font-weight-medium); }
+details pre, .code { font: var(--type-small-size)/1.55 var(--font-family-mono); background: var(--color-surface-subtle); color: var(--color-text-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-control); padding: var(--space-xs); margin: var(--space-xs) 0 0; white-space: pre; overflow-x: auto; }
+.code { width: 100%; height: 11rem; resize: vertical; }
+.note { font-size: var(--type-small-size); color: var(--color-text-muted); margin: var(--space-xs) 0 0; }
+.note code { font-family: var(--font-family-mono); }
+.head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); margin-bottom: var(--space-xs); }
+.head h2 { margin: 0; }
+
+.poses { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2xs); }
+.poses button { border: 1px solid var(--color-border); background: var(--color-surface-subtle); border-radius: var(--radius-control); padding: var(--space-3xs) var(--space-3xs) var(--space-2xs); display: flex; flex-direction: column; align-items: center; gap: var(--space-3xs); font: inherit; font-size: var(--type-micro-size); color: var(--color-text-muted); cursor: pointer; }
+.poses img { width: 2.75rem; height: 2.75rem; display: block; }
+.poses button[aria-pressed='true'] { border-color: var(--color-accent); background: var(--color-accent-subtle); color: var(--color-text-primary); }
+.expv { margin-top: var(--space-xs); border: 1px solid var(--color-border); border-radius: var(--radius-control); height: 9.5rem; display: grid; place-items: center; overflow: hidden; background: var(--color-surface-subtle); }
+.expv img { max-width: 92%; max-height: 8.25rem; display: block; }
+.dlrow { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: var(--space-2xs); margin-top: var(--space-sm); }
+.dlrow .btn { padding-inline: var(--space-2xs); }
+.status { font-size: var(--type-small-size); color: var(--color-text-muted); margin: var(--space-xs) 0 0; min-height: 1.4em; }
+</style>
+</head>
+<body>
+__SITE_HEADER__
+<div class="wrap">
+  <div class="masthead">
+    <h1 class="type-h3">Exabot playground</h1>
+    <p>The interactive full-spectrum Force Exabot from <code>exabot.js</code>. Tune it, try its reactions, export images, then copy the embed code. Use Theme in the header to check light and dark.</p>
+  </div>
+
+  <div class="grid">
+    <section class="stage" aria-label="Preview">
+      <p class="hint">Click to poke, drag to fling, hold to pet.</p>
+      <exa-bot id="bot" size="180"></exa-bot>
+      <div class="log" id="log" aria-live="polite"></div>
+      <div class="acts" role="group" aria-label="Try a reaction">
+        <button class="btn" type="button" data-do="poke">Poke</button>
+        <button class="btn" type="button" data-do="dizzy">Spin</button>
+        <button class="btn" type="button" data-do="celebrate">Celebrate</button>
+        <button class="btn" type="button" data-do="confused">Confused</button>
+        <button class="btn" type="button" data-do="stretch">Stretch</button>
+        <button class="btn" type="button" data-do="sleep">Nap</button>
+      </div>
+    </section>
+
+    <aside class="panel" aria-label="Settings">
+      <div class="tabs" role="tablist" aria-label="Settings sections">
+        <button type="button" role="tab" id="tab-custom" aria-controls="tp-custom" aria-selected="true" data-tab="custom">Customize</button>
+        <button type="button" role="tab" id="tab-export" aria-controls="tp-export" aria-selected="false" tabindex="-1" data-tab="export">Export</button>
+        <button type="button" role="tab" id="tab-embed" aria-controls="tp-embed" aria-selected="false" tabindex="-1" data-tab="embed">Embed</button>
+      </div>
+
+      <div class="tabpanel" role="tabpanel" id="tp-custom" aria-labelledby="tab-custom">
+        <div class="sec">
+          <h2>Behavior</h2>
+          <div class="row"><label for="size">Size</label><input type="range" id="size" min="64" max="260" step="4" value="180"><output id="sizeO" for="size">180px</output></div>
+          <div class="row"><label for="dz">Spins after</label><input type="range" id="dz" min="3" max="8" value="5"><output id="dzO" for="dz">5 taps</output></div>
+          <div class="row"><label for="sl">Falls asleep after</label><select id="sl"><option value="0" selected>Never</option><option value="20">20 seconds</option><option value="45">45 seconds</option><option value="120">2 minutes</option></select></div>
+          <div class="row"><span class="lbl" id="bubL">Speech bubble</span><div class="seg" role="group" aria-labelledby="bubL" id="bub"><button type="button" data-v="right" aria-pressed="true">Right</button><button type="button" data-v="top" aria-pressed="false">Top</button></div></div>
+        </div>
+        <div class="sec">
+          <h2>What it says <small>one line per tap</small></h2>
+          <textarea id="lines" rows="6" aria-label="Lines, one per tap"></textarea>
+          <details>
+            <summary>Lines for other reactions</summary>
+            <div class="lns" id="lns"></div>
+          </details>
+        </div>
+        <div class="sec">
+          <h2>Interactions</h2>
+          <div class="checks" id="checks">
+            <label><input type="checkbox" data-k="drag">Drag and fling</label>
+            <label><input type="checkbox" data-k="pet">Press and hold to pet</label>
+            <label><input type="checkbox" data-k="peek">Shuts its eyes on password fields</label>
+            <label><input type="checkbox" data-k="scroll">Watches the page scroll</label>
+          </div>
+          <p class="note">Drag and pet are on by default; password peeking and scroll reactions are opt-in.</p>
+          <label class="field"><span>Peekaboo test: type a password</span><input type="password" id="pw" autocomplete="off" placeholder="Not a real password"></label>
+        </div>
+      </div>
+
+      <div class="tabpanel" role="tabpanel" id="tp-export" aria-labelledby="tab-export" hidden>
+        <div class="sec">
+          <h2>Export image</h2>
+          <div class="poses" id="poses" role="group" aria-label="Pose"></div>
+          <div class="expv"><img id="expimg" alt="Export preview"></div>
+          <div class="row" style="margin-top:var(--space-sm)"><span class="lbl" id="expxL">Size</span><div class="seg" role="group" aria-labelledby="expxL" id="expx"><button type="button" data-v="256" aria-pressed="false">256</button><button type="button" data-v="512" aria-pressed="true">512</button><button type="button" data-v="1024" aria-pressed="false">1024</button></div></div>
+          <div class="row"><span class="lbl" id="expbgL">Background</span><div class="seg" role="group" aria-labelledby="expbgL" id="expbg"><button type="button" data-v="clear" aria-pressed="true">None</button><button type="button" data-v="light" aria-pressed="false">Light</button><button type="button" data-v="dark" aria-pressed="false">Dark</button></div></div>
+          <div class="checks" style="margin-top:var(--space-sm)"><label><input type="checkbox" id="expbub" checked>Include speech bubble</label></div>
+          <input type="text" id="exptxt" aria-label="Bubble text" style="margin-top:var(--space-2xs)">
+          <div class="dlrow">
+            <button class="btn primary" type="button" data-dl="png">Download PNG</button>
+            <button class="btn" type="button" data-dl="svg">SVG</button>
+            <button class="btn" type="button" data-dl="zip" title="Every pose at 256px, transparent, no bubble">Emoji pack</button>
+          </div>
+          <p class="status" id="dlstatus" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="tabpanel" role="tabpanel" id="tp-embed" aria-labelledby="tab-embed" hidden>
+        <div class="sec">
+          <div class="head">
+            <h2>Embed code</h2>
+            <div class="seg" role="group" aria-label="Site type" id="fmt"><button type="button" data-v="html" aria-pressed="true">HTML</button><button type="button" data-v="astro" aria-pressed="false">Astro</button></div>
+          </div>
+          <textarea class="code" id="code" readonly spellcheck="false" aria-label="Embed code"></textarea>
+          <div class="row" style="margin-top:var(--space-xs)"><p class="note" id="codeNote" style="flex:1;margin:0"></p><button class="btn primary" type="button" id="copy">Copy code</button></div>
+          <details>
+            <summary>Colours and theming</summary>
+            <p>The bot reads the site's semantic tokens, so with <code>tokens.css</code> loaded it follows light, dark and system themes on its own. Override any of these on the element or an ancestor:</p>
+            <pre>exa-bot {
+  --exabot-accent: var(--color-accent);
+  --exabot-focus: var(--color-focus);
+  --exabot-bubble-surface: var(--color-surface-raised);
+  --exabot-bubble-text: var(--color-text-primary);
+  --exabot-bubble-border: var(--color-border);
+  --exabot-bubble-shadow: var(--elevation-md);
+  --exabot-font: var(--font-family-base);
+  --exabot-heart: #ec4899;
+}</pre>
+          </details>
+          <details>
+            <summary>Calling it from the page</summary>
+            <pre>const bot = document.querySelector('exa-bot');
+bot.say('Welcome back');
+bot.celebrate();           // e.g. after a form submits
+bot.confused('Page not found');
+// also: poke(), hop(), dizzy(), peek(true|false),
+//       stretch(), sleep(), wake()
+bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
+// also: exabot-dizzy, -celebrate, -confused, -peek,
+//       -fling, -pet</pre>
+          </details>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(() => {
+  const tabs = [...document.querySelectorAll('[role=tab]')];
+  function show(name, focus) {
+    tabs.forEach(t => {
+      const on = t.dataset.tab === name;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+      if (on && focus) t.focus();
+    });
+    try { localStorage.setItem('exabot-playground-tab', name); } catch (e) {}
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => show(t.dataset.tab));
+    t.addEventListener('keydown', e => {
+      const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (d) { e.preventDefault(); show(tabs[(i + d + tabs.length) % tabs.length].dataset.tab, true); }
+    });
+  });
+  let start = 'custom';
+  try { start = localStorage.getItem('exabot-playground-tab') || 'custom'; } catch (e) {}
+  if (tabs.some(t => t.dataset.tab === start)) show(start);
+})();
+</script>
+<script>
+(() => {
+  const SVG_PATH = '__MAJOR__/assets/avatars/exabots/full-spectrum/exabot-force-full-spectrum.svg';
+  const SVG_IMPORT = '@exaforce/design-system/assets/avatars/exabots/full-spectrum/exabot-force-full-spectrum.svg?url';
+  const DEF_LINES = ['Hi there!', 'Ready when you are.', 'Ask me anything.', 'Boop.', 'That tickles.', 'Still here.', 'Want a summary of today?'];
+  const DEF_LN = { dizzy: ['Spin', 'Whoa… dizzy.'], celebrate: ['Celebrate', 'Nice work!'], confused: ['Confused', 'Hmm?'], peek: ['Peekaboo', 'Not looking!'], pet: ['Pet', 'Mmm, that’s nice.'], fling: ['Fling', 'Wheee!'], scroll: ['Back to top', 'Welcome back up!'] };
+  /* Which interactions are on unless switched off, and which are opt-in;
+     mirrors the component's defaults. */
+  const ON_BY_DEFAULT = ['drag', 'pet'], OPT_IN = ['peek', 'scroll'];
+  const $ = s => document.querySelector(s);
+  const bot = $('#bot');
+  let S = { ex: { pose: 'happy', px: 512, bg: 'clear', bubble: true, text: '' }, size: 180, dz: 5, sl: 0, bub: 'right', fmt: 'html', lines: DEF_LINES.join('\n'), ln: {}, on: ON_BY_DEFAULT.slice() };
+  Object.keys(DEF_LN).forEach(k => S.ln[k] = DEF_LN[k][1]);
+  const KEY = 'exabot-playground-3';
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (saved) { S = Object.assign(S, saved, { ex: Object.assign({}, S.ex, saved.ex || {}), ln: Object.assign({}, S.ln, saved.ln || {}) }); }
+  } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+  $('#lns').innerHTML = Object.keys(DEF_LN).map(k => `<label for="ln-${k}">${DEF_LN[k][0]}</label><input type="text" id="ln-${k}" data-ln="${k}">`).join('');
+
+  const pressed = (group, v) => group.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === v)));
+  const linesArr = () => S.lines.split('\n').map(s => s.trim()).filter(Boolean).map(s => s.replace(/\|/g, '/'));
+  const esc = s => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  const disabled = () => ON_BY_DEFAULT.filter(k => !S.on.includes(k));
+  const enabled = () => OPT_IN.filter(k => S.on.includes(k));
+
+  function apply() {
+    bot.setAttribute('size', S.size);
+    bot.setAttribute('dizzy-after', S.dz);
+    bot.setAttribute('sleep', S.sl);
+    bot.setAttribute('bubble', S.bub);
+    bot.setAttribute('lines', linesArr().join('|'));
+    Object.keys(DEF_LN).forEach(k => bot.setAttribute(k + '-line', S.ln[k] || DEF_LN[k][1]));
+    disabled().length ? bot.setAttribute('disable', disabled().join(' ')) : bot.removeAttribute('disable');
+    enabled().length ? bot.setAttribute('enable', enabled().join(' ')) : bot.removeAttribute('enable');
+    document.querySelectorAll('#checks input').forEach(c => c.checked = S.on.includes(c.dataset.k));
+    document.querySelectorAll('[data-ln]').forEach(i => { if (document.activeElement !== i) i.value = S.ln[i.dataset.ln]; });
+    pressed($('#bub'), S.bub);
+    pressed($('#fmt'), S.fmt);
+    $('#size').value = S.size; $('#sizeO').textContent = S.size + 'px';
+    $('#dz').value = S.dz; $('#dzO').textContent = S.dz + ' taps';
+    $('#sl').value = String(S.sl);
+    if ($('#lines').value !== S.lines) $('#lines').value = S.lines;
+    buildCode(); renderExport(); save();
+  }
+
+  /* The snippet only ever carries attributes that differ from the defaults,
+     plus a script reference: the component itself is never pasted. */
+  function buildCode() {
+    const L = linesArr(), attrs = [`size="${S.size}"`];
+    if (L.join('|') !== DEF_LINES.join('|')) attrs.push(`lines="${esc(L.join('|'))}"`);
+    Object.keys(DEF_LN).forEach(k => { if (S.ln[k] && S.ln[k] !== DEF_LN[k][1]) attrs.push(`${k}-line="${esc(S.ln[k])}"`); });
+    if (disabled().length) attrs.push(`disable="${disabled().join(' ')}"`);
+    if (enabled().length) attrs.push(`enable="${enabled().join(' ')}"`);
+    if (S.dz !== 5) attrs.push(`dizzy-after="${S.dz}"`);
+    if (S.sl) attrs.push(`sleep="${S.sl}"`);
+    if (S.bub !== 'right') attrs.push('bubble="top"');
+    let code;
+    if (S.fmt === 'astro') {
+      code = `---\nimport exabotSvg from '${SVG_IMPORT}';\n---\n<exa-bot src={exabotSvg} ${attrs.join(' ')}></exa-bot>\n<script>\n  import '@exaforce/design-system/exabot.js';\n<\/script>`;
+      $('#codeNote').innerHTML = 'Bundled by Astro from the installed package. Load <code>tokens.css</code> as usual for theming.';
+    } else {
+      const src = new URL('__MAJOR__/exabot.js', location.href).href;
+      code = `<exa-bot ${attrs.join(' ')}></exa-bot>\n<script type="module" src="${src}"><\/script>`;
+      $('#codeNote').innerHTML = 'Load the script once per page; add more <code>&lt;exa-bot&gt;</code> tags to show several.';
+    }
+    $('#code').value = code;
+  }
+
+  $('#bub').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.bub = b.dataset.v; apply(); } });
+  $('#fmt').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.fmt = b.dataset.v; apply(); } });
+  $('#size').addEventListener('input', e => { S.size = +e.target.value; apply(); });
+  $('#dz').addEventListener('input', e => { S.dz = +e.target.value; apply(); });
+  $('#sl').addEventListener('change', e => { S.sl = +e.target.value; apply(); });
+  $('#lines').addEventListener('input', e => { S.lines = e.target.value; apply(); });
+  $('#lns').addEventListener('input', e => { const k = e.target.dataset.ln; if (k) { S.ln[k] = e.target.value; apply(); } });
+  $('#checks').addEventListener('change', e => { const k = e.target.dataset.k; if (!k) return; S.on = S.on.filter(x => x !== k); if (e.target.checked) S.on.push(k); apply(); });
+  $('.acts').addEventListener('click', e => {
+    const b = e.target.closest('[data-do]'); if (!b) return;
+    const d = b.dataset.do;
+    if (d === 'stretch') { bot.wake(); bot.stretch(); } else bot[d]();
+  });
+
+  let logT;
+  const log = t => { $('#log').textContent = t; clearTimeout(logT); logT = setTimeout(() => $('#log').textContent = '', 2200); };
+  bot.addEventListener('exabot-poke', e => log('exabot-poke · “' + e.detail.line + '”'));
+  ['dizzy', 'celebrate', 'confused', 'fling', 'pet'].forEach(n => bot.addEventListener('exabot-' + n, () => log('exabot-' + n)));
+  bot.addEventListener('exabot-peek', e => log('exabot-peek · ' + (e.detail.on ? 'on' : 'off')));
+
+  $('#copy').addEventListener('click', async () => {
+    const ta = $('#code'), btn = $('#copy');
+    let ok = false;
+    try { await navigator.clipboard.writeText(ta.value); ok = true; } catch (e) {
+      ta.focus(); ta.select(); try { ok = document.execCommand('copy'); } catch (e2) {}
+    }
+    btn.textContent = ok ? 'Copied' : 'Select and copy';
+    if (!ok) { ta.focus(); ta.select(); }
+    setTimeout(() => btn.textContent = 'Copy code', 1600);
+  });
+
+  /* ---------- export ----------
+     Image files have no theme, so these are fixed: the light and dark values
+     of --color-accent, --color-surface, --color-surface-raised,
+     --color-text-primary and --color-border, as sRGB hex. */
+  const PAL = {
+    light: { accent: '#4f46e5', page: '#fafafa', bubble: '#ffffff', text: '#09090b', edge: '#e4e4e7' },
+    dark: { accent: '#818cf8', page: '#09090b', bubble: '#18181b', text: '#fafafa', edge: '#27272a' },
+  };
+  const HEART_FILL = '#ec4899';
+  const FONT = '-apple-system,"Segoe UI",Helvetica,Arial,sans-serif';
+  const HEART = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
+  const POSES = {
+    neutral:   { name: 'Neutral',   line: () => linesArr()[0] || 'Hi there!' },
+    happy:     { name: 'Happy',     eyes: { sy: .34, dy: -.08 }, line: () => S.ln.celebrate },
+    surprised: { name: 'Surprised', eyes: { sx: 1.26, sy: 1.26 }, line: () => 'Whoa!' },
+    confused:  { name: 'Confused',  rot: 16, look: [6, -8], e1: { sx: 1, sy: .55 }, e2: { sx: 1.12, sy: 1.12 }, mark: 'q', line: () => S.ln.confused },
+    shut:      { name: 'Eyes shut', rot: -14, look: [-14, 10], eyes: { sy: .1 }, line: () => S.ln.peek },
+    loved:     { name: 'Loved',     rot: -6, eyes: { sy: .34, dy: -.08 }, mark: 'hearts', line: () => S.ln.pet },
+    asleep:    { name: 'Asleep',    look: [0, 6], eyes: { sy: .14 }, mark: 'zzz', line: () => 'Zzz…' },
+  };
+  const xesc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const measure = (() => { const c = document.createElement('canvas').getContext('2d'); return (txt, size) => { c.font = `500 ${size}px ${FONT}`; return c.measureText(txt).width; }; })();
+  let RAW = '', pn = 0;
+  function botSVG(pose, pal) {
+    const P = POSES[pose], id = 'xp' + (++pn);
+    const doc = new DOMParser().parseFromString(RAW.replace(/exabot-/g, id + '-'), 'image/svg+xml');
+    const svg = doc.documentElement, NS = 'http://www.w3.org/2000/svg';
+    svg.querySelector('metadata')?.remove();
+    /* Editor attributes (inkscape:label …) rely on a namespace declared on the
+       root element, which is dropped when the artwork is nested below. */
+    for (const el of svg.querySelectorAll('*')) for (const a of [...el.attributes]) if (a.prefix) el.removeAttributeNode(a);
+    const eyes = svg.querySelector('[id$="-eyes"]');
+    const els = eyes ? [...eyes.querySelectorAll('ellipse')] : [];
+    if (eyes && els.length) {
+      const cy = els.reduce((a, e) => a + +e.getAttribute('cy'), 0) / els.length;
+      const cx = els.reduce((a, e) => a + +e.getAttribute('cx'), 0) / els.length;
+      const h = 2 * Math.max(...els.map(e => +e.getAttribute('ry')));
+      const [lx, ly] = P.look || [0, 0], E = P.eyes || {};
+      eyes.setAttribute('transform', `translate(${lx} ${ly + (E.dy || 0) * h}) translate(${cx} ${cy}) scale(${E.sx || 1} ${E.sy || 1}) translate(${-cx} ${-cy})`);
+      [P.e1, P.e2].forEach((t, i) => {
+        const e = els[i]; if (!t || !e) return;
+        const ex = +e.getAttribute('cx'), ey = +e.getAttribute('cy');
+        e.setAttribute('transform', `translate(${ex} ${ey}) scale(${t.sx} ${t.sy}) translate(${-ex} ${-ey}) ` + (e.getAttribute('transform') || ''));
+      });
+    }
+    const body = doc.createElementNS(NS, 'g');
+    if (P.rot) body.setAttribute('transform', `rotate(${P.rot} 256 256)`);
+    [...svg.childNodes].filter(n => n.nodeName !== 'defs' && n.nodeName !== 'title').forEach(n => body.appendChild(n));
+    svg.appendChild(body);
+    let extra = '';
+    if (P.mark === 'q') extra = `<text x="448" y="96" font-family="${xesc(FONT)}" font-weight="700" font-size="112" fill="${pal.accent}">?</text>`;
+    if (P.mark === 'zzz') extra = `<g font-family="${xesc(FONT)}" font-weight="700" fill="${pal.accent}"><text x="420" y="104" font-size="70">z</text><text x="462" y="62" font-size="56" opacity=".8">z</text><text x="496" y="28" font-size="44" opacity=".6">z</text></g>`;
+    if (P.mark === 'hearts') extra = `<g fill="${HEART_FILL}"><path d="${HEART}" transform="translate(96 20) scale(2.6)"/><path d="${HEART}" transform="translate(372 4) scale(2)" opacity=".75"/><path d="${HEART}" transform="translate(430 96) scale(1.5)" opacity=".55"/></g>`;
+    svg.removeAttribute('role');
+    const inner = new XMLSerializer().serializeToString(svg).replace(/^<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
+    return inner + extra;
+  }
+  function compose(pose, o) {
+    const pal = PAL[o.bg === 'dark' ? 'dark' : 'light'];
+    const pad = 48, BOT = 512, fs = 34, px = 22, bh = Math.round(fs * 1.4 + 24);
+    const text = (o.text || '').trim(), bubble = o.bubble && text;
+    const bw = bubble ? Math.ceil(measure(text, fs)) + px * 2 : 0;
+    const top = bubble && S.bub === 'top';
+    const cw = bubble && !top ? BOT - 24 + bw : Math.max(BOT, bw);
+    const W = cw + pad * 2, H = BOT + pad * 2 + (top ? bh + 16 : 0);
+    const bx = top ? (W - BOT) / 2 : pad, by = pad + (top ? bh + 16 : 0);
+    let out = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">`;
+    out += `<defs><filter id="xsh" x="-20%" y="-30%" width="140%" height="180%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#18181b" flood-opacity=".14"/></filter></defs>`;
+    if (o.bg !== 'clear') out += `<rect width="${W}" height="${H}" fill="${pal.page}"/>`;
+    out += `<svg x="${bx}" y="${by}" width="${BOT}" height="${BOT}" viewBox="0 0 512 512" overflow="visible">${botSVG(pose, pal)}</svg>`;
+    if (bubble) {
+      const x = top ? (W - bw) / 2 : bx + BOT - 24, y = top ? pad : by + (POSES[pose].mark ? 150 : 20);
+      const r = 24, bl = top ? 24 : 8;
+      const d = `M${x + r} ${y}H${x + bw - r}A${r} ${r} 0 0 1 ${x + bw} ${y + r}V${y + bh - r}A${r} ${r} 0 0 1 ${x + bw - r} ${y + bh}H${x + bl}A${bl} ${bl} 0 0 1 ${x} ${y + bh - bl}V${y + r}A${r} ${r} 0 0 1 ${x + r} ${y}Z`;
+      out += `<path d="${d}" fill="${pal.bubble}" stroke="${pal.edge}" stroke-width="2" filter="url(#xsh)"/>`;
+      out += `<text x="${x + px}" y="${y + bh / 2}" dominant-baseline="central" font-family="${xesc(FONT)}" font-weight="500" font-size="${fs}" fill="${pal.text}">${xesc(text)}</text>`;
+    }
+    return { svg: out + '</svg>', W, H };
+  }
+  const dataURL = svg => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  function raster(c, outW) {
+    return new Promise((res, rej) => {
+      const img = new Image();
+      img.onload = () => {
+        const k = outW / c.W, cv = document.createElement('canvas');
+        cv.width = Math.round(c.W * k); cv.height = Math.round(c.H * k);
+        cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+        cv.toBlob(b => b ? res(b) : rej(new Error('PNG failed')), 'image/png');
+      };
+      img.onerror = () => rej(new Error('Render failed'));
+      img.src = dataURL(c.svg);
+    });
+  }
+  /* Stored (uncompressed) zip: PNGs are already compressed. */
+  function crc32(u) { let c = ~0; for (let i = 0; i < u.length; i++) { c ^= u[i]; for (let k = 0; k < 8; k++) c = (c >>> 1) ^ (0xEDB88320 & -(c & 1)); } return ~c >>> 0; }
+  function zip(files) {
+    const parts = [], central = [], enc = new TextEncoder(); let off = 0;
+    for (const f of files) {
+      const n = enc.encode(f.name), crc = crc32(f.data), sz = f.data.length;
+      const l = new DataView(new ArrayBuffer(30));
+      l.setUint32(0, 0x04034b50, true); l.setUint16(4, 20, true); l.setUint16(12, 0x21, true);
+      l.setUint32(14, crc, true); l.setUint32(18, sz, true); l.setUint32(22, sz, true); l.setUint16(26, n.length, true);
+      parts.push(l, n, f.data);
+      const c = new DataView(new ArrayBuffer(46));
+      c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(14, 0x21, true);
+      c.setUint32(16, crc, true); c.setUint32(20, sz, true); c.setUint32(24, sz, true); c.setUint16(28, n.length, true); c.setUint32(42, off, true);
+      central.push(c, n); off += 30 + n.length + sz;
+    }
+    const cs = central.reduce((a, p) => a + p.byteLength, 0), e = new DataView(new ArrayBuffer(22));
+    e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true); e.setUint32(12, cs, true); e.setUint32(16, off, true);
+    return new Blob([...parts, ...central, e], { type: 'application/zip' });
+  }
+  const status = t => { $('#dlstatus').textContent = t; };
+  function saveFile(filename, blob) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000); status('Saved ' + filename);
+  }
+  let thumbs = false;
+  const current = () => compose(S.ex.pose, { bubble: S.ex.bubble, bg: S.ex.bg, text: S.ex.text.trim() || POSES[S.ex.pose].line() });
+  function renderExport() {
+    if (!RAW) return;
+    if (!thumbs) {
+      thumbs = true;
+      $('#poses').innerHTML = Object.keys(POSES).map(k => `<button type="button" data-pose="${k}" aria-pressed="false"><img alt="" src="${dataURL(compose(k, { bubble: false, bg: 'clear' }).svg)}"><span>${POSES[k].name}</span></button>`).join('');
+    }
+    const E = S.ex;
+    $('#poses').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.pose === E.pose)));
+    pressed($('#expx'), String(E.px)); pressed($('#expbg'), E.bg);
+    $('#expbub').checked = E.bubble; $('#exptxt').disabled = !E.bubble;
+    $('#exptxt').placeholder = POSES[E.pose].line();
+    if (document.activeElement !== $('#exptxt')) $('#exptxt').value = E.text;
+    $('#expimg').src = dataURL(current().svg);
+  }
+  $('#poses').addEventListener('click', e => { const b = e.target.closest('[data-pose]'); if (b) { S.ex.pose = b.dataset.pose; S.ex.text = ''; apply(); } });
+  $('#expx').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.ex.px = +b.dataset.v; apply(); } });
+  $('#expbg').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.ex.bg = b.dataset.v; apply(); } });
+  $('#expbub').addEventListener('change', e => { S.ex.bubble = e.target.checked; apply(); });
+  $('#exptxt').addEventListener('input', e => { S.ex.text = e.target.value; apply(); });
+  $('.dlrow').addEventListener('click', async e => {
+    const b = e.target.closest('[data-dl]'); if (!b) return;
+    if (!RAW) { status('The Exabot artwork has not loaded.'); return; }
+    const kind = b.dataset.dl, base = `exabot-force-${S.ex.pose}`;
+    try {
+      if (kind === 'svg') return saveFile(base + '.svg', new Blob([current().svg], { type: 'image/svg+xml' }));
+      if (kind === 'png') { const c = current(); status('Rendering…'); return saveFile(`${base}-${S.ex.px}.png`, await raster(c, c.W >= c.H ? S.ex.px : Math.round(S.ex.px * c.W / c.H))); }
+      status('Rendering emoji…');
+      const files = [];
+      for (const k of Object.keys(POSES)) {
+        const blob = await raster(compose(k, { bubble: false, bg: 'clear' }), 256);
+        files.push({ name: `exabot-force-${k}.png`, data: new Uint8Array(await blob.arrayBuffer()) });
+      }
+      saveFile('exabot-force-emoji.zip', zip(files));
+    } catch (err) { status('Couldn’t render the image. ' + (err && err.message || '')); }
+  });
+
+  apply();
+  fetch(SVG_PATH).then(r => { if (!r.ok) throw new Error('Asset unavailable'); return r.text(); })
+    .then(t => { RAW = t; renderExport(); })
+    .catch(() => status('The Exabot artwork could not be loaded, so export is unavailable.'));
+})();
+</script>
+</body>
+</html>

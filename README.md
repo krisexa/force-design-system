@@ -34,6 +34,7 @@ src/
   fonts/files/*.woff2     148 font subsets/slices total (verified by npm run check)
   base.css                element defaults, focus ring, .type-* classes, .text-* helpers
   theme.js                applies the saved light/dark/system choice before paint; toggle API
+  exabot.js               <exa-bot>, the interactive full-spectrum Force Exabot (ES module); see *Interactive Exabot*
   index.css               fonts + tokens + base, for bundlers
   tokens.css              tokens only, for bundlers
   assets/logo/            wordmark and mark: black, white, currentColor, auto (OS dark mode)
@@ -49,6 +50,7 @@ src/
   ribbon/presets.json     ribbon shader colourways and forms — the one file the studio and every site read
   site/_header.html, _header.css  the one site header (lockup, page nav, theme toggle); build.mjs injects it into every page below and marks the current page
   site/ribbon-shader-studio.html  the Ribbon Shader Studio, presets injected at build
+  site/exabot.html        the Exabot playground: tune, export images, copy embed code
   site/index.html         the styleguide, published at the root of the Pages site
   site/404.html           served for any missing path; names the published channels
 scripts/
@@ -332,6 +334,71 @@ For another colorway, change both the directory and filename suffix, for example
 `cool/exabot-force-cool.svg` or `soft-pastel/exabot-shield-soft-pastel.svg`.
 The three additional colorways ship in 1.3.0; use `/1.3.0/` to pin them.
 These paths become available on the host only after an authorized release.
+
+### Interactive Exabot
+
+`exabot.js` defines `<exa-bot>`: the full-spectrum Force Exabot with idle
+motion, eye tracking, blinking, speech bubbles and reactions (poke, spin,
+celebrate, confused, peek, fling, pet, nap). It is the only form offered
+interactively; every other form and colorway stays a static SVG above. The
+component fetches `assets/avatars/exabots/full-spectrum/exabot-force-full-spectrum.svg`
+rather than carrying a copy, so the static and interactive bot cannot drift.
+Tune it, export PNG/SVG/emoji images and copy embed code at `/exabot.html` on
+the design-system host (the playground); the full attribute, method, event
+and custom-property reference is at the top of `src/exabot.js`.
+
+Hosted (vanilla sites); load the module once per page:
+
+```html
+<exa-bot size="160"></exa-bot>
+<script type="module" src="https://exaforce-design-system.pages.dev/v1/exabot.js"></script>
+```
+
+Astro: bundle it from the package and pass the SVG URL explicitly. Vite
+pre-bundles dependencies in dev, which breaks a URL resolved relative to the
+module, so the default would not be found there:
+
+```astro
+---
+import exabotSvg from '@exaforce/design-system/assets/avatars/exabots/full-spectrum/exabot-force-full-spectrum.svg?url';
+---
+<exa-bot src={exabotSvg} size="160"></exa-bot>
+<script>
+  import '@exaforce/design-system/exabot.js';
+</script>
+```
+
+Colours are not hard-coded. Each part reads an `--exabot-*` custom property,
+then the semantic token, then a light literal for pages without tokens:
+accent (`--color-accent`), focus ring (`--color-focus`), bubble surface, text,
+border and shadow (`--color-surface-raised`, `--color-text-primary`,
+`--color-border`, `--elevation-md`) and font (`--font-family-base`). With
+`tokens.css` loaded the bot follows light, dark and system themes with no
+extra code. Override on the element or any ancestor:
+
+```css
+.hero exa-bot { --exabot-accent: var(--color-accent-inverse); }
+```
+
+Defaults suit marketing pages: drag and press-and-hold petting are on
+(`disable="drag pet"` turns them off); shutting its eyes while a password
+field has focus and reacting to page scroll are opt-in (`enable="peek scroll"`);
+it never falls asleep unless given `sleep="<seconds>"`. Reduced motion stops
+every animation. Page listeners and timers exist only while a bot is on the
+page. The element reserves its size once defined; to reserve it before the
+module loads too, add to the site CSS (size 160 shown, height is 1.14 × size):
+
+```css
+exa-bot:not(:defined) { display: inline-block; width: 160px; height: 182px; }
+```
+
+Script control, e.g. after a form submits:
+
+```js
+const bot = document.querySelector('exa-bot');
+bot.celebrate('Thanks, we will be in touch');
+bot.addEventListener('exabot-poke', (e) => console.log(e.detail.line));
+```
 
 ## Product icons
 

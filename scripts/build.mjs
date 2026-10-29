@@ -16,6 +16,7 @@
  *   dist/ribbon-shader-studio.html   the Ribbon Shader Studio, presets injected from
  *                                    src/ribbon/presets.json (also published as
  *                                    <channel>/ribbon-presets.json for the sites)
+ *   dist/exabot.html                 the Exabot playground (consumes <channel>/exabot.js)
  *   dist/manifest.json               versions and the hashed font map
  *   dist/_headers                    cache + CORS rules for Pages
  *
@@ -34,6 +35,7 @@
  *   base.css      element defaults, focus ring, type classes
  *   exaforce.css  fonts + tokens + base in one request
  *   theme.js
+ *   exabot.js     the <exa-bot> component (ES module; artwork from assets/)
  *   assets/       logo, icons, favicon
  */
 import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync, existsSync } from 'node:fs';
@@ -139,6 +141,7 @@ const primitives = lean(read('src/tokens/primitives.css'));
 const semantic = lean(read('src/tokens/semantic.css'));
 const base = lean(read('src/base.css'));
 const themeJs = read('src/theme.js');
+const exabotJs = read('src/exabot.js');
 
 const ribbonPresets = JSON.parse(read('src/ribbon/presets.json'));
 const files = {
@@ -149,6 +152,7 @@ const files = {
   'base.css': banner('base') + base,
   'exaforce.css': banner('exaforce.css (fonts + tokens + base)') + fontsCss + '\n' + primitives + '\n' + semantic + '\n' + base,
   'theme.js': themeJs.replace(/^\/\*!/, `/*! v${version}`),
+  'exabot.js': exabotJs.replace(/^\/\*!/, `/*! v${version}`),
 };
 
 for (const channel of [major, version]) {
@@ -240,6 +244,9 @@ write(
   page('src/site/ribbon-shader-studio.html', 'ribbon-shader-studio').replace('__RIBBON_PRESETS__', JSON.stringify(ribbonPresets)),
 );
 
+/* Exabot playground: consumes <channel>/exabot.js like any site would. */
+write(dist, 'exabot.html', page('src/site/exabot.html', 'exabot'));
+
 /* 4. Manifest + headers. */
 write(
   dist,
@@ -288,6 +295,8 @@ ${exact.map((v) => `/${v}/*\n  Cache-Control: public, max-age=31536000, immutabl
 /404.html
   Cache-Control: public, max-age=300
 /ribbon-shader-studio.html
+  Cache-Control: public, max-age=300
+/exabot.html
   Cache-Control: public, max-age=300
 /manifest.json
   Cache-Control: public, max-age=300
