@@ -386,9 +386,11 @@ field has focus and reacting to page scroll are opt-in (`enable="peek scroll"`);
 it never falls asleep unless given `sleep="<seconds>"`. The speech bubble is
 `bubble="auto"` by default: each time the bot speaks it goes right, else left,
 else top, whichever fits in the viewport and any `overflow`-clipping ancestor,
-and the directional poses (peek, confused, "?", "zzz") mirror to match, so a
-bot on the right of a layout needs no setup. Fix a side with
-`bubble="right|left|top"`. The artwork is never flipped. Reduced motion stops
+so a bot on either side of a layout needs no bubble setup. Fix a bubble side
+with `bubble="right|left|top"`. Independently, `facing="auto"` (default) faces
+inward from the bot’s position in its clipping container or viewport; use
+`facing="left|right"` to fix its direction. Artwork and eye tracking mirror
+together, while speech and reaction text stay readable. Reduced motion stops
 every animation. Page listeners and timers exist only while a bot is on the
 page. The element reserves its size once defined; to reserve it before the
 module loads too, add to the site CSS (size 160 shown, height is 1.14 × size):

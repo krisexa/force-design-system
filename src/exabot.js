@@ -31,8 +31,9 @@
  *                   each time it speaks, the first of right, left, top that
  *                   fits inside the viewport and any clipping (overflow)
  *                   ancestor, so a bot on either side of a layout works.
- *                   Directional poses (peek, confused, the "?" and "zzz")
- *                   mirror to face the same way, toward the room.
+ *   facing          "auto" (default) | "left" | "right". Auto faces inward
+ *                   from its position in the nearest clipping container or
+ *                   viewport. Mirrors artwork, keeps text readable.
  *   disable         any of "drag pet" (both on by default).
  *   enable          any of "peek scroll" (both off by default): shut its eyes
  *                   while a password field has focus; react to page scroll.
@@ -98,6 +99,7 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
 .drag{display:block;position:relative;will-change:transform}
 .bot{position:relative;display:block;width:var(--s);height:var(--s);rotate:var(--tilt,0deg);transition:rotate .4s cubic-bezier(.3,1.4,.5,1),scale .3s ease;animation:float 4.2s ease-in-out infinite}
 .bot svg{width:100%;height:100%;display:block;overflow:visible;transform-origin:50% 90%}
+.art{transform-origin:center;transform-box:view-box;scale:var(--dir,1) 1}
 .eyes{transform-box:fill-box;transform-origin:center;transition:scale .2s,transform .25s}
 .eye{transform-box:fill-box;transform-origin:center;transition:transform .2s}
 .look{transition:transform .25s ease-out}
@@ -124,8 +126,8 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
 @keyframes celebrate{0%{transform:none}18%{transform:translateY(-24%) scale(1.06) rotate(-7deg)}36%{transform:translateY(0) scale(1.1,.9)}56%{transform:translateY(-14%) rotate(7deg)}76%{transform:translateY(0) scale(1.05,.95)}100%{transform:none}}
 .celebrate .eyes,.pet .eyes{transform:translateY(-8%) scaleY(.34)}
 .confused .bot{rotate:calc(16deg*var(--dir,1))}
-.confused .eye-1,.mirror.confused .eye-2{transform:scaleY(.55)}
-.confused .eye-2,.mirror.confused .eye-1{transform:scale(1.12)}
+.confused .eye-1{transform:scaleY(.55)}
+.confused .eye-2{transform:scale(1.12)}
 .peek .bot{rotate:calc(-14deg*var(--dir,1))}
 .peek .eyes{transform:scaleY(.1)}
 .dragging .eyes{scale:1.14}
@@ -156,7 +158,7 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
 `;
 
   class ExaBot extends HTMLElement {
-    static get observedAttributes() { return ['size', 'label', 'src', 'bubble']; }
+    static get observedAttributes() { return ['size', 'label', 'src', 'bubble', 'facing']; }
     constructor() { super(); this.attachShadow({ mode: 'open' }); this._clicks = []; this._line = 0; this._deep = false; this._dir = 1; }
     connectedCallback() { if (!this._btn) this._render(); all.add(this); listen(); }
     disconnectedCallback() { all.delete(this); if (!all.size) unlisten(); }
@@ -164,7 +166,7 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
       if (!this._btn) return;
       if (n === 'src') this._load();
       else if (n === 'label') this._btn.setAttribute('aria-label', this._label());
-      else if (n === 'bubble') this._orient();
+      else if (n === 'bubble' || n === 'facing') this._orient();
       else this._applySize();
     }
     get lines() {
@@ -232,8 +234,10 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
       const body = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       body.classList.add('body');
       [...svg.childNodes].filter((n) => n.nodeName !== 'defs' && n.nodeName !== 'title').forEach((n) => body.appendChild(n));
-      svg.appendChild(body);
+      const art = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      art.classList.add('art'); art.appendChild(body); svg.appendChild(art);
       this._bot.prepend(svg);
+      this._orient();
       if (this.asleep) this.sleep();
     }
     /* ---------- drag to fling, hold to pet ---------- */
@@ -306,7 +310,7 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
         this._btn.appendChild(sp); setTimeout(() => sp.remove(), 800);
       }
     }
-    /* Which side the bubble goes, and which way directional poses face. The
+    /* Bubble placement and artwork orientation are independent. The
        bubble is measured with its new text before it shows, against the
        viewport narrowed to the nearest ancestor that clips overflow. */
     _orient() {
@@ -323,7 +327,13 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
         const bw = this._bubble.offsetWidth, m = 8;
         side = r.right - 6 + bw <= hi - m ? 'right' : r.left + 6 - bw >= lo + m ? 'left' : 'top';
       }
-      this._dir = side === 'left' || (side === 'top' && r.left + r.width / 2 > innerWidth / 2) ? -1 : 1;
+      let lo = 0, hi = innerWidth;
+      for (let el = this.parentElement; el && el !== document.body; el = el.parentElement) {
+        if (getComputedStyle(el).overflowX === 'visible') continue;
+        const c = el.getBoundingClientRect(); lo = Math.max(lo, c.left); hi = Math.min(hi, c.right); break;
+      }
+      const facing = this.getAttribute('facing');
+      this._dir = facing === 'left' || (facing !== 'right' && r.left + r.width / 2 > (lo + hi) / 2 + 1) ? -1 : 1;
       this._btn.dataset.side = side;
       this._btn.classList.toggle('mirror', this._dir < 0);
       this._btn.style.setProperty('--dir', this._dir);
@@ -348,7 +358,7 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
       if (!this._btn) return;
       this.wake(); this.say(t || this._ln('confused'));
       const b = this._btn; b.classList.remove('confused'); void b.offsetWidth; b.classList.add('confused');
-      if (this._look) this._look.style.transform = `translate(${6 * this._dir}px,-8px)`;
+      if (this._look) this._look.style.transform = 'translate(6px,-8px)';
       clearTimeout(this._cT); this._cT = setTimeout(() => b.classList.remove('confused'), 1600);
       this._emit('confused');
     }
@@ -359,7 +369,7 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
       this.wake();
       if (on) this.say(this._ln('peek')); else this._btn.classList.remove('saying');
       this._btn.classList.toggle('peek', !!on);
-      if (this._look) this._look.style.transform = on ? `translate(${-14 * this._dir}px,10px)` : '';
+      if (this._look) this._look.style.transform = on ? 'translate(-14px,10px)' : '';
       this._emit('peek', { on: !!on });
     }
     poke() {
@@ -378,8 +388,14 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
       if (!this._has('peek')) this.style.setProperty('--tilt', Math.max(-9, Math.min(9, dx / 40)) + 'deg');
       if (this.asleep) { if (d < Math.max(320, r.width * 2)) this.wake(); return; }
       if (this._has('peek') || this._has('confused') || this._has('pet')) return;
-      const m = Math.min(18, d / 14);
-      if (this._look) this._look.style.transform = `translate(${dx / d * m}px,${dy / d * m}px)`;
+      this._orient();
+      /* The artwork already looks toward its leading edge. Leave more room
+         there instead of adding the full tracking offset on top of that gaze.
+         Work in artwork coordinates so both facing directions behave alike. */
+      const m = Math.min(12, d / 24);
+      const lx = Math.max(-12, Math.min(6, dx / d * m * this._dir));
+      const ly = Math.max(-8, Math.min(8, dy / d * m));
+      if (this._look) this._look.style.transform = `translate(${lx}px,${ly}px)`;
     }
     _scroll(dy, y) {
       if (!this._btn || !this._on('scroll') || this.asleep || this._busy()) return;
@@ -397,7 +413,7 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
       const idle = Date.now() - lastMove, sl = +this.getAttribute('sleep') || 0;
       if (sl > 0 && idle > sl * 1000) { this.sleep(); return; }
       if (idle > 3500) {
-        const g = [[-16, 2], [16, 2], [0, -10], [-10, 8], [10, -6], [0, 0]][Math.floor(Math.random() * 6)];
+        const g = [[-8, 2], [6, 2], [0, -8], [-6, 6], [6, -6], [0, 0]][Math.floor(Math.random() * 6)];
         this._look.style.transform = `translate(${g[0]}px,${g[1]}px)`;
         if (Math.random() < .18 && !RM()) this.stretch();
       }

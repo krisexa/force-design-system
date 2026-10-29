@@ -4,6 +4,48 @@ Audit date: 2026-10-19. Shared rules: [AGENTS.md](AGENTS.md).
 
 ## Current handoff
 
+- Task (2026-10-29): modernize Ribbon Studio / Exabot playground and apply
+  review feedback: smaller help icons, contrast tooltips, select-arrow spacing,
+  compact shader settings, and inward-facing mirrored Exabot artwork/eyes.
+  User approved all updates and authorized commit/push on 2026-10-29, including
+  the main-branch release workflow. Owner: Codex; released for handoff.
+- Branch / base: `main`, `94714b85140d96c2f8d7f9f86f901481923a53b1`.
+  Clean on initial entry. Earlier UI changes preserved throughout review.
+- Changes: `src/site/_tool-ui.css` shares tool-only controls and surfaces;
+  `scripts/build.mjs` injects it into both tool HTML files. Ribbon palette uses
+  semantic tokens. Latest review: removed full-width section headings and
+  separators, restored one compact slider grid, reduced Studio toolbar control
+  sizes/padding and row spacing. All 15 parameters retain compact help buttons
+  with keyboard/touch tooltips.
+  Native selects retain behavior with a custom chevron and reserved space.
+  `src/exabot.js` adds `facing="auto|left|right"`: mirrors artwork and eye
+  coordinates together, independently of speech placement. Latest gaze fix
+  caps forward eye travel at 6 SVG units, vertical travel at 8, and softens idle
+  glances in both directions. Playground position,
+  embeds and exports match. README documents facing; package prepared as 1.6.0
+  (minor for the new attribute). Global tokens and consumer CSS unchanged.
+- Validation (Node 25.9.0; configured Node 22 unavailable): `npm run check`,
+  `npm run build`, `npm test` (2 pass), `git diff --check`, JS syntax check pass.
+  Headless Chrome: desktop 1440 and mobile 390, light/dark, no horizontal
+  overflow; all 15 help buttons sized to label font, tooltips open on focus;
+  select arrow padding 48px. Mirrored right-side eye movement follows a cursor
+  on the left; explicit left/right facing and automatic right-side orientation
+  checked. SVG export includes mirror transform; PNG blob generated. No runtime
+  exceptions observed. Screenshots inspected. Earlier system dark checks passed.
+  Reduced-motion preference emulated; not a full motion/accessibility audit.
+- Not checked: manual screen-reader/real touch, asset failure cases, full shader
+  export/emoji ZIP regression, Node 22 and hosted integration. CI/deployment
+  results must be checked against the pushed commit.
+- Local staging preview: `http://127.0.0.1:3097/` (serve process running).
+  Existing dist was preserved in a timestamped temporary backup before building.
+- Release preparation: remote main matches base, v1.6.0 absent before push.
+  Regression tests rerun (2 pass); `npm run build:pages` with remote tag fetch
+  passed, including historical channels 1.1.0–1.5.0 plus current 1.6.0.
+- Next: push the authorized release commit, then verify CI/tag v1.6.0 and
+  hosted version. Do not rewrite existing immutable release paths.
+
+## Previous 1.5.0 handoff
+
 - Task (2026-10-29): 1.5.0, support the Exabot on the right of a layout. User
   approved. Owner: Claude Code; released for handoff when this turn completes.
 - Branch / base: `main`, `acb1f9b` (1.4.0, tagged and deployed; CI passed,

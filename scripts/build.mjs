@@ -216,9 +216,11 @@ for (const group of readdirSync(logoRoot).sort()) {
    with aria-current on the nav link for the page being built. */
 const headerHtml = read('src/site/_header.html');
 const headerCss = read('src/site/_header.css');
+const toolUiCss = read('src/site/_tool-ui.css');
 const page = (file, current) =>
   read(file)
     .replace('__SITE_HEADER_CSS__', () => headerCss)
+    .replace('__TOOL_UI_CSS__', () => toolUiCss)
     .replace('__SITE_HEADER__', () => headerHtml.replace(`data-page="${current}"`, `data-page="${current}" aria-current="page"`))
     .replaceAll('__VERSION__', version)
     .replaceAll('__MAJOR__', major);

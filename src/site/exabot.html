@@ -92,6 +92,7 @@ details pre, .code { font: var(--type-small-size)/1.55 var(--font-family-mono); 
 .dlrow { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: var(--space-2xs); margin-top: var(--space-sm); }
 .dlrow .btn { padding-inline: var(--space-2xs); }
 .status { font-size: var(--type-small-size); color: var(--color-text-muted); margin: var(--space-xs) 0 0; min-height: 1.4em; }
+__TOOL_UI_CSS__
 </style>
 </head>
 <body>
@@ -134,7 +135,7 @@ __SITE_HEADER__
           <div class="row"><label for="dz">Spins after</label><input type="range" id="dz" min="3" max="8" value="5"><output id="dzO" for="dz">5 taps</output></div>
           <div class="row"><label for="sl">Falls asleep after</label><select id="sl"><option value="0" selected>Never</option><option value="20">20 seconds</option><option value="45">45 seconds</option><option value="120">2 minutes</option></select></div>
           <div class="row"><span class="lbl" id="bubL">Speech bubble</span><div class="seg" role="group" aria-labelledby="bubL" id="bub"><button type="button" data-v="auto" aria-pressed="true">Auto</button><button type="button" data-v="right" aria-pressed="false">Right</button><button type="button" data-v="left" aria-pressed="false">Left</button><button type="button" data-v="top" aria-pressed="false">Top</button></div></div>
-          <p class="note">Auto puts the bubble wherever it fits (right, then left, then top) and turns its poses toward that side. Try it with the preview position.</p>
+          <p class="note">Auto puts the bubble wherever it fits (right, then left, then top) while the avatar faces inward from its preview position. Artwork and eyes turn together; text stays readable.</p>
         </div>
         <div class="sec">
           <h2>What it says <small>one line per tap</small></h2>
@@ -283,6 +284,7 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
     pressed($('#bub'), S.bub);
     pressed($('#pos'), S.pos);
     $('#stage').dataset.pos = S.pos;
+    bot.setAttribute('facing', S.pos === 'right' ? 'left' : 'right');
     pressed($('#fmt'), S.fmt);
     $('#size').value = S.size; $('#sizeO').textContent = S.size + 'px';
     $('#dz').value = S.dz; $('#dzO').textContent = S.dz + ' taps';
@@ -301,6 +303,7 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
     if (enabled().length) attrs.push(`enable="${enabled().join(' ')}"`);
     if (S.dz !== 5) attrs.push(`dizzy-after="${S.dz}"`);
     if (S.sl) attrs.push(`sleep="${S.sl}"`);
+    if (S.pos !== 'center') attrs.push(`facing="${S.pos === 'right' ? 'left' : 'right'}"`);
     if (S.bub !== 'auto') attrs.push(`bubble="${S.bub}"`);
     let code;
     if (S.fmt === 'astro') {
@@ -369,8 +372,7 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
   const xesc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const measure = (() => { const c = document.createElement('canvas').getContext('2d'); return (txt, size) => { c.font = `500 ${size}px ${FONT}`; return c.measureText(txt).width; }; })();
   let RAW = '', pn = 0;
-  /* dir -1 mirrors the pose and its marks for a bubble on the left, the way
-     the live component does; the artwork itself is never flipped. */
+  /* Mirror artwork and poses together, keeping text marks readable. */
   function botSVG(pose, pal, dir) {
     const P = POSES[pose], id = 'xp' + (++pn);
     const doc = new DOMParser().parseFromString(RAW.replace(/exabot-/g, id + '-'), 'image/svg+xml');
@@ -386,15 +388,15 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
       const cx = els.reduce((a, e) => a + +e.getAttribute('cx'), 0) / els.length;
       const h = 2 * Math.max(...els.map(e => +e.getAttribute('ry')));
       const [lx, ly] = P.look || [0, 0], E = P.eyes || {};
-      eyes.setAttribute('transform', `translate(${lx * dir} ${ly + (E.dy || 0) * h}) translate(${cx} ${cy}) scale(${E.sx || 1} ${E.sy || 1}) translate(${-cx} ${-cy})`);
-      (dir < 0 ? [P.e2, P.e1] : [P.e1, P.e2]).forEach((t, i) => {
+      eyes.setAttribute('transform', `translate(${lx} ${ly + (E.dy || 0) * h}) translate(${cx} ${cy}) scale(${E.sx || 1} ${E.sy || 1}) translate(${-cx} ${-cy})`);
+      [P.e1, P.e2].forEach((t, i) => {
         const e = els[i]; if (!t || !e) return;
         const ex = +e.getAttribute('cx'), ey = +e.getAttribute('cy');
         e.setAttribute('transform', `translate(${ex} ${ey}) scale(${t.sx} ${t.sy}) translate(${-ex} ${-ey}) ` + (e.getAttribute('transform') || ''));
       });
     }
     const body = doc.createElementNS(NS, 'g');
-    if (P.rot) body.setAttribute('transform', `rotate(${P.rot * dir} 256 256)`);
+    body.setAttribute('transform', `${dir < 0 ? 'translate(512 0) scale(-1 1) ' : ''}rotate(${P.rot || 0} 256 256)`);
     [...svg.childNodes].filter(n => n.nodeName !== 'defs' && n.nodeName !== 'title').forEach(n => body.appendChild(n));
     svg.appendChild(body);
     let extra = '';
@@ -414,7 +416,7 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
     const text = (o.text || '').trim(), bubble = o.bubble && text;
     const bw = bubble ? Math.ceil(measure(text, fs)) + px * 2 : 0;
     /* Auto has no page to measure against in a file, so it exports as right. */
-    const top = bubble && S.bub === 'top', left = bubble && S.bub === 'left', dir = left ? -1 : 1;
+    const top = bubble && S.bub === 'top', left = bubble && S.bub === 'left', dir = S.pos === 'right' ? -1 : 1;
     const cw = bubble && !top ? BOT - 24 + bw : Math.max(BOT, bw);
     const W = cw + pad * 2, H = BOT + pad * 2 + (top ? bh + 16 : 0);
     const bx = top ? (W - BOT) / 2 : left ? pad + bw - 24 : pad, by = pad + (top ? bh + 16 : 0);

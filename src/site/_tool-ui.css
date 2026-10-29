@@ -1,0 +1,112 @@
+/* Shared only by the two hosted tools; never part of the consumer CSS bundle.
+   Semantic tokens keep explicit and system themes on the same surface ladder. */
+.wrap { min-width: 0; }
+.wrap .btn, .wrap .copy, .wrap .iconbtn, .wrap .form {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-surface);
+  background: var(--color-surface-raised);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+  font-size: var(--type-small-size);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: normal;
+  text-transform: none;
+  transition: background-color var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-fast);
+}
+.wrap .btn { min-height: var(--space-xl); padding: var(--space-2xs) var(--space-sm); }
+.wrap .btn:hover, .wrap .copy:hover, .wrap .iconbtn:hover:not(:disabled), .wrap .form:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+  color: var(--color-text-primary);
+}
+.wrap .btn:active { background: var(--color-control-secondary-active); }
+.wrap .btn.primary { background: var(--color-control); border-color: var(--color-control); color: var(--color-control-text); }
+.wrap .btn.primary:hover { background: var(--color-control-hover); }
+.wrap .btn.primary:active { background: var(--color-control-active); }
+.wrap .btn[aria-pressed='true'], .wrap .form[aria-pressed='true'], .wrap .iconbtn[aria-pressed='true'] {
+  background: var(--color-accent-subtle); border-color: var(--color-accent); color: var(--color-accent);
+}
+.wrap .iconbtn, .wrap .form, .wrap .preset { width: var(--space-xl); height: var(--space-xl); flex: none; }
+.wrap :is(button, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--color-focus-ring); outline-offset: 3px;
+}
+.wrap :is(select, input[type=text], input[type=password], textarea) {
+  background: var(--color-field-surface); color: var(--color-field-text);
+  border: 1px solid var(--color-field-border); border-radius: var(--radius-surface);
+  padding: var(--space-2xs) var(--space-xs);
+  font-family: var(--font-family-base); font-size: var(--type-small-size);
+}
+.wrap .tool, .wrap .stage, .wrap .panel { border-color: var(--color-border); }
+.wrap .tool, .wrap .grid > .stage, .wrap aside.panel {
+  border-radius: var(--radius-surface-lg); box-shadow: var(--elevation-sm);
+}
+.wrap .tool > .stage { border-radius: 0; }
+.wrap .panel { background: var(--color-surface-raised); }
+.wrap .sec { padding: var(--space-md); }
+.wrap .sec h2 { margin-bottom: var(--space-sm); }
+.wrap .tabs, .wrap .seg {
+  background: var(--color-surface-sunken); border-radius: var(--radius-surface);
+  gap: var(--space-3xs); padding: var(--space-3xs);
+}
+.wrap .tabs { margin: var(--space-xs); border: 1px solid var(--color-border); }
+.wrap .tabs button, .wrap .seg button {
+  min-height: var(--space-xl); border-radius: var(--radius-control);
+  transition: background-color var(--motion-fast), color var(--motion-fast);
+}
+.wrap .tabs button:hover, .wrap .seg button:hover { background: var(--color-surface-hover); color: var(--color-text-primary); }
+.wrap .tabs button[aria-selected='true'], .wrap .seg button[aria-pressed='true'] {
+  background: var(--color-surface-raised); color: var(--color-text-primary);
+  box-shadow: var(--elevation-sm); font-weight: var(--font-weight-semibold);
+}
+.wrap .ctrl label, .wrap .group > .lbl, .wrap .check, .wrap .strip > .lbl {
+  font-family: var(--font-family-base); font-size: var(--type-small-size);
+  letter-spacing: normal; text-transform: none; color: var(--color-text-secondary);
+}
+.wrap .checks label { padding-block: var(--space-3xs); cursor: pointer; }
+.wrap .poses button { transition: background-color var(--motion-fast), border-color var(--motion-fast); }
+.wrap .poses button:hover { background: var(--color-surface-hover); border-color: var(--color-border-strong); }
+.wrap .below { grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
+.wrap .below > *, .wrap .grid > *, .wrap .row > * { min-width: 0; }
+@media (max-width: 720px) {
+  .wrap .row { gap: var(--space-xs); }
+  .wrap .group { flex-wrap: wrap; }
+  .wrap .sec { padding: var(--space-sm); }
+  .wrap .seg { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wrap *, .wrap *::before, .wrap *::after { transition: none !important; }
+}
+/* Native select behavior, with a theme-aware chevron and reserved arrow space. */
+.wrap select:not([multiple]) {
+  appearance: none;
+  padding-inline-end: var(--space-xl);
+  background-image: linear-gradient(45deg, transparent 50%, var(--color-text-secondary) 50%), linear-gradient(135deg, var(--color-text-secondary) 50%, transparent 50%);
+  background-position: right calc(var(--space-sm) + var(--space-3xs)) center, right var(--space-sm) center;
+  background-size: var(--space-3xs) var(--space-3xs);
+  background-repeat: no-repeat;
+  min-height: var(--space-xl);
+}
+.control-label { display: inline-flex; align-items: center; gap: var(--space-3xs); }
+.wrap .help-icon {
+  position: relative; display: inline-grid; place-items: center; flex: none;
+  width: 1em; height: 1em; padding: 0; border-radius: var(--radius-pill);
+  border: 1px solid var(--color-text-muted); background: transparent;
+  font: var(--font-weight-semibold) var(--type-small-size)/1 var(--font-family-base);
+  color: var(--color-text-secondary); cursor: help;
+}
+.wrap .help-icon::before { content: ''; position: absolute; inset: calc(-1 * var(--space-2xs)); }
+.wrap .help-icon:hover, .wrap .help-icon:focus-visible { color: var(--color-accent); border-color: var(--color-accent); }
+.tool-tooltip {
+  position: fixed; inset: auto; margin: 0; max-width: min(36ch, calc(100vw - 2 * var(--space-sm)));
+  padding: var(--space-xs) var(--space-sm); border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-surface); background: var(--color-control); color: var(--color-control-text);
+  box-shadow: var(--elevation-md); font: var(--type-small-size)/1.5 var(--font-family-base);
+}
+@media (forced-colors: active) { .wrap select:not([multiple]) { appearance: auto; background-image: none; } }
+
+/* Keep the Studio dense enough to tune while the preview stays in view. */
+.wrap .tool .btn { min-height: var(--space-lg); padding: var(--space-3xs) var(--space-xs); }
+.wrap .tool :is(.iconbtn, .form, .preset) { width: var(--space-lg); height: var(--space-lg); }
+.wrap .tool select:not([multiple]) { min-height: var(--space-lg); padding-block: var(--space-3xs); padding-inline-end: var(--space-lg); }
+.wrap .tool .sliders { gap: var(--space-xs) var(--space-md); }
+.wrap .tool .row + .row { margin-top: var(--space-xs); padding-top: var(--space-xs); }
