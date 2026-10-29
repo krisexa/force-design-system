@@ -39,7 +39,7 @@ src/
   assets/logo/            wordmark and mark: black, white, currentColor, auto (OS dark mode)
   assets/icons/           platform (15, first-party marks), nav (47), trust (8), chain (3), ui (3)
   assets/product-icons/   the product's own icons (UI, entities, apps, services, flags, graph nodes) + index.json; generated, see *Product icons*
-  assets/avatars/exabots/ eight full-spectrum Exabot avatars + index.json and usage guide
+  assets/avatars/exabots/ 32 Exabot SVGs across four colorways + index.json and usage guide
   assets/favicon/         favicon.svg/.ico, apple-touch-icon, PWA icons, site.webmanifest
   assets/logos/customers/ 25 customers × -color / -black / -white (fixed ink, never recolour)
   assets/logos/investors/ 9 investor marks, currentColor
@@ -304,9 +304,11 @@ the canonical one. The mark is normalised from pure black to the wordmark's
 
 ## Exabot avatars
 
-Eight full-spectrum Exabot avatars live in `assets/avatars/exabots/`:
+Eight Exabot forms in four colorways (32 SVGs) live in `assets/avatars/exabots/`:
 Force, Lightning bolt, Long pill, Magnifying glass, Shield, Spark, Square and
-Triangle. `index.json` lists their labels, relative file paths and dimensions.
+Triangle. Colorways: `full-spectrum`, `cool`, `soft-pastel` and `dark-spectrum`.
+`index.json` lists their labels, colorways, relative file paths and dimensions.
+Identify a variant by the pair of `id` (form) and `colorway`.
 See [avatar usage](src/assets/avatars/exabots/README.md) for sizing and brand rules.
 The supplied SVGs are preserved unchanged, with their gradients and opaque faces.
 
@@ -326,6 +328,9 @@ import forceAvatar from '@exaforce/design-system/assets/avatars/exabots/full-spe
 ```
 
 Use `alt=""` when an adjacent label already conveys the same information.
+For another colorway, change both the directory and filename suffix, for example
+`cool/exabot-force-cool.svg` or `soft-pastel/exabot-shield-soft-pastel.svg`.
+The three additional colorways ship in 1.3.0; use `/1.3.0/` to pin them.
 These paths become available on the host only after an authorized release.
 
 ## Product icons

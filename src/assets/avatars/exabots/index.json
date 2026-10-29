@@ -62,5 +62,197 @@
     "file": "full-spectrum/exabot-triangle-full-spectrum.svg",
     "width": 512,
     "height": 512
+  },
+  {
+    "id": "force",
+    "label": "Force",
+    "colorway": "cool",
+    "file": "cool/exabot-force-cool.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "lightning-bolt",
+    "label": "Lightning bolt",
+    "colorway": "cool",
+    "file": "cool/exabot-lightning-bolt-cool.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "long-pill",
+    "label": "Long pill",
+    "colorway": "cool",
+    "file": "cool/exabot-long-pill-cool.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "magnifying-glass",
+    "label": "Magnifying glass",
+    "colorway": "cool",
+    "file": "cool/exabot-magnifying-glass-cool.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "shield",
+    "label": "Shield",
+    "colorway": "cool",
+    "file": "cool/exabot-shield-cool.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "spark",
+    "label": "Spark",
+    "colorway": "cool",
+    "file": "cool/exabot-spark-cool.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "square",
+    "label": "Square",
+    "colorway": "cool",
+    "file": "cool/exabot-square-cool.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "triangle",
+    "label": "Triangle",
+    "colorway": "cool",
+    "file": "cool/exabot-triangle-cool.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "force",
+    "label": "Force",
+    "colorway": "soft-pastel",
+    "file": "soft-pastel/exabot-force-soft-pastel.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "lightning-bolt",
+    "label": "Lightning bolt",
+    "colorway": "soft-pastel",
+    "file": "soft-pastel/exabot-lightning-bolt-soft-pastel.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "long-pill",
+    "label": "Long pill",
+    "colorway": "soft-pastel",
+    "file": "soft-pastel/exabot-long-pill-soft-pastel.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "magnifying-glass",
+    "label": "Magnifying glass",
+    "colorway": "soft-pastel",
+    "file": "soft-pastel/exabot-magnifying-glass-soft-pastel.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "shield",
+    "label": "Shield",
+    "colorway": "soft-pastel",
+    "file": "soft-pastel/exabot-shield-soft-pastel.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "spark",
+    "label": "Spark",
+    "colorway": "soft-pastel",
+    "file": "soft-pastel/exabot-spark-soft-pastel.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "square",
+    "label": "Square",
+    "colorway": "soft-pastel",
+    "file": "soft-pastel/exabot-square-soft-pastel.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "triangle",
+    "label": "Triangle",
+    "colorway": "soft-pastel",
+    "file": "soft-pastel/exabot-triangle-soft-pastel.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "force",
+    "label": "Force",
+    "colorway": "dark-spectrum",
+    "file": "dark-spectrum/exabot-force-dark-spectrum.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "lightning-bolt",
+    "label": "Lightning bolt",
+    "colorway": "dark-spectrum",
+    "file": "dark-spectrum/exabot-lightning-bolt-dark-spectrum.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "long-pill",
+    "label": "Long pill",
+    "colorway": "dark-spectrum",
+    "file": "dark-spectrum/exabot-long-pill-dark-spectrum.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "magnifying-glass",
+    "label": "Magnifying glass",
+    "colorway": "dark-spectrum",
+    "file": "dark-spectrum/exabot-magnifying-glass-dark-spectrum.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "shield",
+    "label": "Shield",
+    "colorway": "dark-spectrum",
+    "file": "dark-spectrum/exabot-shield-dark-spectrum.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "spark",
+    "label": "Spark",
+    "colorway": "dark-spectrum",
+    "file": "dark-spectrum/exabot-spark-dark-spectrum.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "square",
+    "label": "Square",
+    "colorway": "dark-spectrum",
+    "file": "dark-spectrum/exabot-square-dark-spectrum.svg",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "id": "triangle",
+    "label": "Triangle",
+    "colorway": "dark-spectrum",
+    "file": "dark-spectrum/exabot-triangle-dark-spectrum.svg",
+    "width": 512,
+    "height": 512
   }
 ]

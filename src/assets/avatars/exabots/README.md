@@ -1,9 +1,20 @@
 # Exabot avatars
 
-Eight original full-spectrum SVGs, supplied with the October 2026 Exabot
+32 original SVGs (eight forms in four colorways), supplied with the October 2026 Exabot
 Creation Guide. Each has a 512 × 512 viewBox, a transparent surrounding canvas,
 native gradients and an opaque tinted white face. `index.json` lists all files;
-paths in the index are relative to this folder.
+paths in the index are relative to this folder. Each variant is identified by
+its `id` (form) and `colorway` together; form IDs repeat across colorways.
+
+| Colorway directory | Force example |
+|---|---|
+| `full-spectrum/` | [Full spectrum](full-spectrum/exabot-force-full-spectrum.svg) |
+| `cool/` | [Cool](cool/exabot-force-cool.svg) |
+| `soft-pastel/` | [Soft pastel](soft-pastel/exabot-force-soft-pastel.svg) |
+| `dark-spectrum/` | [Dark spectrum](dark-spectrum/exabot-force-dark-spectrum.svg) |
+
+Every directory contains all eight forms below. To select a variant, use
+`<colorway>/exabot-<form>-<colorway>.svg`. The full-spectrum paths remain unchanged.
 
 | Form | SVG |
 |---|---|
@@ -33,9 +44,10 @@ The supplied guide specifies:
   artwork with an exclamation mark and a clear label such as “Unavailable”.
   Disabled artwork is not included in this set; do not simulate it with a filter.
 
-Only the eight requested full-spectrum assets are included. Other colorways
-illustrated in the guide are not part of this directory. These are fixed brand
-artwork, not theme tokens; do not recolor them through CSS.
+Full spectrum, cool, soft pastel and dark spectrum are included. Warm and
+separate disabled artwork are not included. Colorways are selected explicitly;
+dark spectrum does not switch automatically with the page theme. These are
+fixed brand artwork, not theme tokens; do not recolor them through CSS.
 
 Provide meaningful image alt text when the avatar conveys identity. Use empty
 alt text when decorative or when the same identity is already labeled nearby.

@@ -4,6 +4,29 @@ Audit date: 2026-10-19. Shared rules: [AGENTS.md](AGENTS.md).
 
 ## Current handoff
 
+- Task (2026-10-28): add the 24 supplied cool, soft-pastel and dark-spectrum
+  Exabot SVGs. Owner: Codex; released for handoff. User authorized asset additions.
+- Branch / base: `main`, `2a39f5926f16bb1ff6aabd5d5a57e561d468da3e`.
+  Working tree was clean on entry; prior 1.2.0 additions were committed and pushed.
+- Changes: three new directories under `src/assets/avatars/exabots/` with eight
+  unchanged SVGs each; index expanded to 32 entries, keyed by form/colorway pair;
+  avatar and root READMEs updated; package version bumped to `1.3.0` (additions).
+  Existing full-spectrum SVGs and paths unchanged. No styleguide UI changes.
+- Validation: `npm run build` (including invariants), `npm test` (2 tests),
+  `git diff --check` PASS on Node 25.9.0. All 32 variants parse as XML, have
+  unique form/colorway pairs, match supplied bytes, have valid internal IDs/
+  references, contain no script/foreignObject/image or external hrefs, and match
+  built v1 and 1.3.0 output. Existing ignored dist/ backed up before rebuilding.
+- User authorized commit and push of 1.3.0 on 2026-10-28. Remote main matches
+  the base and v1.3.0 is absent. `npm run build:pages` PASS with remote tag fetch,
+  including historical 1.2.0 and 1.1.0–1.1.11. Prior 1.2.0 CI confirmed success.
+- Publication: committing and pushing the reviewed 29 files in this turn;
+  CI can tag v1.3.0 and Cloudflare can deploy main. Next step: check CI/tag and
+  hosted variant availability after push. Total remains 32 avatars, without warm.
+- Limits: Node 22 local and visual/browser checks not run. No dependency install.
+
+## Previous full-spectrum handoff
+
 - Task (2026-10-28): user authorized adding the eight supplied full-spectrum
   Exabot avatars for design-system usage. Owner: Codex; released for handoff.
 - Branch / base: `main`, `e825eae65cf2c554d680daf17ba397bc61878e41`.
