@@ -4,6 +4,35 @@ Audit date: 2026-10-19. Shared rules: [AGENTS.md](AGENTS.md).
 
 ## Current handoff
 
+- Task (2026-11-02): 1.7.1, Exabot playground redesign after 1.7.0. User
+  approved: agent list on the stage, any form/colorway for preview, export
+  and embed, denser controls, preview vs export grouping, colorway swatches
+  and form tiles (each previewed in the chosen colorway), with the shared
+  tool tooltip. Owner: Claude Code;
+  released for handoff. User authorized commit and push 2026-11-02.
+- Branch / base: `main`, `ef6ac08` (1.7.0, tagged, CI passed, hosted).
+- Changes: `src/site/exabot.html` only, plus README playground note and
+  package `1.7.1`. Stage is a bar / preview / footer column: Bot | Agent list
+  view toggle, position (bot view), labelled React and State groups, list
+  actions (send all, mark all read, reset). Form and colorway sit above the
+  tabs and drive stage, agent list, export (with a new Working pose) and
+  embed code (HTML `src` / Astro import). Customize: Live bot size and
+  Compact (16–64px; hides speech/interaction sections). States tab: list
+  options (reply delay), lifecycle, generated code. Scope notes on Export and
+  Embed. Page-only density CSS; shared `_tool-ui.css` untouched.
+- Validation (Node 25.9.0): `npm run check`, `npm run build`, `npm test`
+  (2 pass), `git diff --check` pass. Headless Chrome via CDP at 1440 light,
+  1100 dark, 390 light/dark and 390 with reduced motion: list send/working/
+  done, Square + Cool export with 8 poses, embed `src`, compact size 32, no
+  horizontal overflow, no console errors. Screenshots inspected.
+- Release: `npm run build:pages` with remote tag fetch passed before push.
+- Not checked: real downloads of PNG/ZIP, Safari/Firefox, touch, screen
+  reader.
+- Local staging: `http://127.0.0.1:3097/exabot.html`.
+- Next: verify CI, tag v1.7.1 and hosted playground after the push.
+
+## Previous 1.7.0 handoff
+
 - Task (2026-11-02): 1.7.0, agent working states for `<exa-bot>`, derived from
   a user screen recording of an agent list (send → hop, working → rocking with
   thinking-dot eyes, reply → pop/squint, unread row). User chose: spec plus

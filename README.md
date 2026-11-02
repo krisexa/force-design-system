@@ -449,8 +449,10 @@ bot.state = 'idle';      // reply opened
 row.addEventListener('pointerenter', () => bot.nudge());   // hover is on the row
 ```
 
-Try it under *States* in the playground: a list of all eight forms with
-send, working, unread and read, plus a state switch for the large bot.
+Try it in the playground: *Agent list* on the stage shows all eight forms
+with send, working, unread and read; the stage's State switch drives the large
+bot; the *States* tab has the lifecycle and code. Form and colorway, chosen
+above the tabs, apply to the preview, image export and embed code.
 
 ## Product icons
 

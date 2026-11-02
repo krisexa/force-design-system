@@ -25,18 +25,26 @@ body { margin: 0; background: var(--color-surface); color: var(--color-text-prim
 .grid { display: grid; grid-template-columns: minmax(0, 1fr) 22rem; gap: var(--space-md); align-items: start; }
 @media (max-width: 880px) { .grid { grid-template-columns: 1fr; } }
 
-.stage { position: relative; border: 1px solid var(--color-border); border-radius: var(--radius-surface-lg); min-height: 36rem; display: grid; place-items: center; overflow: hidden; background: radial-gradient(circle at 50% 45%, var(--color-accent-subtle) 0, transparent 55%), var(--color-surface-raised); }
+.stage { position: relative; border: 1px solid var(--color-border); border-radius: var(--radius-surface-lg); min-height: 36rem; display: flex; flex-direction: column; overflow: hidden; background: radial-gradient(circle at 50% 45%, var(--color-accent-subtle) 0, transparent 55%), var(--color-surface-raised); }
 @media (min-width: 881px) { .stage { position: sticky; top: calc(var(--header-height) + var(--space-md)); height: min(47rem, calc(100vh - var(--header-height) - 2 * var(--space-md))); } }
 @media (max-width: 880px) { .stage { min-height: 24rem; } }
-.stage-bar { position: absolute; left: var(--space-sm); right: var(--space-sm); top: var(--space-sm); display: flex; justify-content: space-between; align-items: center; gap: var(--space-xs); flex-wrap: wrap; z-index: 1; }
-.hint { margin: 0; font-size: var(--type-small-size); color: var(--color-text-muted); }
+/* Stage: controls above and below, the preview between, so wrapped
+   controls on a narrow screen never cover the bot or the list. */
+.stage-bar { display: flex; justify-content: space-between; align-items: center; gap: var(--space-xs); flex-wrap: wrap; padding: var(--space-sm) var(--space-sm) 0; z-index: 1; }
+.stage-main { flex: 1; min-height: 0; display: grid; place-items: center; padding: var(--space-sm); }
+.foot { display: grid; justify-items: center; gap: var(--space-2xs); padding: 0 var(--space-sm) var(--space-sm); }
+.hint { margin: 0; font-size: var(--type-small-size); color: var(--color-text-muted); text-align: center; }
+.stage[data-view='list'] #bot, .stage[data-view='list'] #pos, .stage[data-view='list'] .bot-acts { display: none; }
+.stage[data-view='bot'] .listview, .stage[data-view='bot'] .list-acts { display: none; }
 /* Placement preview: the bot moves to either edge of the stage so auto
    bubble placement and the mirrored poses can be checked. */
-.stage exa-bot { margin-inline: var(--space-xl); }
-.stage[data-pos='left'] exa-bot { justify-self: start; }
-.stage[data-pos='right'] exa-bot { justify-self: end; }
-.log { position: absolute; left: 0; right: 0; bottom: 3.5rem; text-align: center; font: var(--type-small-size)/1.4 var(--font-family-mono); color: var(--color-text-muted); pointer-events: none; min-height: 1.4em; }
-.acts { position: absolute; left: var(--space-sm); right: var(--space-sm); bottom: var(--space-sm); display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2xs); }
+.stage #bot { margin-inline: var(--space-xl); }
+.stage[data-pos='left'] #bot { justify-self: start; }
+.stage[data-pos='right'] #bot { justify-self: end; }
+.log { text-align: center; font: var(--type-small-size)/1.4 var(--font-family-mono); color: var(--color-text-muted); pointer-events: none; min-height: 1.4em; }
+.acts { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--space-xs) var(--space-md); }
+.act-group { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space-2xs); }
+.act-l { font-size: var(--type-micro-size); font-weight: var(--font-weight-medium); color: var(--color-text-muted); }
 
 .btn { border: 1px solid var(--color-border-strong); background: var(--color-control-secondary); color: var(--color-text-primary); border-radius: var(--radius-button); padding: var(--space-3xs) var(--space-sm); font: inherit; font-size: var(--type-small-size); font-weight: var(--font-weight-medium); cursor: pointer; transition: background-color var(--motion-fast); }
 .btn:hover { background: var(--color-control-secondary-hover); }
@@ -92,7 +100,30 @@ details pre, .code { font: var(--type-small-size)/1.55 var(--font-family-mono); 
 .dlrow { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: var(--space-2xs); margin-top: var(--space-sm); }
 .dlrow .btn { padding-inline: var(--space-2xs); }
 .status { font-size: var(--type-small-size); color: var(--color-text-muted); margin: var(--space-xs) 0 0; min-height: 1.4em; }
-.stage-bar .bar-r { display: flex; gap: var(--space-2xs); flex-wrap: wrap; }
+/* Agent list preview: a chat-app sidebar on the stage. */
+.listview { width: min(24rem, 100%); align-self: stretch; display: grid; align-items: center; min-height: 0; }
+.listcard { border: 1px solid var(--color-border); border-radius: var(--radius-surface-lg); background: var(--color-surface); box-shadow: var(--elevation-md); padding: var(--space-xs); max-height: 100%; overflow-y: auto; }
+.listcap { margin: 0 var(--space-xs) var(--space-2xs); font-size: var(--type-micro-size); font-weight: var(--font-weight-medium); color: var(--color-text-muted); }
+.compact-only { display: none; }
+/* Artwork choice sits above the tabs because preview, export and embed all use it. */
+.shared { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xs); padding: var(--space-sm) var(--space-md) var(--space-2xs); flex: none; }
+.shared label, .cwf { display: grid; gap: var(--space-3xs); min-width: 0; align-content: start; }
+.shared span { font-size: var(--type-micro-size); font-weight: var(--font-weight-medium); color: var(--color-text-muted); }
+.shared span b { font-weight: inherit; color: var(--color-text-primary); }
+/* Colorway swatches show the chosen form in each colorway. */
+.swatches { display: flex; gap: var(--space-2xs); }
+.swatches button { all: unset; box-sizing: border-box; flex: none; width: var(--space-xl); height: var(--space-xl); display: grid; place-items: center; border: 1px solid var(--color-border); border-radius: var(--radius-control); background: var(--color-surface-subtle); cursor: pointer; transition: border-color var(--motion-fast), background-color var(--motion-fast); }
+.swatches button:hover { border-color: var(--color-border-strong); background: var(--color-surface-hover); }
+.swatches button[aria-pressed='true'] { border-color: var(--color-accent); background: var(--color-accent-subtle); box-shadow: 0 0 0 1px var(--color-accent); }
+.swatches.tiles { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: var(--space-3xs); }
+.swatches.tiles button { width: auto; height: auto; aspect-ratio: 1; }
+@media (max-width: 880px) { .swatches.tiles { grid-template-columns: repeat(8, minmax(0, var(--space-xl))); } }
+.swatches img { width: 70%; height: 70%; display: block; pointer-events: none; }
+.tool-tooltip b { display: block; font-weight: var(--font-weight-semibold); }
+.shared select { width: 100%; min-width: 0; }
+.note.scope { margin: calc(-1 * var(--space-2xs)) 0 var(--space-xs); }
+.panel[data-compact] .compact-only { display: block; }
+.panel[data-compact] .full-only { display: none; }
 
 /* Agent list demo: compact bots in rows, the way a chat app lists agents. */
 .agents { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3xs); }
@@ -109,6 +140,23 @@ details pre, .code { font: var(--type-small-size)/1.55 var(--font-family-mono); 
 .states th, .states td { text-align: left; vertical-align: top; padding: var(--space-3xs) var(--space-2xs) var(--space-3xs) 0; border-top: 1px solid var(--color-border); }
 .states th { color: var(--color-text-primary); font-weight: var(--font-weight-medium); white-space: nowrap; }
 __TOOL_UI_CSS__
+/* Denser than the shared tool UI so the stage controls, the agent list and
+   more settings fit on a laptop screen without scrolling. Page-only. */
+.wrap { padding-top: var(--space-md); }
+.masthead { margin-bottom: var(--space-sm); }
+.masthead p { font-size: var(--type-small-size); }
+.wrap .stage .btn { min-height: var(--space-lg); padding: var(--space-3xs) var(--space-xs); }
+.wrap .stage .seg button, .wrap .panel .tabs button { min-height: var(--space-lg); padding-block: 0; }
+.wrap .panel .tabs { margin: var(--space-2xs); }
+.wrap .panel .sec { padding: var(--space-sm) var(--space-md); }
+.wrap .panel .sec h2 { margin-bottom: var(--space-xs); }
+.wrap .panel :is(select, input[type=text], input[type=password]) { padding-block: var(--space-3xs); }
+.wrap .panel .seg button { min-height: var(--space-lg); padding-block: 0; }
+.agent { padding: var(--space-3xs) var(--space-xs); }
+/* Stage and panel fit the first screen below the masthead, then stay put. */
+@media (min-width: 881px) { .stage { height: min(47rem, calc(100vh - var(--header-height) - var(--space-md) - 7rem)); } .panel { max-height: min(47rem, calc(100vh - var(--header-height) - var(--space-md) - 7rem)); } }
+@media (max-width: 880px) { .wrap .stage { min-height: 26rem; } .stage[data-view='list'] .listcard { max-height: 24rem; } }
+@media (max-width: 480px) { .act-l { flex-basis: 100%; text-align: center; } .stage #bot { margin-inline: var(--space-sm); } }
 </style>
 </head>
 <body>
@@ -116,31 +164,52 @@ __SITE_HEADER__
 <div class="wrap">
   <div class="masthead">
     <h1 class="type-h3">Exabot playground</h1>
-    <p>The interactive Exabot from <code>exabot.js</code>. Tune it, try its reactions and agent states, export images, then copy the embed code. Use Theme in the header to check light and dark.</p>
+    <p>Tune the interactive Exabot from <code>exabot.js</code>, try its reactions and agent states, export images and copy the embed code.</p>
   </div>
 
   <div class="grid">
-    <section class="stage" id="stage" data-pos="center" aria-label="Preview">
+    <section class="stage" id="stage" data-pos="center" data-view="bot" aria-label="Preview">
       <div class="stage-bar">
-        <p class="hint">Click to poke, drag to fling, hold to pet.</p>
-        <div class="bar-r">
-        <div class="seg" role="group" aria-label="Agent state" id="state"><button type="button" data-v="idle" aria-pressed="true">Idle</button><button type="button" data-v="working" aria-pressed="false">Working</button><button type="button" data-v="done" aria-pressed="false">Done</button></div>
+        <div class="seg" role="group" aria-label="Preview" id="view"><button type="button" data-v="bot" aria-pressed="true">Bot</button><button type="button" data-v="list" aria-pressed="false">Agent list</button></div>
         <div class="seg" role="group" aria-label="Preview position" id="pos"><button type="button" data-v="left" aria-pressed="false">Left</button><button type="button" data-v="center" aria-pressed="true">Centre</button><button type="button" data-v="right" aria-pressed="false">Right</button></div>
+      </div>
+      <div class="stage-main">
+        <exa-bot id="bot" size="180"></exa-bot>
+        <div class="listview">
+          <div class="listcard"><p class="listcap">Agents</p><ul class="agents" id="agents"></ul></div>
         </div>
       </div>
-      <exa-bot id="bot" size="180"></exa-bot>
-      <div class="log" id="log" aria-live="polite"></div>
-      <div class="acts" role="group" aria-label="Try a reaction">
-        <button class="btn" type="button" data-do="poke">Poke</button>
-        <button class="btn" type="button" data-do="dizzy">Spin</button>
-        <button class="btn" type="button" data-do="celebrate">Celebrate</button>
-        <button class="btn" type="button" data-do="confused">Confused</button>
-        <button class="btn" type="button" data-do="stretch">Stretch</button>
-        <button class="btn" type="button" data-do="sleep">Nap</button>
+      <div class="foot">
+        <div class="log" id="log" aria-live="polite"></div>
+        <p class="hint" id="hint"></p>
+        <div class="acts bot-acts">
+          <div class="act-group" role="group" aria-labelledby="actL">
+            <span class="act-l" id="actL">React</span>
+            <button class="btn" type="button" data-do="poke">Poke</button>
+            <button class="btn" type="button" data-do="dizzy">Spin</button>
+            <button class="btn" type="button" data-do="celebrate">Celebrate</button>
+            <button class="btn" type="button" data-do="confused">Confused</button>
+            <button class="btn" type="button" data-do="stretch">Stretch</button>
+            <button class="btn" type="button" data-do="sleep">Nap</button>
+          </div>
+          <div class="act-group" role="group" aria-labelledby="stL">
+            <span class="act-l" id="stL">State</span>
+            <div class="seg" id="state"><button type="button" data-v="idle" aria-pressed="true">Idle</button><button type="button" data-v="working" aria-pressed="false">Working</button><button type="button" data-v="done" aria-pressed="false">Done</button></div>
+          </div>
+        </div>
+        <div class="acts list-acts" role="group" aria-label="Agent list">
+          <button class="btn primary" type="button" id="sendAll">Send to all</button>
+          <button class="btn" type="button" id="readAll">Mark all read</button>
+          <button class="btn" type="button" id="resetAll">Reset</button>
+        </div>
       </div>
     </section>
 
     <aside class="panel" aria-label="Settings">
+      <div class="shared" role="group" aria-label="Artwork, used by the preview, export and embed code">
+        <div class="cwf"><span id="formL">Form <b id="formName"></b></span><div class="swatches tiles" id="form" role="group" aria-labelledby="formL"><button type="button" data-v="force" aria-pressed="false" aria-label="Force" data-tip="Force" data-tip-note="The default interactive form."><img alt="" width="28" height="28"></button><button type="button" data-v="square" aria-pressed="false" aria-label="Square" data-tip="Square"><img alt="" width="28" height="28"></button><button type="button" data-v="spark" aria-pressed="false" aria-label="Spark" data-tip="Spark"><img alt="" width="28" height="28"></button><button type="button" data-v="shield" aria-pressed="false" aria-label="Shield" data-tip="Shield"><img alt="" width="28" height="28"></button><button type="button" data-v="magnifying-glass" aria-pressed="false" aria-label="Magnifying glass" data-tip="Magnifying glass"><img alt="" width="28" height="28"></button><button type="button" data-v="lightning-bolt" aria-pressed="false" aria-label="Lightning bolt" data-tip="Lightning bolt"><img alt="" width="28" height="28"></button><button type="button" data-v="long-pill" aria-pressed="false" aria-label="Long pill" data-tip="Long pill"><img alt="" width="28" height="28"></button><button type="button" data-v="triangle" aria-pressed="false" aria-label="Triangle" data-tip="Triangle"><img alt="" width="28" height="28"></button></div></div>
+        <div class="cwf"><span id="cwL">Colorway <b id="cwName"></b></span><div class="swatches tiles" id="cw" role="group" aria-labelledby="cwL"><button type="button" data-v="full-spectrum" aria-pressed="false" aria-label="Full spectrum" data-tip="Full spectrum" data-tip-note="The original colorway. Default."><img alt="" width="28" height="28"></button><button type="button" data-v="cool" aria-pressed="false" aria-label="Cool" data-tip="Cool" data-tip-note="Blues and violets."><img alt="" width="28" height="28"></button><button type="button" data-v="soft-pastel" aria-pressed="false" aria-label="Soft pastel" data-tip="Soft pastel" data-tip-note="Lighter, softer tints."><img alt="" width="28" height="28"></button><button type="button" data-v="dark-spectrum" aria-pressed="false" aria-label="Dark spectrum" data-tip="Dark spectrum" data-tip-note="Deeper tones. Chosen explicitly; it does not follow the page theme."><img alt="" width="28" height="28"></button></div></div>
+      </div>
       <div class="tabs" role="tablist" aria-label="Settings sections">
         <button type="button" role="tab" id="tab-custom" aria-controls="tp-custom" aria-selected="true" data-tab="custom">Customize</button>
         <button type="button" role="tab" id="tab-states" aria-controls="tp-states" aria-selected="false" tabindex="-1" data-tab="states">States</button>
@@ -150,14 +219,19 @@ __SITE_HEADER__
 
       <div class="tabpanel" role="tabpanel" id="tp-custom" aria-labelledby="tab-custom">
         <div class="sec">
-          <h2>Behavior</h2>
+          <h2>Live bot <small>stage and embed code</small></h2>
           <div class="row"><label for="size">Size</label><input type="range" id="size" min="64" max="260" step="4" value="180"><output id="sizeO" for="size">180px</output></div>
+          <div class="checks" style="margin-top:var(--space-xs)"><label><input type="checkbox" id="compact">Compact list avatar</label></div>
+          <p class="note compact-only">Compact is for rows in a list: no shadow, float, speech or gestures. The row names the agent and shows its state as text.</p>
+        </div>
+        <div class="sec full-only">
+          <h2>Behavior</h2>
           <div class="row"><label for="dz">Spins after</label><input type="range" id="dz" min="3" max="8" value="5"><output id="dzO" for="dz">5 taps</output></div>
           <div class="row"><label for="sl">Falls asleep after</label><select id="sl"><option value="0" selected>Never</option><option value="20">20 seconds</option><option value="45">45 seconds</option><option value="120">2 minutes</option></select></div>
           <div class="row"><span class="lbl" id="bubL">Speech bubble</span><div class="seg" role="group" aria-labelledby="bubL" id="bub"><button type="button" data-v="auto" aria-pressed="true">Auto</button><button type="button" data-v="right" aria-pressed="false">Right</button><button type="button" data-v="left" aria-pressed="false">Left</button><button type="button" data-v="top" aria-pressed="false">Top</button></div></div>
           <p class="note">Auto puts the bubble wherever it fits (right, then left, then top) while the avatar faces inward from its preview position. Artwork and eyes turn together; text stays readable.</p>
         </div>
-        <div class="sec">
+        <div class="sec full-only">
           <h2>What it says <small>one line per tap</small></h2>
           <textarea id="lines" rows="6" aria-label="Lines, one per tap"></textarea>
           <details>
@@ -165,7 +239,7 @@ __SITE_HEADER__
             <div class="lns" id="lns"></div>
           </details>
         </div>
-        <div class="sec">
+        <div class="sec full-only">
           <h2>Interactions</h2>
           <div class="checks" id="checks">
             <label><input type="checkbox" data-k="drag">Drag and fling</label>
@@ -180,11 +254,10 @@ __SITE_HEADER__
 
       <div class="tabpanel" role="tabpanel" id="tp-states" aria-labelledby="tab-states" hidden>
         <div class="sec">
-          <h2>Agent list <small>click a row to send</small></h2>
-          <ul class="agents" id="agents"></ul>
-          <div class="row" style="margin-top:var(--space-xs)"><label for="cw">Colorway</label><select id="cw"><option value="full-spectrum">Full spectrum</option><option value="cool">Cool</option><option value="soft-pastel">Soft pastel</option><option value="dark-spectrum">Dark spectrum</option></select></div>
-          <div class="row"><span class="lbl"></span><button class="btn" type="button" id="sendAll">Send to all</button></div>
-          <p class="note" id="agentsLive" aria-live="polite"></p>
+          <h2>Agent list</h2>
+          <p class="note scope">Compact bots in rows, one per form, the way a chat app lists agents, in the colorway above.</p>
+          <div class="row" style="margin-top:var(--space-xs)"><span class="lbl">Preview</span><button class="btn" type="button" id="showList">Show agent list</button></div>
+          <div class="row"><label for="delay">Replies after about</label><input type="range" id="delay" min="1" max="10" value="4"><output id="delayO" for="delay">4 s</output></div>
         </div>
         <div class="sec">
           <h2>Lifecycle</h2>
@@ -195,19 +268,17 @@ __SITE_HEADER__
             <tr><th>Done</th><td><code>state="done"</code> pops and squints, then rests. Your row shows the reply preview as unread.</td></tr>
             <tr><th>Read</th><td>Set <code>state="idle"</code> when the reply is opened. No animation.</td></tr>
           </table>
-          <p class="note">Reduced motion: no hop, rock or pop; the dots stay still and the squint still shows. The bot never shows text in compact mode, so always pair it with visible state text.</p>
-          <pre>&lt;exa-bot compact size="32" state="working"
-  src="__MAJOR__/assets/avatars/exabots/full-spectrum/exabot-square-full-spectrum.svg"&gt;&lt;/exa-bot&gt;
-
-bot.state = 'working';   // on send
-bot.state = 'done';      // reply arrived
-bot.state = 'idle';      // reply read
-row.addEventListener('pointerenter', () =&gt; bot.nudge());</pre>
+          <p class="note">Reduced motion: no hop, rock or pop; the dots stay still and the squint still shows. A compact bot never shows text, so always pair it with visible state text.</p>
+        </div>
+        <div class="sec">
+          <h2>Code <small>for the form and colorway above</small></h2>
+          <pre id="stateCode"></pre>
         </div>
       </div>
       <div class="tabpanel" role="tabpanel" id="tp-export" aria-labelledby="tab-export" hidden>
         <div class="sec">
           <h2>Export image</h2>
+          <p class="note scope">Still images of the form and colorway above. Pose, size and background here don’t change the live bot.</p>
           <div class="poses" id="poses" role="group" aria-label="Pose"></div>
           <div class="expv"><img id="expimg" alt="Export preview"></div>
           <div class="row" style="margin-top:var(--space-sm)"><span class="lbl" id="expxL">Size</span><div class="seg" role="group" aria-labelledby="expxL" id="expx"><button type="button" data-v="256" aria-pressed="false">256</button><button type="button" data-v="512" aria-pressed="true">512</button><button type="button" data-v="1024" aria-pressed="false">1024</button></div></div>
@@ -229,6 +300,7 @@ row.addEventListener('pointerenter', () =&gt; bot.nudge());</pre>
             <h2>Embed code</h2>
             <div class="seg" role="group" aria-label="Site type" id="fmt"><button type="button" data-v="html" aria-pressed="true">HTML</button><button type="button" data-v="astro" aria-pressed="false">Astro</button></div>
           </div>
+          <p class="note scope">The live bot as set in Customize, with the form and colorway above.</p>
           <textarea class="code" id="code" readonly spellcheck="false" aria-label="Embed code"></textarea>
           <div class="row" style="margin-top:var(--space-xs)"><p class="note" id="codeNote" style="flex:1;margin:0"></p><button class="btn primary" type="button" id="copy">Copy code</button></div>
           <details>
@@ -291,8 +363,12 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
 </script>
 <script>
 (() => {
-  const SVG_PATH = '__MAJOR__/assets/avatars/exabots/full-spectrum/exabot-force-full-spectrum.svg';
-  const SVG_IMPORT = '@exaforce/design-system/assets/avatars/exabots/full-spectrum/exabot-force-full-spectrum.svg?url';
+  /* Every form and colorway shares one path pattern and the same eye layers,
+     so the stage, list, export and embed code all follow the chosen pair. */
+  const FORMS = [['force', 'Force'], ['square', 'Square'], ['spark', 'Spark'], ['shield', 'Shield'], ['magnifying-glass', 'Magnifying glass'], ['lightning-bolt', 'Lightning bolt'], ['long-pill', 'Long pill'], ['triangle', 'Triangle']];
+  const artPath = (f, c) => `assets/avatars/exabots/${c}/exabot-${f}-${c}.svg`;
+  const artUrl = (f, c) => '__MAJOR__/' + artPath(f, c);
+  const isDefaultArt = () => S.form === 'force' && S.cw === 'full-spectrum';
   const DEF_LINES = ['Hi there!', 'Ready when you are.', 'Ask me anything.', 'Boop.', 'That tickles.', 'Still here.', 'Want a summary of today?'];
   const DEF_LN = { dizzy: ['Spin', 'Whoa… dizzy.'], celebrate: ['Celebrate', 'Nice work!'], confused: ['Confused', 'Hmm?'], peek: ['Peekaboo', 'Not looking!'], pet: ['Pet', 'Mmm, that’s nice.'], fling: ['Fling', 'Wheee!'], scroll: ['Back to top', 'Welcome back up!'] };
   /* Which interactions are on unless switched off, and which are opt-in;
@@ -300,7 +376,7 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
   const ON_BY_DEFAULT = ['drag', 'pet'], OPT_IN = ['peek', 'scroll'];
   const $ = s => document.querySelector(s);
   const bot = $('#bot');
-  let S = { ex: { pose: 'happy', px: 512, bg: 'clear', bubble: true, text: '' }, size: 180, dz: 5, sl: 0, bub: 'auto', pos: 'center', fmt: 'html', lines: DEF_LINES.join('\n'), ln: {}, on: ON_BY_DEFAULT.slice() };
+  let S = { ex: { pose: 'happy', px: 512, bg: 'clear', bubble: true, text: '' }, form: 'force', cw: 'full-spectrum', compact: false, view: 'bot', delay: 4, size: 180, dz: 5, sl: 0, bub: 'auto', pos: 'center', fmt: 'html', lines: DEF_LINES.join('\n'), ln: {}, on: ON_BY_DEFAULT.slice() };
   Object.keys(DEF_LN).forEach(k => S.ln[k] = DEF_LN[k][1]);
   const KEY = 'exabot-playground-3';
   try {
@@ -318,7 +394,35 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
   const disabled = () => ON_BY_DEFAULT.filter(k => !S.on.includes(k));
   const enabled = () => OPT_IN.filter(k => S.on.includes(k));
 
+  const HINT = { bot: 'Click to poke, drag to fling, hold to pet.', compact: 'Compact list avatar: hover to squish, or try a state.', list: 'Click a row to send. Click an unread reply to read it.' };
   function apply() {
+    if (!FORMS.some(f => f[0] === S.form)) S.form = 'force';
+    const src = artUrl(S.form, S.cw);
+    if (bot.getAttribute('src') !== src) bot.setAttribute('src', src);
+    S.compact ? bot.setAttribute('compact', '') : bot.removeAttribute('compact');
+    const [lo, hi, st] = S.compact ? [16, 64, 2] : [64, 260, 4];
+    S.size = Math.max(lo, Math.min(hi, S.size));
+    Object.assign($('#size'), { min: lo, max: hi, step: st });
+    $('#compact').checked = S.compact;
+    pressed($('#form'), S.form);
+    $('#form').querySelectorAll('button').forEach(b => {
+      const u = artUrl(b.dataset.v, S.cw), i = b.querySelector('img');
+      if (i.getAttribute('src') !== u) i.setAttribute('src', u);
+    });
+    $('#formName').textContent = '· ' + $(`#form [data-v="${S.form}"]`).dataset.tip;
+    pressed($('#cw'), S.cw);
+    $('#cw').querySelectorAll('button').forEach(b => {
+      const u = artUrl(S.form, b.dataset.v), i = b.querySelector('img');
+      if (i.getAttribute('src') !== u) i.setAttribute('src', u);
+    });
+    $('#cwName').textContent = '· ' + $(`#cw [data-v="${S.cw}"]`).dataset.tip;
+    $('.panel').toggleAttribute('data-compact', S.compact);
+    $('#stage').dataset.view = S.view;
+    pressed($('#view'), S.view);
+    $('#showList').textContent = S.view === 'list' ? 'Show the bot' : 'Show agent list';
+    $('#hint').textContent = HINT[S.view === 'list' ? 'list' : S.compact ? 'compact' : 'bot'];
+    $('#delay').value = S.delay; $('#delayO').textContent = S.delay + ' s';
+    syncList();
     bot.setAttribute('size', S.size);
     bot.setAttribute('dizzy-after', S.dz);
     bot.setAttribute('sleep', S.sl);
@@ -338,14 +442,15 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
     $('#dz').value = S.dz; $('#dzO').textContent = S.dz + ' taps';
     $('#sl').value = String(S.sl);
     if ($('#lines').value !== S.lines) $('#lines').value = S.lines;
-    buildCode(); renderExport(); save();
+    buildCode(); loadArt(); save();
   }
 
   /* The snippet only ever carries attributes that differ from the defaults,
      plus a script reference: the component itself is never pasted. */
   function buildCode() {
     const L = linesArr(), attrs = [`size="${S.size}"`];
-    if (L.join('|') !== DEF_LINES.join('|')) attrs.push(`lines="${esc(L.join('|'))}"`);
+    if (S.compact) attrs.push('compact');
+    else {
     Object.keys(DEF_LN).forEach(k => { if (S.ln[k] && S.ln[k] !== DEF_LN[k][1]) attrs.push(`${k}-line="${esc(S.ln[k])}"`); });
     if (disabled().length) attrs.push(`disable="${disabled().join(' ')}"`);
     if (enabled().length) attrs.push(`enable="${enabled().join(' ')}"`);
@@ -353,28 +458,61 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
     if (S.sl) attrs.push(`sleep="${S.sl}"`);
     if (S.pos !== 'center') attrs.push(`facing="${S.pos === 'right' ? 'left' : 'right'}"`);
     if (S.bub !== 'auto') attrs.push(`bubble="${S.bub}"`);
+    }
     let code;
     if (S.fmt === 'astro') {
-      code = `---\nimport exabotSvg from '${SVG_IMPORT}';\n---\n<exa-bot src={exabotSvg} ${attrs.join(' ')}></exa-bot>\n<script>\n  import '@exaforce/design-system/exabot.js';\n<\/script>`;
+      code = `---\nimport exabotSvg from '@exaforce/design-system/${artPath(S.form, S.cw)}?url';\n---\n<exa-bot src={exabotSvg} ${attrs.join(' ')}></exa-bot>\n<script>\n  import '@exaforce/design-system/exabot.js';\n<\/script>`;
       $('#codeNote').innerHTML = 'Bundled by Astro from the installed package. Load <code>tokens.css</code> as usual for theming.';
     } else {
       const src = new URL('__MAJOR__/exabot.js', location.href).href;
+      if (!isDefaultArt()) attrs.push(`src="${new URL(artUrl(S.form, S.cw), location.href).href}"`);
       code = `<exa-bot ${attrs.join(' ')}></exa-bot>\n<script type="module" src="${src}"><\/script>`;
       $('#codeNote').innerHTML = 'Load the script once per page; add more <code>&lt;exa-bot&gt;</code> tags to show several.';
     }
     $('#code').value = code;
+    const art = new URL(artUrl(S.form, S.cw), location.href).href;
+    $('#stateCode').textContent = `<exa-bot compact size="32" state="idle"\n  src="${art}"></exa-bot>\n\nbot.state = 'working';   // on send\nbot.state = 'done';      // reply arrived\nbot.state = 'idle';      // reply read\nrow.addEventListener('pointerenter', () => bot.nudge());`;
   }
 
   $('#bub').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.bub = b.dataset.v; apply(); } });
   $('#pos').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.pos = b.dataset.v; apply(); } });
   $('#fmt').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.fmt = b.dataset.v; apply(); } });
   $('#size').addEventListener('input', e => { S.size = +e.target.value; apply(); });
+  $('#form').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.form = b.dataset.v; apply(); } });
+  $('#cw').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.cw = b.dataset.v; apply(); } });
+  /* Form and colorway swatch tooltips: the shared tool tooltip, on hover and keyboard focus. */
+  const tip = document.createElement('div');
+  tip.className = 'tool-tooltip'; tip.id = 'swatch-tip'; tip.setAttribute('role', 'tooltip'); tip.setAttribute('popover', 'manual');
+  document.body.append(tip);
+  let tipFor = null;
+  const hideTip = () => { if (!tipFor) return; try { tip.hidePopover(); } catch (e) {} tipFor.removeAttribute('aria-describedby'); tipFor = null; };
+  const showTip = b => {
+    hideTip(); tipFor = b;
+    tip.innerHTML = `<b>${esc(b.dataset.tip)}</b>${esc(b.dataset.tipNote || '')}`;
+    b.setAttribute('aria-describedby', tip.id);
+    try { tip.showPopover(); } catch (e) { return; }
+    const r = b.getBoundingClientRect(), t = tip.getBoundingClientRect();
+    tip.style.left = Math.max(8, Math.min(r.left + r.width / 2 - t.width / 2, innerWidth - t.width - 8)) + 'px';
+    tip.style.top = (r.bottom + t.height + 12 < innerHeight ? r.bottom + 8 : Math.max(8, r.top - t.height - 8)) + 'px';
+  };
+  document.querySelectorAll('.swatches button').forEach(b => {
+    b.addEventListener('mouseenter', () => showTip(b));
+    b.addEventListener('mouseleave', () => { if (document.activeElement !== b) hideTip(); });
+    b.addEventListener('focus', () => { if (b.matches(':focus-visible')) showTip(b); });
+    b.addEventListener('blur', hideTip);
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') hideTip(); });
+  addEventListener('scroll', hideTip, true); addEventListener('resize', hideTip);
+  $('#compact').addEventListener('change', e => { S.compact = e.target.checked; S.size = S.compact ? 32 : 180; apply(); });
+  $('#view').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.view = b.dataset.v; apply(); } });
+  $('#showList').addEventListener('click', () => { S.view = S.view === 'list' ? 'bot' : 'list'; apply(); });
+  $('#delay').addEventListener('input', e => { S.delay = +e.target.value; apply(); });
   $('#dz').addEventListener('input', e => { S.dz = +e.target.value; apply(); });
   $('#sl').addEventListener('change', e => { S.sl = +e.target.value; apply(); });
   $('#lines').addEventListener('input', e => { S.lines = e.target.value; apply(); });
   $('#lns').addEventListener('input', e => { const k = e.target.dataset.ln; if (k) { S.ln[k] = e.target.value; apply(); } });
   $('#checks').addEventListener('change', e => { const k = e.target.dataset.k; if (!k) return; S.on = S.on.filter(x => x !== k); if (e.target.checked) S.on.push(k); apply(); });
-  $('.acts').addEventListener('click', e => {
+  $('.bot-acts').addEventListener('click', e => {
     const b = e.target.closest('[data-do]'); if (!b) return;
     const d = b.dataset.do;
     if (d === 'stretch') { bot.wake(); bot.stretch(); } else bot[d]();
@@ -388,24 +526,27 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
   bot.addEventListener('exabot-state', e => { log('exabot-state · ' + e.detail.from + ' → ' + e.detail.state); pressed($('#state'), e.detail.state); });
   $('#state').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) bot.state = b.dataset.v; });
 
-  /* ---------- agent states demo ----------
-     Each row owns its state; the reply delay is random, as a real one is. */
-  const FORMS = [['square', 'Square'], ['spark', 'Spark'], ['force', 'Force'], ['shield', 'Shield'], ['magnifying-glass', 'Magnifying glass'], ['lightning-bolt', 'Lightning bolt'], ['long-pill', 'Long pill'], ['triangle', 'Triangle']];
+  /* ---------- agent list ----------
+     Each row owns its state; the reply delay varies around the chosen
+     value, as a real one does. */
   const SUB = { idle: 'Idle', working: 'Working…', done: 'Replied · unread' };
-  let cw = 'full-spectrum';
-  try { cw = localStorage.getItem('exabot-playground-cw') || cw; } catch (e) {}
-  const artUrl = f => `__MAJOR__/assets/avatars/exabots/${cw}/exabot-${f}-${cw}.svg`;
-  $('#agents').innerHTML = FORMS.map(([f, name]) => `<li><button type="button" class="agent" data-form="${f}" data-state="idle"><exa-bot compact size="32" src="${artUrl(f)}"></exa-bot><span><b>${name}</b><small>${SUB.idle}</small></span></button></li>`).join('');
-  $('#cw').value = cw;
-  const setRow = (row, st) => {
+  $('#agents').innerHTML = FORMS.map(([f, name]) => `<li><button type="button" class="agent" data-form="${f}" data-state="idle"><exa-bot compact size="32"></exa-bot><span><b>${name}</b><small>${SUB.idle}</small></span></button></li>`).join('');
+  function syncList() {
+    document.querySelectorAll('#agents .agent').forEach(r => {
+      const b = r.querySelector('exa-bot'), u = artUrl(r.dataset.form, S.cw);
+      if (b.getAttribute('src') !== u) b.setAttribute('src', u);
+    });
+  }
+  const rows = () => [...document.querySelectorAll('#agents .agent')];
+  const setRow = (row, st, quiet) => {
     row.dataset.state = st; row.querySelector('exa-bot').state = st; row.querySelector('small').textContent = SUB[st];
-    $('#agentsLive').textContent = `${row.querySelector('b').textContent}: ${SUB[st]}`;
+    if (!quiet) log(`${row.querySelector('b').textContent} · ${SUB[st]}`);
   };
   const send = row => {
     if (row.dataset.state === 'working') return;
     setRow(row, 'working');
     const li = row.parentElement; li.parentElement.prepend(li);
-    clearTimeout(row._t); row._t = setTimeout(() => setRow(row, 'done'), 2500 + Math.random() * 3500);
+    clearTimeout(row._t); row._t = setTimeout(() => setRow(row, 'done'), S.delay * 1000 * (.6 + Math.random() * .8));
   };
   $('#agents').addEventListener('click', e => {
     const row = e.target.closest('.agent'); if (!row) return;
@@ -415,11 +556,11 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
     const row = e.target.closest('.agent');
     if (row && !row.contains(e.relatedTarget)) row.querySelector('exa-bot').nudge();
   });
-  $('#sendAll').addEventListener('click', () => document.querySelectorAll('#agents .agent').forEach(send));
-  $('#cw').addEventListener('change', e => {
-    cw = e.target.value;
-    try { localStorage.setItem('exabot-playground-cw', cw); } catch (err) {}
-    document.querySelectorAll('#agents .agent').forEach(r => r.querySelector('exa-bot').setAttribute('src', artUrl(r.dataset.form)));
+  $('#sendAll').addEventListener('click', () => rows().forEach(send));
+  $('#readAll').addEventListener('click', () => rows().forEach(r => { if (r.dataset.state === 'done') setRow(r, 'idle', true); }));
+  $('#resetAll').addEventListener('click', () => {
+    const ul = $('#agents');
+    FORMS.forEach(([f]) => { const r = ul.querySelector(`[data-form="${f}"]`); clearTimeout(r._t); setRow(r, 'idle', true); ul.appendChild(r.parentElement); });
   });
 
   $('#copy').addEventListener('click', async () => {
@@ -452,6 +593,7 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
     shut:      { name: 'Eyes shut', rot: -14, look: [-14, 10], eyes: { sy: .1 }, line: () => S.ln.peek },
     loved:     { name: 'Loved',     rot: -6, eyes: { sy: .34, dy: -.08 }, mark: 'hearts', line: () => S.ln.pet },
     asleep:    { name: 'Asleep',    look: [0, 6], eyes: { sy: .14 }, mark: 'zzz', line: () => 'Zzz…' },
+    working:   { name: 'Working',   rot: -7, dots: true, line: () => 'Working…' },
   };
   const xesc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const measure = (() => { const c = document.createElement('canvas').getContext('2d'); return (txt, size) => { c.font = `500 ${size}px ${FONT}`; return c.measureText(txt).width; }; })();
@@ -478,6 +620,18 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
         const ex = +e.getAttribute('cx'), ey = +e.getAttribute('cy');
         e.setAttribute('transform', `translate(${ex} ${ey}) scale(${t.sx} ${t.sy}) translate(${-ex} ${-ey}) ` + (e.getAttribute('transform') || ''));
       });
+      /* Working: the component's thinking dots, sized from the eyes. */
+      if (P.dots && els.length > 1) {
+        const a = els[0], z = els[els.length - 1], gap = Math.abs(+z.getAttribute('cx') - +a.getAttribute('cx')) / 2, r = +a.getAttribute('rx') * 1.05;
+        const g = doc.createElementNS(NS, 'g');
+        [-1, 0, 1].forEach((i, k) => {
+          const c = doc.createElementNS(NS, 'circle');
+          c.setAttribute('cx', cx + i * gap); c.setAttribute('cy', cy - (k === 1 ? r * .5 : 0)); c.setAttribute('r', r);
+          c.setAttribute('fill', a.getAttribute('fill') || '#18181b');
+          g.appendChild(c);
+        });
+        eyes.parentNode.insertBefore(g, eyes); eyes.remove();
+      }
     }
     const body = doc.createElementNS(NS, 'g');
     body.setAttribute('transform', `${dir < 0 ? 'translate(512 0) scale(-1 1) ' : ''}rotate(${P.rot || 0} 256 256)`);
@@ -582,7 +736,7 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
   $('.dlrow').addEventListener('click', async e => {
     const b = e.target.closest('[data-dl]'); if (!b) return;
     if (!RAW) { status('The Exabot artwork has not loaded.'); return; }
-    const kind = b.dataset.dl, base = `exabot-force-${S.ex.pose}`;
+    const name = `exabot-${S.form}-${S.cw}`, kind = b.dataset.dl, base = `${name}-${S.ex.pose}`;
     try {
       if (kind === 'svg') return saveFile(base + '.svg', new Blob([current().svg], { type: 'image/svg+xml' }));
       if (kind === 'png') { const c = current(); status('Rendering…'); return saveFile(`${base}-${S.ex.px}.png`, await raster(c, c.W >= c.H ? S.ex.px : Math.round(S.ex.px * c.W / c.H))); }
@@ -590,16 +744,24 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
       const files = [];
       for (const k of Object.keys(POSES)) {
         const blob = await raster(compose(k, { bubble: false, bg: 'clear' }), 256);
-        files.push({ name: `exabot-force-${k}.png`, data: new Uint8Array(await blob.arrayBuffer()) });
+        files.push({ name: `${name}-${k}.png`, data: new Uint8Array(await blob.arrayBuffer()) });
       }
-      saveFile('exabot-force-emoji.zip', zip(files));
+      saveFile(`${name}-emoji.zip`, zip(files));
     } catch (err) { status('Couldn’t render the image. ' + (err && err.message || '')); }
   });
 
+  /* Export artwork follows the chosen form and colorway; pose thumbnails
+     are redrawn whenever it changes. */
+  let rawFor = '';
+  function loadArt() {
+    const url = artUrl(S.form, S.cw);
+    if (url === rawFor) { renderExport(); return; }
+    rawFor = url; RAW = '';
+    fetch(url).then(r => { if (!r.ok) throw new Error('Asset unavailable'); return r.text(); })
+      .then(t => { if (rawFor !== url) return; RAW = t; thumbs = false; renderExport(); })
+      .catch(() => { if (rawFor === url) status('The Exabot artwork could not be loaded, so export is unavailable.'); });
+  }
   apply();
-  fetch(SVG_PATH).then(r => { if (!r.ok) throw new Error('Asset unavailable'); return r.text(); })
-    .then(t => { RAW = t; renderExport(); })
-    .catch(() => status('The Exabot artwork could not be loaded, so export is unavailable.'));
 })();
 </script>
 </body>
