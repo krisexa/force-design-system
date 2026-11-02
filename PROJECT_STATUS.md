@@ -4,6 +4,23 @@ Audit date: 2026-10-19. Shared rules: [AGENTS.md](AGENTS.md).
 
 ## Current handoff
 
+- Task (2026-11-02): 1.7.2, playground fixes from user screenshots: panel
+  buttons as compact as stage buttons; States tab code block styled and
+  wrapped so the sidebar no longer scrolls sideways (tab panels also clip
+  x-overflow); download labels stay on one line. Owner: Claude Code;
+  released for handoff. User authorized commit and push 2026-11-02.
+- Branch / base: `main`, `eb67fd7` (1.7.1, tagged, CI passed, hosted).
+- Changes: `src/site/exabot.html`, package `1.7.2`.
+- Validation (Node 25.9.0): `npm run check`, `npm run build`, `npm test`
+  (2 pass), `git diff --check` pass. Headless Chrome 1440 and 390: every
+  tab panel scrollWidth equals clientWidth; panel and stage buttons 33–35px
+  tall; no console errors. Screenshots inspected.
+- Local staging: `http://127.0.0.1:3097/exabot.html`.
+- Release: `npm run build:pages` with remote tag fetch passed before push.
+- Next: verify CI, tag v1.7.2 and hosted playground after the push.
+
+## Previous 1.7.1 handoff
+
 - Task (2026-11-02): 1.7.1, Exabot playground redesign after 1.7.0. User
   approved: agent list on the stage, any form/colorway for preview, export
   and embed, denser controls, preview vs export grouping, colorway swatches

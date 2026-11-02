@@ -84,7 +84,9 @@ input[type=text], input[type=password] { width: 100%; }
 .lns label { font-size: var(--type-small-size); color: var(--color-text-secondary); }
 details { margin-top: var(--space-xs); font-size: var(--type-small-size); color: var(--color-text-secondary); }
 details summary { cursor: pointer; color: var(--color-text-primary); font-weight: var(--font-weight-medium); }
-details pre, .code { font: var(--type-small-size)/1.55 var(--font-family-mono); background: var(--color-surface-subtle); color: var(--color-text-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-control); padding: var(--space-xs); margin: var(--space-xs) 0 0; white-space: pre; overflow-x: auto; }
+details pre, .code, #stateCode { font: var(--type-small-size)/1.55 var(--font-family-mono); background: var(--color-surface-subtle); color: var(--color-text-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-control); padding: var(--space-xs); margin: var(--space-xs) 0 0; white-space: pre; overflow-x: auto; }
+#stateCode { white-space: pre-wrap; overflow-wrap: anywhere; }
+.tabpanel { overflow-x: hidden; }
 .code { width: 100%; height: 11rem; resize: vertical; white-space: pre-wrap; overflow-wrap: anywhere; }
 .note { font-size: var(--type-small-size); color: var(--color-text-muted); margin: var(--space-xs) 0 0; }
 .note code { font-family: var(--font-family-mono); }
@@ -97,8 +99,8 @@ details pre, .code { font: var(--type-small-size)/1.55 var(--font-family-mono); 
 .poses button[aria-pressed='true'] { border-color: var(--color-accent); background: var(--color-accent-subtle); color: var(--color-text-primary); }
 .expv { margin-top: var(--space-xs); border: 1px solid var(--color-border); border-radius: var(--radius-control); height: 9.5rem; display: grid; place-items: center; overflow: hidden; background: var(--color-surface-subtle); }
 .expv img { max-width: 92%; max-height: 8.25rem; display: block; }
-.dlrow { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: var(--space-2xs); margin-top: var(--space-sm); }
-.dlrow .btn { padding-inline: var(--space-2xs); }
+.dlrow { display: flex; gap: var(--space-2xs); margin-top: var(--space-sm); }
+.dlrow .btn { flex: 1 1 auto; padding-inline: var(--space-2xs); white-space: nowrap; }
 .status { font-size: var(--type-small-size); color: var(--color-text-muted); margin: var(--space-xs) 0 0; min-height: 1.4em; }
 /* Agent list preview: a chat-app sidebar on the stage. */
 .listview { width: min(24rem, 100%); align-self: stretch; display: grid; align-items: center; min-height: 0; }
@@ -145,7 +147,7 @@ __TOOL_UI_CSS__
 .wrap { padding-top: var(--space-md); }
 .masthead { margin-bottom: var(--space-sm); }
 .masthead p { font-size: var(--type-small-size); }
-.wrap .stage .btn { min-height: var(--space-lg); padding: var(--space-3xs) var(--space-xs); }
+.wrap :is(.stage, .panel) .btn { min-height: var(--space-lg); padding: var(--space-3xs) var(--space-xs); }
 .wrap .stage .seg button, .wrap .panel .tabs button { min-height: var(--space-lg); padding-block: 0; }
 .wrap .panel .tabs { margin: var(--space-2xs); }
 .wrap .panel .sec { padding: var(--space-sm) var(--space-md); }
@@ -471,7 +473,7 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
     }
     $('#code').value = code;
     const art = new URL(artUrl(S.form, S.cw), location.href).href;
-    $('#stateCode').textContent = `<exa-bot compact size="32" state="idle"\n  src="${art}"></exa-bot>\n\nbot.state = 'working';   // on send\nbot.state = 'done';      // reply arrived\nbot.state = 'idle';      // reply read\nrow.addEventListener('pointerenter', () => bot.nudge());`;
+    $('#stateCode').textContent = `<exa-bot compact size="32" state="idle"\n  src="${art}"></exa-bot>\n\n// on send\nbot.state = 'working';\n// reply arrived\nbot.state = 'done';\n// reply read\nbot.state = 'idle';\n// hover is on the row\nrow.addEventListener('pointerenter',\n  () => bot.nudge());`;
   }
 
   $('#bub').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) { S.bub = b.dataset.v; apply(); } });
