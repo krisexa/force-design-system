@@ -20,10 +20,23 @@ Audit date: 2026-10-19. Shared rules: [AGENTS.md](AGENTS.md).
   build:pages` with remote tag fetch: 22 channels, 10 rewrites to 1 stored
   set (all copies byte-identical), 6,813 files. Local serve: icons 200 under
   v1, 1.7.3, 1.7.2, 1.2.0; 404 under 1.1.0 (no icons then), as before.
-- Not yet verified: Pages behaviour on the preview deploy (rewrite works,
-  CORS/cache headers on rewritten paths).
-- Next: verify preview, then merge to main (tags v1.7.3), confirm Pages
-  check-run and hosted `/1.7.2/` + `/1.7.3/` + `/v1/` serve.
+- Released: `9cc76af` on `main`, tag v1.7.3. Check-runs on that commit:
+  check, tag and Cloudflare Pages ("Deployed successfully") passed. Hosted:
+  `/1.7.3/` and `/1.7.2/exabot.js` 200, `manifest.json` reports 1.7.3,
+  product icons 200 under `/v1/` and `/1.2.0/` with immutable cache and
+  `Access-Control-Allow-Origin: *`; a `/1.2.0/` icon matched its source byte
+  for byte. Playground 200.
+- Decision (user agreed, 2026-11-02): share only product icons for now.
+  Pages allows 100 dynamic (splat) redirects and rules grow per channel per
+  shared set; sharing logos, icons and avatars too would need 64 rules now
+  and +4 per release (~9 releases of headroom) versus 10 rules, +1 and ~237
+  files per release today (~55 releases before 20,000 files). A Pages
+  Function could remove the rule cap but makes every asset request run code
+  (Workers quota, shared failure point); kept as a fallback only.
+- Next: with the next shipping release, add a build guard that fails above
+  100 `_redirects` rules (needs approval as a build change). Decide a channel
+  retention policy when `dist/` passes ~15,000 files. Delete the merged
+  `pages-shared-assets` branch (same commit as `main`) when approved.
 
 ## Previous 1.7.2 handoff
 
