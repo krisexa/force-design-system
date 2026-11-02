@@ -34,7 +34,7 @@ src/
   fonts/files/*.woff2     148 font subsets/slices total (verified by npm run check)
   base.css                element defaults, focus ring, .type-* classes, .text-* helpers
   theme.js                applies the saved light/dark/system choice before paint; toggle API
-  exabot.js               <exa-bot>, the interactive full-spectrum Force Exabot (ES module); see *Interactive Exabot*
+  exabot.js               <exa-bot>, the interactive Exabot with agent states (ES module); see *Interactive Exabot*
   index.css               fonts + tokens + base, for bundlers
   tokens.css              tokens only, for bundlers
   assets/logo/            wordmark and mark: black, white, currentColor, auto (OS dark mode)
@@ -337,12 +337,13 @@ These paths become available on the host only after an authorized release.
 
 ### Interactive Exabot
 
-`exabot.js` defines `<exa-bot>`: the full-spectrum Force Exabot with idle
-motion, eye tracking, blinking, speech bubbles and reactions (poke, spin,
-celebrate, confused, peek, fling, pet, nap). It is the only form offered
-interactively; every other form and colorway stays a static SVG above. The
-component fetches `assets/avatars/exabots/full-spectrum/exabot-force-full-spectrum.svg`
-rather than carrying a copy, so the static and interactive bot cannot drift.
+`exabot.js` defines `<exa-bot>`: an Exabot with idle motion, eye tracking,
+blinking, speech bubbles, reactions (poke, spin, celebrate, confused, peek,
+fling, pet, nap) and agent states (working, done; see *Agent states* below).
+By default it fetches the full-spectrum Force,
+`assets/avatars/exabots/full-spectrum/exabot-force-full-spectrum.svg`, rather
+than carrying a copy, so the static and interactive bot cannot drift. Any of
+the 32 SVGs above works through `src`: every form shares the same eye layers.
 Tune it, export PNG/SVG/emoji images and copy embed code at `/exabot.html` on
 the design-system host (the playground); the full attribute, method, event
 and custom-property reference is at the top of `src/exabot.js`.
@@ -406,6 +407,50 @@ const bot = document.querySelector('exa-bot');
 bot.celebrate('Thanks, we will be in touch');
 bot.addEventListener('exabot-poke', (e) => console.log(e.detail.line));
 ```
+
+#### Agent states
+
+For an AI agent in a chat or agent list, `state="idle|working|done"` covers
+the message lifecycle. The host app sets the state; the bot only animates it.
+
+| Moment | Set | The bot | The host shows |
+|---|---|---|---|
+| Idle | `idle` (default) | rests and blinks; squishes on hover or `nudge()` | name, last message |
+| Message sent | `working` | hops once (0.75 s) | row moves to top, “Working…” |
+| Working | `working` | rocks ±7° and squashes (1.4 s / 0.7 s loops); eyes become three thinking dots in a 1.2 s wave | “Working…”, elapsed time in the thread |
+| Reply arrives | `done` | pops up (0.7 s) and squints (1.5 s), then rests | reply preview, unread highlight |
+| Reply read | `idle` | nothing | normal row |
+
+Only a change animates: a bot rendered already `working` loops without the
+hop, and one rendered `done` does not pop. Every change fires
+`exabot-state` with `{state, from}`. While working the bot ignores the
+pointer, never sleeps and sets `aria-busy`. Reduced motion drops the hop,
+rocking and pop; the dots stay still and the squint still shows. Errors are
+not a state: show them in the host, and call `confused()` on a full-size bot
+if wanted.
+
+Avatars in a list use `compact` (default size 32, minimum 16): no shadow,
+float, speech, sparks, eye tracking or drag/pet/poke, and the bot is hidden
+from assistive tech and the tab order because the row names it. Always pair
+it with visible state text. Give each agent its own form through `src`:
+
+```html
+<button class="agent-row">
+  <exa-bot compact size="32" state="working"
+    src="https://exaforce-design-system.pages.dev/v1/assets/avatars/exabots/full-spectrum/exabot-square-full-spectrum.svg"></exa-bot>
+  <span>Agent name <small>Working…</small></span>
+</button>
+```
+
+```js
+bot.state = 'working';   // on send
+bot.state = 'done';      // reply arrived
+bot.state = 'idle';      // reply opened
+row.addEventListener('pointerenter', () => bot.nudge());   // hover is on the row
+```
+
+Try it under *States* in the playground: a list of all eight forms with
+send, working, unread and read, plus a state switch for the large bot.
 
 ## Product icons
 

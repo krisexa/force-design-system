@@ -4,6 +4,33 @@ Audit date: 2026-10-19. Shared rules: [AGENTS.md](AGENTS.md).
 
 ## Current handoff
 
+- Task (2026-11-02): 1.7.0, agent working states for `<exa-bot>`, derived from
+  a user screen recording of an agent list (send → hop, working → rocking with
+  thinking-dot eyes, reply → pop/squint, unread row). User chose: spec plus
+  component, all eight forms, timings derived from the recording. Owner:
+  Claude Code; released for handoff. User authorized commit and push 2026-11-02.
+- Branch / base: `main`, `3ed810f` (1.6.0). Clean on entry.
+- Changes: `src/exabot.js` adds `state="idle|working|done"` (+ `state`
+  property, `exabot-state {state, from}` event, `aria-busy`), `compact`
+  (list avatar, 16–400px, default 32, decorative, no shadow/float/speech/
+  sparks/tracking/gestures) and `nudge()`. Thinking dots are generated from
+  each form's eye ellipses, so all 32 SVGs work via `src`. Playground: State
+  switch on the stage and a States tab (agent list of all eight forms, colorway
+  select, lifecycle table, snippet). README *Agent states*, avatar README and
+  component header updated; package `1.7.0`.
+- Validation (Node 25.9.0; configured Node 22 unavailable): `npm run check`,
+  `npm run build`, `npm test` (2 pass), `git diff --check`, `node --check`
+  pass. Headless Chrome via CDP at 1440 light/dark and 390 light, 390 dark with
+  reduced motion: rows go idle → working → done, thinking dots present on all
+  eight forms, compact bot 32×32 and aria-hidden, large bot aria-busy while
+  working, no horizontal overflow, no console errors. Screenshots inspected.
+- Not checked: real touch, screen reader, Safari/Firefox, `npm run
+  build:pages` with remote tags, Astro build.
+- Local staging: `http://127.0.0.1:3097/exabot.html` (States tab).
+- Next: verify CI, tag v1.7.0 and hosted `/v1/exabot.js` after the push.
+
+## Previous 1.6.0 handoff
+
 - Task (2026-10-29): modernize Ribbon Studio / Exabot playground and apply
   review feedback: smaller help icons, contrast tooltips, select-arrow spacing,
   compact shader settings, and inward-facing mirrored Exabot artwork/eyes.

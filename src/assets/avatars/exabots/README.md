@@ -50,8 +50,10 @@ dark spectrum does not switch automatically with the page theme. These are
 fixed brand artwork, not theme tokens; do not recolor them through CSS.
 
 The interactive `<exa-bot>` component (`src/exabot.js`, playground at
-`/exabot.html`) animates the full-spectrum Force SVG from this folder. It is
-the only interactive form; see *Interactive Exabot* in the root README.
+`/exabot.html`) animates the full-spectrum Force SVG from this folder by
+default and any other form or colorway through its `src` attribute, including
+the agent states (working, done) used for chat and agent lists; see
+*Interactive Exabot* in the root README.
 
 Provide meaningful image alt text when the avatar conveys identity. Use empty
 alt text when decorative or when the same identity is already labeled nearby.

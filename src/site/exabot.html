@@ -92,6 +92,22 @@ details pre, .code { font: var(--type-small-size)/1.55 var(--font-family-mono); 
 .dlrow { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: var(--space-2xs); margin-top: var(--space-sm); }
 .dlrow .btn { padding-inline: var(--space-2xs); }
 .status { font-size: var(--type-small-size); color: var(--color-text-muted); margin: var(--space-xs) 0 0; min-height: 1.4em; }
+.stage-bar .bar-r { display: flex; gap: var(--space-2xs); flex-wrap: wrap; }
+
+/* Agent list demo: compact bots in rows, the way a chat app lists agents. */
+.agents { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3xs); }
+.agent { all: unset; box-sizing: border-box; width: 100%; display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-2xs) var(--space-xs); border-radius: var(--radius-control); cursor: pointer; transition: background-color var(--motion-fast); }
+.agent:hover { background: var(--color-surface-subtle); }
+.agent:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 1px; }
+.agent[data-state='done'] { background: var(--color-accent-subtle); }
+.agent span { display: grid; min-width: 0; }
+.agent b { font-size: var(--type-small-size); font-weight: var(--font-weight-medium); }
+.agent small { font-size: var(--type-micro-size); color: var(--color-text-muted); }
+.agent[data-state='working'] small { color: var(--color-accent); }
+.agent[data-state='done'] small { color: var(--color-text-primary); }
+.states { width: 100%; border-collapse: collapse; font-size: var(--type-small-size); color: var(--color-text-secondary); }
+.states th, .states td { text-align: left; vertical-align: top; padding: var(--space-3xs) var(--space-2xs) var(--space-3xs) 0; border-top: 1px solid var(--color-border); }
+.states th { color: var(--color-text-primary); font-weight: var(--font-weight-medium); white-space: nowrap; }
 __TOOL_UI_CSS__
 </style>
 </head>
@@ -100,14 +116,17 @@ __SITE_HEADER__
 <div class="wrap">
   <div class="masthead">
     <h1 class="type-h3">Exabot playground</h1>
-    <p>The interactive full-spectrum Force Exabot from <code>exabot.js</code>. Tune it, try its reactions, export images, then copy the embed code. Use Theme in the header to check light and dark.</p>
+    <p>The interactive Exabot from <code>exabot.js</code>. Tune it, try its reactions and agent states, export images, then copy the embed code. Use Theme in the header to check light and dark.</p>
   </div>
 
   <div class="grid">
     <section class="stage" id="stage" data-pos="center" aria-label="Preview">
       <div class="stage-bar">
         <p class="hint">Click to poke, drag to fling, hold to pet.</p>
+        <div class="bar-r">
+        <div class="seg" role="group" aria-label="Agent state" id="state"><button type="button" data-v="idle" aria-pressed="true">Idle</button><button type="button" data-v="working" aria-pressed="false">Working</button><button type="button" data-v="done" aria-pressed="false">Done</button></div>
         <div class="seg" role="group" aria-label="Preview position" id="pos"><button type="button" data-v="left" aria-pressed="false">Left</button><button type="button" data-v="center" aria-pressed="true">Centre</button><button type="button" data-v="right" aria-pressed="false">Right</button></div>
+        </div>
       </div>
       <exa-bot id="bot" size="180"></exa-bot>
       <div class="log" id="log" aria-live="polite"></div>
@@ -124,6 +143,7 @@ __SITE_HEADER__
     <aside class="panel" aria-label="Settings">
       <div class="tabs" role="tablist" aria-label="Settings sections">
         <button type="button" role="tab" id="tab-custom" aria-controls="tp-custom" aria-selected="true" data-tab="custom">Customize</button>
+        <button type="button" role="tab" id="tab-states" aria-controls="tp-states" aria-selected="false" tabindex="-1" data-tab="states">States</button>
         <button type="button" role="tab" id="tab-export" aria-controls="tp-export" aria-selected="false" tabindex="-1" data-tab="export">Export</button>
         <button type="button" role="tab" id="tab-embed" aria-controls="tp-embed" aria-selected="false" tabindex="-1" data-tab="embed">Embed</button>
       </div>
@@ -158,6 +178,33 @@ __SITE_HEADER__
         </div>
       </div>
 
+      <div class="tabpanel" role="tabpanel" id="tp-states" aria-labelledby="tab-states" hidden>
+        <div class="sec">
+          <h2>Agent list <small>click a row to send</small></h2>
+          <ul class="agents" id="agents"></ul>
+          <div class="row" style="margin-top:var(--space-xs)"><label for="cw">Colorway</label><select id="cw"><option value="full-spectrum">Full spectrum</option><option value="cool">Cool</option><option value="soft-pastel">Soft pastel</option><option value="dark-spectrum">Dark spectrum</option></select></div>
+          <div class="row"><span class="lbl"></span><button class="btn" type="button" id="sendAll">Send to all</button></div>
+          <p class="note" id="agentsLive" aria-live="polite"></p>
+        </div>
+        <div class="sec">
+          <h2>Lifecycle</h2>
+          <table class="states">
+            <tr><th>Idle</th><td>Rests and blinks. Hover gives a small squish (or call <code>nudge()</code> from the row).</td></tr>
+            <tr><th>Sent</th><td>Setting <code>state="working"</code> hops once. Your row moves to the top and reads “Working…”.</td></tr>
+            <tr><th>Working</th><td>Rocks and churns; eyes become three thinking dots. Loops until the state changes.</td></tr>
+            <tr><th>Done</th><td><code>state="done"</code> pops and squints, then rests. Your row shows the reply preview as unread.</td></tr>
+            <tr><th>Read</th><td>Set <code>state="idle"</code> when the reply is opened. No animation.</td></tr>
+          </table>
+          <p class="note">Reduced motion: no hop, rock or pop; the dots stay still and the squint still shows. The bot never shows text in compact mode, so always pair it with visible state text.</p>
+          <pre>&lt;exa-bot compact size="32" state="working"
+  src="__MAJOR__/assets/avatars/exabots/full-spectrum/exabot-square-full-spectrum.svg"&gt;&lt;/exa-bot&gt;
+
+bot.state = 'working';   // on send
+bot.state = 'done';      // reply arrived
+bot.state = 'idle';      // reply read
+row.addEventListener('pointerenter', () =&gt; bot.nudge());</pre>
+        </div>
+      </div>
       <div class="tabpanel" role="tabpanel" id="tp-export" aria-labelledby="tab-export" hidden>
         <div class="sec">
           <h2>Export image</h2>
@@ -204,11 +251,12 @@ __SITE_HEADER__
 bot.say('Welcome back');
 bot.celebrate();           // e.g. after a form submits
 bot.confused('Page not found');
+bot.state = 'working';     // agent states: idle | working | done
 // also: poke(), hop(), dizzy(), peek(true|false),
-//       stretch(), sleep(), wake()
+//       stretch(), sleep(), wake(), nudge()
 bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
 // also: exabot-dizzy, -celebrate, -confused, -peek,
-//       -fling, -pet</pre>
+//       -fling, -pet, -state {state, from}</pre>
           </details>
         </div>
       </div>
@@ -337,6 +385,42 @@ bot.addEventListener('exabot-poke', e =&gt; console.log(e.detail.line));
   bot.addEventListener('exabot-poke', e => log('exabot-poke · “' + e.detail.line + '”'));
   ['dizzy', 'celebrate', 'confused', 'fling', 'pet'].forEach(n => bot.addEventListener('exabot-' + n, () => log('exabot-' + n)));
   bot.addEventListener('exabot-peek', e => log('exabot-peek · ' + (e.detail.on ? 'on' : 'off')));
+  bot.addEventListener('exabot-state', e => { log('exabot-state · ' + e.detail.from + ' → ' + e.detail.state); pressed($('#state'), e.detail.state); });
+  $('#state').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) bot.state = b.dataset.v; });
+
+  /* ---------- agent states demo ----------
+     Each row owns its state; the reply delay is random, as a real one is. */
+  const FORMS = [['square', 'Square'], ['spark', 'Spark'], ['force', 'Force'], ['shield', 'Shield'], ['magnifying-glass', 'Magnifying glass'], ['lightning-bolt', 'Lightning bolt'], ['long-pill', 'Long pill'], ['triangle', 'Triangle']];
+  const SUB = { idle: 'Idle', working: 'Working…', done: 'Replied · unread' };
+  let cw = 'full-spectrum';
+  try { cw = localStorage.getItem('exabot-playground-cw') || cw; } catch (e) {}
+  const artUrl = f => `__MAJOR__/assets/avatars/exabots/${cw}/exabot-${f}-${cw}.svg`;
+  $('#agents').innerHTML = FORMS.map(([f, name]) => `<li><button type="button" class="agent" data-form="${f}" data-state="idle"><exa-bot compact size="32" src="${artUrl(f)}"></exa-bot><span><b>${name}</b><small>${SUB.idle}</small></span></button></li>`).join('');
+  $('#cw').value = cw;
+  const setRow = (row, st) => {
+    row.dataset.state = st; row.querySelector('exa-bot').state = st; row.querySelector('small').textContent = SUB[st];
+    $('#agentsLive').textContent = `${row.querySelector('b').textContent}: ${SUB[st]}`;
+  };
+  const send = row => {
+    if (row.dataset.state === 'working') return;
+    setRow(row, 'working');
+    const li = row.parentElement; li.parentElement.prepend(li);
+    clearTimeout(row._t); row._t = setTimeout(() => setRow(row, 'done'), 2500 + Math.random() * 3500);
+  };
+  $('#agents').addEventListener('click', e => {
+    const row = e.target.closest('.agent'); if (!row) return;
+    if (row.dataset.state === 'done') setRow(row, 'idle'); else send(row);
+  });
+  $('#agents').addEventListener('pointerover', e => {
+    const row = e.target.closest('.agent');
+    if (row && !row.contains(e.relatedTarget)) row.querySelector('exa-bot').nudge();
+  });
+  $('#sendAll').addEventListener('click', () => document.querySelectorAll('#agents .agent').forEach(send));
+  $('#cw').addEventListener('change', e => {
+    cw = e.target.value;
+    try { localStorage.setItem('exabot-playground-cw', cw); } catch (err) {}
+    document.querySelectorAll('#agents .agent').forEach(r => r.querySelector('exa-bot').setAttribute('src', artUrl(r.dataset.form)));
+  });
 
   $('#copy').addEventListener('click', async () => {
     const ta = $('#code'), btn = $('#copy');

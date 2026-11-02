@@ -1,11 +1,12 @@
 /*!
  * Exaforce Design System — exabot.js
  *
- * <exa-bot>: the interactive full-spectrum Force Exabot. One ES module, no
- * dependencies. It defines the element once, however many times it is loaded,
- * and fetches its artwork from the design system's own SVG
- * (assets/avatars/exabots/full-spectrum/exabot-force-full-spectrum.svg) rather
- * than carrying a copy, so the bot and the static avatar can never drift.
+ * <exa-bot>: the interactive Exabot. One ES module, no dependencies. It
+ * defines the element once, however many times it is loaded, and fetches its
+ * artwork from the design system's own SVG (default
+ * assets/avatars/exabots/full-spectrum/exabot-force-full-spectrum.svg; any of
+ * the 32 form/colorway SVGs through src) rather than carrying a copy, so the
+ * bot and the static avatar can never drift.
  *
  * Hosted:
  *   <script type="module" src="https://<design-system-host>/v1/exabot.js"><\/script>
@@ -20,7 +21,15 @@
  *   <script>import '@exaforce/design-system/exabot.js';<\/script>
  *
  * Attributes:
- *   size            px, 40–400. Default 132.
+ *   size            px, 40–400 (compact 16–400). Default 132 (compact 32).
+ *   state           agent state: "idle" (default) | "working" | "done".
+ *                   idle→working hops once, then rocks with thinking-dot
+ *                   eyes until changed; →done pops and squints, then rests.
+ *                   The first state applied never animates.
+ *   compact         list/chat avatar: square box, no shadow, float, speech,
+ *                   sparks, tracking or gestures; hidden from assistive tech
+ *                   and the tab order, so the row around it must name it and
+ *                   show its state as text.
  *   label           accessible name. Default "Say hi to Exabot".
  *   lines           what a tap says, "a|b|c", in turn.
  *   <reaction>-line dizzy-line, celebrate-line, confused-line, peek-line,
@@ -54,13 +63,17 @@
  *   --exabot-heart            hearts while being petted
  * The artwork itself is fixed brand colour and is never recoloured.
  *
+ * Properties: state (get/set, mirrors the attribute), compact (get)
  * Methods: say(text), poke(), hop(), dizzy(), celebrate(text?), confused(text?),
- *          peek(on), stretch(), sleep(), wake()
+ *          peek(on), stretch(), sleep(), wake(), nudge() (hover squish, for a
+ *          row hover the bot cannot see)
  * Events (bubble, composed): exabot-poke {line}, exabot-dizzy, exabot-celebrate,
- *          exabot-confused, exabot-peek {on}, exabot-fling {speed}, exabot-pet
+ *          exabot-confused, exabot-peek {on}, exabot-fling {speed}, exabot-pet,
+ *          exabot-state {state, from}
  *
  * Reduced motion: every animation stops and nothing is spawned; the bot still
- * talks, looks around and reacts by changing expression.
+ * talks, looks around and reacts by changing expression. Working shows still
+ * thinking dots; done shows the squint.
  */
 const DEFAULT_SRC = new URL('./assets/avatars/exabots/full-spectrum/exabot-force-full-spectrum.svg', import.meta.url).href;
 
@@ -100,7 +113,7 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
 .bot{position:relative;display:block;width:var(--s);height:var(--s);rotate:var(--tilt,0deg);transition:rotate .4s cubic-bezier(.3,1.4,.5,1),scale .3s ease;animation:float 4.2s ease-in-out infinite}
 .bot svg{width:100%;height:100%;display:block;overflow:visible;transform-origin:50% 90%}
 .art{transform-origin:center;transform-box:view-box;scale:var(--dir,1) 1}
-.eyes{transform-box:fill-box;transform-origin:center;transition:scale .2s,transform .25s}
+.eyes{transform-box:fill-box;transform-origin:center;transition:scale .2s,transform .25s,opacity .15s}
 .eye{transform-box:fill-box;transform-origin:center;transition:transform .2s}
 .look{transition:transform .25s ease-out}
 .body{transform-box:fill-box;transform-origin:50% 100%}
@@ -154,11 +167,35 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
 @keyframes spark{0%{transform:translate(0,0) scale(.4);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1);opacity:0}}
 .heart{position:absolute;top:18%;left:var(--x);color:var(--_heart);font:400 calc(var(--s)*.13)/1 var(--_font);pointer-events:none;animation:heart 1.1s ease-out forwards}
 @keyframes heart{0%{opacity:0;transform:translateY(0) scale(.5)}20%{opacity:1;transform:translateY(-10%) scale(1)}100%{opacity:0;transform:translate(var(--d),calc(var(--s)*-.45)) scale(.9)}}
-@media (prefers-reduced-motion:reduce){.bot,.shadow,button:hover .body,.blink .eyes,.hop svg,.dizzy svg,.stretch .body,.wake svg,.celebrate svg,.pet .bot,.zzz span,.confused .q{animation:none!important}.zzz span,.confused .q{opacity:1}.say,.bot,.eyes,.eye,.look{transition:none}}
+.nudge .body{animation:squish .6s cubic-bezier(.3,1.5,.5,1)}
+/* Agent states. Working: the bot rocks and churns while its eyes give way
+   to three thinking dots. Done: it pops up and squints, then rests. */
+.think{opacity:0;transition:opacity .15s}
+.think circle{transform-box:fill-box;transform-origin:center}
+.working .eyes{transform:scale(.3);opacity:0}
+.working .think{opacity:1}
+.working .bot{animation:work 1.4s ease-in-out infinite}
+.working .body{animation:churn .7s ease-in-out infinite}
+.working .think circle{animation:dot 1.2s ease-in-out infinite}
+.working .think circle:nth-child(2){animation-delay:.15s}
+.working .think circle:nth-child(3){animation-delay:.3s}
+@keyframes work{0%,100%{rotate:-7deg;translate:0 0}25%{translate:0 calc(var(--s)*-.04)}50%{rotate:7deg;translate:0 0}75%{translate:0 calc(var(--s)*-.04)}}
+@keyframes churn{0%,100%{transform:scale(1,1)}50%{transform:scale(1.05,.94)}}
+@keyframes dot{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-40%);opacity:1}}
+.done svg{animation:pop .7s cubic-bezier(.3,1.4,.5,1)}
+.done .eyes{transform:translateY(-8%) scaleY(.34)}
+@keyframes pop{0%{transform:none}30%{transform:translateY(-22%) scale(1.08)}55%{transform:translateY(0) scale(1.1,.9)}75%{transform:translateY(-6%)}100%{transform:none}}
+/* Compact: a list or chat avatar. Decorative, no shadow, float, speech or
+   gestures; the row around it carries the name, focus and state text. */
+:host([compact]){line-height:0;vertical-align:middle}
+:host([compact]) button{cursor:inherit;height:var(--s);border-radius:0}
+:host([compact]) .shadow,:host([compact]) .say,:host([compact]) .zzz,:host([compact]) .q{display:none}
+:host([compact]) button:not(.working) .bot{animation:none}
+@media (prefers-reduced-motion:reduce){.bot,.shadow,button:hover .body,.nudge .body,.blink .eyes,.hop svg,.dizzy svg,.stretch .body,.wake svg,.celebrate svg,.pet .bot,.zzz span,.confused .q,.working .bot,.working .body,.working .think circle,.done svg{animation:none!important}.zzz span,.confused .q,.working .think circle{opacity:1}.say,.bot,.eyes,.eye,.look,.think{transition:none}}
 `;
 
   class ExaBot extends HTMLElement {
-    static get observedAttributes() { return ['size', 'label', 'src', 'bubble', 'facing']; }
+    static get observedAttributes() { return ['size', 'label', 'src', 'bubble', 'facing', 'state', 'compact']; }
     constructor() { super(); this.attachShadow({ mode: 'open' }); this._clicks = []; this._line = 0; this._deep = false; this._dir = 1; }
     connectedCallback() { if (!this._btn) this._render(); all.add(this); listen(); }
     disconnectedCallback() { all.delete(this); if (!all.size) unlisten(); }
@@ -167,6 +204,8 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
       if (n === 'src') this._load();
       else if (n === 'label') this._btn.setAttribute('aria-label', this._label());
       else if (n === 'bubble' || n === 'facing') this._orient();
+      else if (n === 'state') this._applyState();
+      else if (n === 'compact') { this._applyCompact(); this._applySize(); }
       else this._applySize();
     }
     get lines() {
@@ -181,10 +220,13 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
     }
     _has(c) { return !!this._btn && this._btn.classList.contains(c); }
     get asleep() { return this._has('asleep'); }
-    _busy() { return this._has('peek') || this._has('pet') || this._has('dragging') || this._has('confused'); }
+    _busy() { return this._has('peek') || this._has('pet') || this._has('dragging') || this._has('confused') || this._has('working'); }
+    get compact() { return this.hasAttribute('compact'); }
+    get state() { return this._st || 'idle'; }
+    set state(v) { this.setAttribute('state', v); }
     _emit(n, detail) { this.dispatchEvent(new CustomEvent('exabot-' + n, { bubbles: true, composed: true, detail })); }
     _applySize() {
-      const s = Math.max(40, Math.min(400, +this.getAttribute('size') || 132));
+      const s = Math.max(this.compact ? 16 : 40, Math.min(400, +this.getAttribute('size') || (this.compact ? 32 : 132)));
       this.style.setProperty('--s', s + 'px');
     }
     _render() {
@@ -196,10 +238,12 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
       this._drag = this.shadowRoot.querySelector('.drag');
       b.dataset.side = SIDES.includes(this.getAttribute('bubble')) ? this.getAttribute('bubble') : 'right';
       this._applySize();
+      this._applyCompact();
+      this._applyState();
       this._load();
 
-      b.addEventListener('click', () => { if (this._suppress) { this._suppress = false; return; } this.poke(); });
-      b.addEventListener('pointerdown', (e) => this._down(e));
+      b.addEventListener('click', () => { if (this._suppress) { this._suppress = false; return; } if (!this.compact) this.poke(); });
+      b.addEventListener('pointerdown', (e) => { if (!this.compact) this._down(e); });
       b.addEventListener('pointermove', (e) => this._move(e));
       b.addEventListener('pointerup', (e) => this._up(e));
       b.addEventListener('pointercancel', (e) => this._up(e));
@@ -229,7 +273,24 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
         const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         eyes.parentNode.insertBefore(g, eyes); g.appendChild(eyes);
         eyes.classList.add('eyes'); g.classList.add('look'); this._look = g;
-        [...eyes.children].forEach((e, i) => e.classList.add('eye', 'eye-' + (i + 1)));
+        const es = [...eyes.children];
+        es.forEach((e, i) => e.classList.add('eye', 'eye-' + (i + 1)));
+        /* Thinking dots for the working state, sized and spaced from the
+           form's own eyes and filled like them, so every form gets them. */
+        if (es.length > 1) {
+          const n = (e, a) => +e.getAttribute(a) || 0, a = es[0], z = es[es.length - 1];
+          const cx = (n(a, 'cx') + n(z, 'cx')) / 2, cy = (n(a, 'cy') + n(z, 'cy')) / 2;
+          const gap = Math.abs(n(z, 'cx') - n(a, 'cx')) / 2, r = n(a, 'rx') * 1.05;
+          const t = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          t.classList.add('think');
+          [-1, 0, 1].forEach((i) => {
+            const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            c.setAttribute('cx', cx + i * gap); c.setAttribute('cy', cy); c.setAttribute('r', r);
+            c.setAttribute('fill', a.getAttribute('fill') || 'currentColor');
+            t.appendChild(c);
+          });
+          g.appendChild(t);
+        }
       }
       const body = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       body.classList.add('body');
@@ -294,12 +355,12 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
     _petStop() { clearInterval(this._petT); this._btn.classList.remove('pet'); }
     /* ---------- reactions ---------- */
     _flash(cls, ms) {
-      const b = this._btn; b.classList.remove('hop', 'dizzy', 'stretch', 'celebrate'); void b.offsetWidth;
+      const b = this._btn; b.classList.remove('hop', 'dizzy', 'stretch', 'celebrate', 'done', 'nudge'); void b.offsetWidth;
       b.classList.add(cls); clearTimeout(this['_t' + cls]);
       this['_t' + cls] = setTimeout(() => b.classList.remove(cls), ms);
     }
     _sparks(n = 7, big = 1) {
-      if (RM()) return;
+      if (RM() || this.compact) return;
       const s = this.getBoundingClientRect().width;
       for (let i = 0; i < n; i++) {
         const sp = document.createElement('span'); sp.className = 'spark';
@@ -339,7 +400,7 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
       this._btn.style.setProperty('--dir', this._dir);
     }
     say(t) {
-      if (!this._btn) return;
+      if (!this._btn || this.compact) return;
       this._bubble.textContent = t; this._orient(); this._btn.classList.add('saying');
       clearTimeout(this._sayT); this._sayT = setTimeout(() => this._btn.classList.remove('saying'), 1900);
     }
@@ -380,9 +441,37 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
       const L = this.lines, line = L[this._line++ % L.length];
       this.hop(); this.say(line); this._emit('poke', { line });
     }
+    /* ---------- agent states ---------- */
+    /* A compact bot is decorative: out of the tab order and hidden from
+       assistive tech, because the row it sits in names it. */
+    _applyCompact() {
+      if (!this._btn) return;
+      const c = this.compact;
+      if (c) { this._btn.tabIndex = -1; this._btn.setAttribute('aria-hidden', 'true'); }
+      else { this._btn.removeAttribute('tabindex'); this._btn.removeAttribute('aria-hidden'); }
+    }
+    /* idle → working hops once (the message was sent), then loops until the
+       state changes. working → done pops and squints, then rests as idle
+       does. The first state applied never animates, so a page that renders
+       a bot already working or done does not replay the transition. */
+    _applyState() {
+      if (!this._btn) return;
+      const v = this.getAttribute('state'), s = v === 'working' || v === 'done' ? v : 'idle';
+      const prev = this._st; this._st = s;
+      const b = this._btn;
+      b.classList.toggle('working', s === 'working');
+      if (s === 'working') b.setAttribute('aria-busy', 'true'); else b.removeAttribute('aria-busy');
+      if (s === 'working') { b.classList.remove('asleep', 'peek', 'confused'); if (this._look) this._look.style.transform = ''; }
+      if (prev === undefined || prev === s) return;
+      lastMove = Date.now();
+      if (s === 'working') this._flash('hop', 750);
+      else if (s === 'done') { this._flash('done', 1500); this._sparks(); }
+      this._emit('state', { state: s, from: prev });
+    }
+    nudge() { if (!this._btn || this._has('working')) return; this._flash('nudge', 650); }
     /* ---------- ambient ---------- */
     _track(x, y) {
-      if (!this._btn) return;
+      if (!this._btn || this.compact || this._has('working')) return;
       const r = this.getBoundingClientRect(); if (!r.width) return;
       const dx = x - (r.left + r.width / 2), dy = y - (r.top + r.width / 2), d = Math.hypot(dx, dy) || 1;
       if (!this._has('peek')) this.style.setProperty('--tilt', Math.max(-9, Math.min(9, dx / 40)) + 'deg');
@@ -409,7 +498,7 @@ button:focus-visible{outline:2px solid var(--_focus);outline-offset:4px}
       if (y < 4 && this._deep) { this._deep = false; this.hop(); this.say(this._ln('scroll')); }
     }
     _idle() {
-      if (!this._btn || this.asleep || !this._look || this._busy()) return;
+      if (!this._btn || this.compact || this.asleep || !this._look || this._busy()) return;
       const idle = Date.now() - lastMove, sl = +this.getAttribute('sleep') || 0;
       if (sl > 0 && idle > sl * 1000) { this.sleep(); return; }
       if (idle > 3500) {
