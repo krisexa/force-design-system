@@ -4,6 +4,29 @@ Audit date: 2026-10-19. Shared rules: [AGENTS.md](AGENTS.md).
 
 ## Current handoff
 
+- Task (2026-11-02): 1.7.3, unblock deploys. The 1.7.2 Pages deploy failed
+  at 22,134 files (limit 20,000); production stayed on 1.7.1. User approved
+  sharing identical asset folders across channels, verified on a preview
+  deploy before main. Owner: Claude Code; released for handoff.
+- Branch / base: `pages-shared-assets` from `main` `7124fc6` (1.7.2, tagged,
+  not deployed). Pre-existing uncommitted handoff note below kept.
+- Changes: `scripts/build.mjs` stores `assets/product-icons/` once per distinct
+  content hash under `dist/shared/product-icons/<hash>/` (historical channels
+  folded in after their own builds), writes `_redirects` 200 splat rewrites
+  per channel, prints and enforces the 20,000-file limit (CI fails before
+  tagging). `scripts/serve.mjs` applies those rewrites; preview test extended.
+  README, AGENTS.md, package `1.7.3`. No `src/` changes.
+- Validation (Node 25.9.0): `npm run build`, `npm test` (2 pass), `npm run
+  build:pages` with remote tag fetch: 22 channels, 10 rewrites to 1 stored
+  set (all copies byte-identical), 6,813 files. Local serve: icons 200 under
+  v1, 1.7.3, 1.7.2, 1.2.0; 404 under 1.1.0 (no icons then), as before.
+- Not yet verified: Pages behaviour on the preview deploy (rewrite works,
+  CORS/cache headers on rewritten paths).
+- Next: verify preview, then merge to main (tags v1.7.3), confirm Pages
+  check-run and hosted `/1.7.2/` + `/1.7.3/` + `/v1/` serve.
+
+## Previous 1.7.2 handoff
+
 - Task (2026-11-02): 1.7.2, playground fixes from user screenshots: panel
   buttons as compact as stage buttons; States tab code block styled and
   wrapped so the sidebar no longer scrolls sideways (tab panels also clip
@@ -17,7 +40,14 @@ Audit date: 2026-10-19. Shared rules: [AGENTS.md](AGENTS.md).
   tall; no console errors. Screenshots inspected.
 - Local staging: `http://127.0.0.1:3097/exabot.html`.
 - Release: `npm run build:pages` with remote tag fetch passed before push.
-- Next: verify CI, tag v1.7.2 and hosted playground after the push.
+- Pushed as `7124fc6`; CI check and tag v1.7.2 passed, but the Cloudflare
+  Pages build FAILED (production still serves 1.7.1). Logs need the
+  dashboard. A clean clone builds fine locally, but `dist/` has 22,134 files
+  (21 channels × ~2,181), over the Pages 20,000-file limit; 1.7.1 was
+  ~19,950. Blocker: needs an approved deploy change (dedupe identical
+  channel files, drop/trim old channels, or a higher plan limit).
+- Next: user decides the approach; then implement, verify the file count,
+  and confirm `/1.7.2/exabot.js` and `/v1/` serve 1.7.2.
 
 ## Previous 1.7.1 handoff
 

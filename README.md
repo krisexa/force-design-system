@@ -187,6 +187,16 @@ Rules that keep that safe:
 - Font files are hashed by content, so a font upgrade is a new file name and
   the old one keeps serving to anything still pointing at it.
 
+Cloudflare Pages deploys at most 20,000 files, and every channel is a full
+copy, so large asset folders that are identical across channels are stored
+once. `assets/product-icons/` lives under `/shared/product-icons/<hash>/`,
+and `_redirects` rewrites (status 200, the URL does not change) each
+`/<channel>/assets/product-icons/…` to its copy. A changed icon set gets a
+new hash, so older channels keep their own bytes. The build prints the file
+count and fails above the limit, which stops CI before it tags. `npm run
+serve` applies the same rewrites. Add a folder to `SHARED_SETS` in
+`scripts/build.mjs` if the count nears the limit again.
+
 ## Making a change
 
 1. Edit `src/`. Semantic tokens reference primitives only; no literals. Both

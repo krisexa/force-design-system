@@ -64,6 +64,10 @@ remote tag fetch and executes historical build scripts from local/fetched tags.
 Release builds fail on tag-fetch errors before replacing output. Explicit local
 `--releases --offline-releases` mode is forbidden in CI/Pages; its output must not
 be deployed. Run `npm test` for release and preview regression checks.
+Cloudflare Pages deploys at most 20,000 files; the build fails above that,
+and large identical asset folders are shared across channels through
+`_redirects` (see README *Versions and caching*). A green CI check does not
+prove the deploy: confirm the "Cloudflare Pages" check-run on the commit.
 
 Use Node 22 from `.node-version`, preferably a supported patched release. No npm
 install is needed. Do not use npx to install missing validators implicitly.

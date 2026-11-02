@@ -1,6 +1,7 @@
 /**
  * Local preview of dist/ that behaves like Cloudflare Pages where it matters:
- * static files, directory index.html, and a real 404 status that renders
+ * static files, directory index.html, the 200 splat rewrites in _redirects
+ * (how channels reach shared asset sets), and a real 404 status that renders
  * dist/404.html for any path that does not exist. No dependencies.
  *
  *   npm run serve            → http://localhost:3000
@@ -37,6 +38,15 @@ async function file(p) {
   }
 }
 
+/* Only the rule shape the build writes: "/from/* /to/:splat 200". */
+async function rewrites(root) {
+  const text = await readFile(join(root, '_redirects'), 'utf8').catch((error) => {
+    if (error.code === 'ENOENT') return '';
+    throw error;
+  });
+  return text.split('\n').map((line) => /^(\/\S*)\/\*\s+(\/\S*)\/:splat\s+200\s*$/.exec(line.trim())).filter(Boolean).map((m) => [m[1] + '/', m[2] + '/']);
+}
+
 export async function preview(req, res, root = dist) {
   function send(status, body, type = 'text/plain; charset=utf-8') {
     res.writeHead(status, {
@@ -52,6 +62,14 @@ export async function preview(req, res, root = dist) {
     if (pathname.includes('\0')) throw new Error('invalid path');
   } catch {
     send(400, 'Bad request');
+    return;
+  }
+  try {
+    const rule = (await rewrites(root)).find(([from]) => pathname.startsWith(from));
+    if (rule) pathname = rule[1] + pathname.slice(rule[0].length);
+  } catch {
+    console.error('Preview could not read _redirects.');
+    send(500, 'Internal server error');
     return;
   }
   const target = resolve(root, '.' + pathname);

@@ -26,6 +26,17 @@ test('preview handles invalid URLs and continues serving files and real 404s', a
     assert.equal(home.body, 'Home');
     assert.match(home.headers['Content-Type'], /text\/html/);
     assert.equal(home.headers['Cache-Control'], 'no-store');
+    // Channels reach shared asset sets through 200 rewrites, as on Pages.
+    const { mkdir } = await import('node:fs/promises');
+    await mkdir(join(root, 'shared/set/abc'), { recursive: true });
+    await writeFile(join(root, 'shared/set/abc/icon.svg'), '<svg/>');
+    await writeFile(join(root, '_redirects'), '# comment\n/1.0.0/assets/set/* /shared/set/abc/:splat 200\n');
+    const shared = await request('/1.0.0/assets/set/icon.svg');
+    assert.equal(shared.status, 200);
+    assert.equal(shared.body, '<svg/>');
+    assert.match(shared.headers['Content-Type'], /image\/svg\+xml/);
+    assert.equal((await request('/1.0.0/assets/set/..%2F..%2F..%2F..%2F..%2Foutside')).status, 400);
+    assert.equal((await request('/1.0.0/assets/set/none.svg')).status, 404);
     const missing = await request('/missing');
     assert.equal(missing.status, 404);
     assert.equal(missing.body, 'Missing');
